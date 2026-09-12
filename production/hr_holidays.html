@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="nav.hr-holidays">Holidays | Dash</title>
+<link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
+<script type="module" src="/src/main-v4.js"></script>
+</head>
+<body data-shell="admin" data-page="hr-holidays" data-breadcrumb="Home > Holidays">
+
+<main class="main">
+<div class="page-wrapper" data-hr-holidays>
+
+  <div class="page-header">
+    <div class="page-header-row">
+      <div>
+        <div class="page-pretitle" data-i18n="hr.ui.pretitle">HR &amp; Operations</div>
+        <h1 class="page-title" data-i18n="nav.hr-holidays">Holidays</h1>
+      </div>
+      <div class="page-actions">
+        <button class="btn btn-outline" id="hol-import" data-i18n="common.import">Import</button>
+        <button class="btn btn-outline" id="hol-export" data-i18n="common.export">Export</button>
+        <button class="btn btn-primary" id="hol-add" data-i18n="hr.p2.addHoliday">Add holiday</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="hr-stat-cards" style="grid-template-columns:repeat(3,1fr)">
+    <div class="hr-stat"><div class="k" data-i18n="hr.p2.totalDays">Total days</div><div class="v" id="hol-stat-days">0</div></div>
+    <div class="hr-stat"><div class="k" data-i18n="hr.p2.events">Events</div><div class="v" id="hol-stat-events">0</div></div>
+    <div class="hr-stat"><div class="k" data-i18n="hr.p2.shifted">Weekend-shifted</div><div class="v" id="hol-stat-shifted">0</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header" style="gap:12px;flex-wrap:wrap">
+      <div class="card-title" data-i18n="hr.p2.register">Register</div>
+      <div class="card-options">
+        <select class="form-control" id="hol-year" aria-label="Year"></select>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table hr-table">
+          <thead><tr>
+            <th data-i18n="hr.p2.holiday">Holiday</th>
+            <th data-i18n="hr.p2.gregorian">Gregorian</th>
+            <th data-i18n="hr.p2.hijri">Hijri</th>
+            <th data-i18n="hr.p2.days">Days</th>
+            <th data-i18n="hr.p2.observed">Observed</th>
+          </tr></thead>
+          <tbody id="hol-rows"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+</main>
+
+<script type="module">
+import { initHolidays } from '/src/v4/holidays.js';
+initHolidays();
+</script>
+
+</body>
+</html>

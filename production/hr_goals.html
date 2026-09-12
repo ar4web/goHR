@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="nav.hr-goals">Goals | Dash</title>
+<link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
+<script type="module" src="/src/main-v4.js"></script>
+</head>
+<body data-shell="admin" data-page="hr-goals" data-breadcrumb="Home > Goals">
+
+<main class="main">
+<div class="page-wrapper" data-hr-goals>
+
+  <div class="page-header">
+    <div class="page-header-row">
+      <div>
+        <div class="page-pretitle" data-i18n="hr.ui.pretitle">HR &amp; Operations</div>
+        <h1 class="page-title" data-i18n="nav.hr-goals">Goals</h1>
+      </div>
+      <div class="page-actions">
+        <button class="btn btn-outline" id="gl-export-xlsx">Excel</button>
+        <button class="btn btn-outline" id="gl-export-csv">CSV</button>
+        <button class="btn btn-primary" id="gl-new" data-i18n="hr.p6.newGoal">New goal</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="hr-stat-cards">
+    <div class="hr-stat"><div class="k" data-i18n="status.active">Active</div><div class="v" id="gl-stat-active">0</div></div>
+    <div class="hr-stat"><div class="k" data-i18n="hr.p6.atRisk">At risk</div><div class="v" id="gl-stat-risk">0</div></div>
+    <div class="hr-stat"><div class="k" data-i18n="hr.p6.done">Done</div><div class="v" id="gl-stat-done">0</div></div>
+    <div class="hr-stat"><div class="k" data-i18n="hr.p6.avgProgress">Avg progress</div><div class="v" id="gl-stat-prog">—</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table hr-table">
+          <thead><tr>
+            <th>#</th>
+            <th data-i18n="hr.p6.owner">Owner</th>
+            <th data-i18n="hr.p6.goal">Goal</th>
+            <th data-i18n="hr.p6.progress">Progress</th>
+            <th data-i18n="hr.p6.due">Due</th>
+            <th data-i18n="common.status">Status</th>
+            <th data-i18n="common.actions">Actions</th>
+          </tr></thead>
+          <tbody id="gl-rows"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+</main>
+
+<script type="module">
+import { initGoals } from '/src/v4/goals.js';
+initGoals();
+</script>
+
+</body>
+</html>

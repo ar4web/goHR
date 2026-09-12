@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="nav.hr-gosi">GOSI | Dash</title>
+<link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
+<script type="module" src="/src/main-v4.js"></script>
+</head>
+<body data-shell="admin" data-page="hr-gosi" data-breadcrumb="Home > GOSI">
+
+<main class="main">
+<div class="page-wrapper" data-hr-gosi>
+
+  <div class="page-header">
+    <div class="page-header-row">
+      <div>
+        <div class="page-pretitle" data-i18n="hr.ui.pretitle">HR &amp; Operations</div>
+        <h1 class="page-title" data-i18n="nav.hr-gosi">GOSI</h1>
+      </div>
+      <div class="page-actions">
+        <button class="btn btn-outline" id="gs-export-xlsx">Excel</button>
+        <button class="btn btn-outline" id="gs-export-csv">CSV</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <div class="hr-form-2col">
+        <div class="form-group"><label class="form-label" for="gs-month" data-i18n="hr.p4.month">Month</label>
+          <input class="form-control" id="gs-month" type="month" dir="ltr"></div>
+        <div class="form-group"><label class="form-label" data-i18n="hr.p4.filing">Filing summary</label>
+          <div id="gs-file"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hr-stat-cards">
+    <div class="hr-stat"><div class="k" data-i18n="hr.p4.base">GOSI base</div><div class="v" id="gs-stat-base">0</div></div>
+    <div class="hr-stat"><div class="k" data-i18n="hr.p4.empShare">Employee share</div><div class="v" id="gs-stat-emp">0</div></div>
+    <div class="hr-stat"><div class="k" data-i18n="hr.p4.erShare">Employer share</div><div class="v" id="gs-stat-er">0</div></div>
+    <div class="hr-stat"><div class="k" data-i18n="hr.p4.headcount">Headcount</div><div class="v" id="gs-stat-hc">0</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table hr-table">
+          <thead><tr>
+            <th data-i18n="hr.p4.employee">Employee</th>
+            <th data-i18n="hr.p4.system">System</th>
+            <th data-i18n="hr.p4.base">GOSI base</th>
+            <th data-i18n="hr.p4.pension">Pension</th>
+            <th data-i18n="hr.gosi.saned">SANED</th>
+            <th data-i18n="hr.p4.hazards">Hazards</th>
+            <th data-i18n="hr.p4.empShare">Employee share</th>
+            <th data-i18n="hr.p4.erShare">Employer share</th>
+          </tr></thead>
+          <tbody id="gs-rows"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+</main>
+
+<script type="module">
+import { initGosi } from '/src/v4/gosi.js';
+initGosi();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="nav.hr-settings">HR Settings | Dash</title>
+<link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
+<script type="module" src="/src/main-v4.js"></script>
+</head>
+<body data-shell="admin" data-page="hr-settings" data-breadcrumb="Home > HR Settings">
+
+<main class="main">
+<div class="page-wrapper" data-hr-settings>
+
+  <div class="page-header">
+    <div class="page-header-row">
+      <div>
+        <div class="page-pretitle" data-i18n="hr.ui.pretitle">HR &amp; Operations</div>
+        <h1 class="page-title" data-i18n="hr.nav.settings">HR Settings</h1>
+      </div>
+      <div class="page-actions">
+        <button class="btn btn-primary" id="set-save-top" data-i18n="common.save">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row col-2" style="margin-bottom:16px">
+    <div class="card">
+      <div class="card-header"><div class="card-title" data-i18n="hr.settings.brand">Company brand</div></div>
+      <div class="card-body" id="set-brand"></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title" data-i18n="hr.settings.nitaqat">Nitaqat profile</div></div>
+      <div class="card-body" id="set-nitaqat"></div>
+    </div>
+  </div>
+
+  <div class="row col-2" style="margin-bottom:16px">
+    <div class="card">
+      <div class="card-header"><div class="card-title" data-i18n="hr.settings.nitaqat">Nitaqat profile</div></div>
+      <div class="card-body" id="set-nitaqat"></div>
+    </div>
+  </div>
+
+  <div class="row col-2" style="margin-bottom:16px">
+    <div class="card">
+      <div class="card-header"><div class="card-title" data-i18n="hr.settings.companies">Companies</div></div>
+      <div class="card-body" id="set-companies"></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title" data-i18n="hr.settings.letters">Company letters</div></div>
+      <div class="card-body" id="set-letters"></div>
+    </div>
+  </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title" data-i18n="hr.settings.language">Language</div></div>
+      <div class="card-body" id="set-lang"></div>
+    </div>
+  </div>
+
+  <div class="row col-2" style="margin-bottom:16px">
+    <div class="card">
+      <div class="card-header"><div class="card-title" data-i18n="hr.p6.eosbPolicy">End-of-service policy</div></div>
+      <div class="card-body" id="set-eosb"></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title" data-i18n="hr.p6.levyBands">Expat levy bands</div></div>
+      <div class="card-body" id="set-levy"></div>
+    </div>
+  </div>
+
+  <div class="row col-2" style="margin-bottom:16px">
+    <div class="card">
+      <div class="card-header"><div class="card-title" data-i18n="hr.p6.expCats">Expense categories</div></div>
+      <div class="card-body" id="set-expcats"></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title" data-i18n="hr.p6.apprChains">Approval chains</div></div>
+      <div class="card-body" id="set-chains"></div>
+    </div>
+  </div>
+
+  <div class="row col-2" style="margin-bottom:16px">
+    <div class="card">
+      <div class="card-header"><div class="card-title" data-i18n="hr.settings.depts">Departments</div></div>
+      <div class="card-body" id="set-depts"></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title" data-i18n="hr.p6.quickLinks">Admin shortcuts</div></div>
+      <div class="card-body" id="set-links"></div>
+    </div>
+  </div>
+
+  <div class="row col-2" style="margin-bottom:16px">
+    <div class="card">
+      <div class="card-header"><div class="card-title" data-i18n="hr.settings.export">Backup</div></div>
+      <div class="card-body" id="set-export"></div>
+    </div>
+  </div>
+
+  <div class="card panel-danger">
+    <div class="card-header"><div class="card-title" data-i18n="hr.settings.danger">Danger zone</div></div>
+    <div class="card-body" id="set-danger"></div>
+  </div>
+
+  <div class="sticky-savebar">
+    <button class="btn btn-primary" id="set-save" data-i18n="common.save">Save</button>
+  </div>
+
+</div>
+</main>
+
+<script type="module">
+import { initHrSettings } from '/src/v4/hr-settings.js';
+initHrSettings();
+</script>
+
+</body>
+</html>

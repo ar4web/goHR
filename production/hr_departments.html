@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="nav.hr-departments">Departments | Dash</title>
+<link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
+<script type="module" src="/src/main-v4.js"></script>
+</head>
+<body data-shell="admin" data-page="hr-departments" data-breadcrumb="Home > Departments">
+
+<main class="main">
+<div class="page-wrapper" data-hr-departments>
+
+  <div class="page-header">
+    <div class="page-header-row">
+      <div>
+        <div class="page-pretitle" data-i18n="hr.ui.pretitle">HR &amp; Operations</div>
+        <h1 class="page-title" data-i18n="nav.hr-departments">Departments</h1>
+      </div>
+      <div class="page-actions">
+        <button class="btn btn-outline" id="dp-export-xlsx">Excel</button>
+        <button class="btn btn-outline" id="dp-export-csv">CSV</button>
+        <button class="btn btn-primary" id="dp-new" data-i18n="hr.p6.newDept">New department</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="hr-stat-cards">
+    <div class="hr-stat"><div class="k" data-i18n="hr.p6.department">Department</div><div class="v" id="dp-stat-total">0</div></div>
+    <div class="hr-stat"><div class="k" data-i18n="hr.p6.head">Head</div><div class="v" id="dp-stat-heads">0</div></div>
+    <div class="hr-stat"><div class="k" data-i18n="hr.p6.headcount">Headcount</div><div class="v" id="dp-stat-staff">0</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table hr-table">
+          <thead><tr>
+            <th data-i18n="hr.p6.code">Code</th>
+            <th data-i18n="hr.p6.department">Department</th>
+            <th data-i18n="hr.p6.head">Head</th>
+            <th data-i18n="hr.p6.headcount">Headcount</th>
+            <th data-i18n="hr.p6.costCenter">Cost center</th>
+            <th data-i18n="common.actions">Actions</th>
+          </tr></thead>
+          <tbody id="dp-rows"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+</main>
+
+<script type="module">
+import { initDepartments } from '/src/v4/departments.js';
+initDepartments();
+</script>
+
+</body>
+</html>

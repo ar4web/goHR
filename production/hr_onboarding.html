@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="nav.hr-onboarding">Onboarding | Dash</title>
+<link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
+<script type="module" src="/src/main-v4.js"></script>
+</head>
+<body data-shell="admin" data-page="hr-onboarding" data-breadcrumb="Home > Onboarding">
+
+<main class="main">
+<div class="page-wrapper" data-hr-onboarding>
+
+  <div class="page-header">
+    <div class="page-header-row">
+      <div>
+        <div class="page-pretitle" data-i18n="hr.ui.pretitle">HR &amp; Operations</div>
+        <h1 class="page-title" data-i18n="hr.nav.onboarding">Onboarding</h1>
+      </div>
+      <div class="page-actions">
+        <button class="btn btn-outline" id="ob-import" data-i18n="common.import">Import</button>
+        <button class="btn btn-outline" id="ob-export" data-i18n="common.export">Export</button>
+        <button class="btn btn-primary" id="ob-new" data-i18n="hr.onboarding.newCase">New case</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row col-2" style="margin-bottom:16px">
+    <div class="card"><div class="stat"><div class="stat-content"><div class="stat-label" data-i18n="hr.onboarding.active">Active cases</div><div class="stat-value-row"><span class="stat-value" id="ob-stat-active">0</span></div></div></div></div>
+    <div class="card"><div class="stat"><div class="stat-content"><div class="stat-label" data-i18n="hr.onboarding.transfers">Transfer-ins</div><div class="stat-value-row"><span class="stat-value" id="ob-stat-transfer">0</span></div></div></div></div>
+    <div class="card"><div class="stat"><div class="stat-content"><div class="stat-label" data-i18n="status.deployed">Deployed</div><div class="stat-value-row"><span class="stat-value" id="ob-stat-deployed">0</span></div></div></div></div>
+    <div class="card"><div class="stat"><div class="stat-content"><div class="stat-label" data-i18n="hr.onboarding.spend">Onboarding spend</div><div class="stat-value-row"><span class="stat-value" id="ob-stat-spend">0</span></div></div></div></div>
+  </div>
+
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-header"><div class="card-title" data-i18n="hr.onboarding.pipeline">Pipeline</div></div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th data-i18n="hr.onboarding.candidate">Candidate</th>
+              <th data-i18n="hr.onboarding.stage">Stage</th>
+              <th data-i18n="hr.onboarding.progress">Progress</th>
+              <th><span class="sr-only" data-i18n="common.actions">Actions</span></th>
+            </tr>
+          </thead>
+          <tbody id="ob-rows"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-title" data-i18n="hr.onboarding.wizard">Case wizard</div></div>
+    <div class="card-body" id="ob-detail"></div>
+  </div>
+
+</div>
+</main>
+
+<script type="module">
+import { initOnboarding } from '/src/v4/onboarding.js';
+initOnboarding();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,92 @@
+{
+  "name": "dash",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Dash — bilingual (EN/AR) HR command center for KSA workforce-supply operations: employees, contracts, payroll, compliance, visas, Ajeer. 108 pages, vanilla JS + SCSS + Vite 8, no Bootstrap, no jQuery.",
+  "scripts": {
+    "dev": "vite --clearScreen false",
+    "build": "NODE_ENV=production vite build",
+    "build:dev": "NODE_ENV=development vite build",
+    "preview": "vite preview",
+    "test:runtime": "vitest run",
+    "test": "node tests/hr-audit-p1.mjs && node tests/hr-logic-p1.mjs && node tests/hr-audit-p2.mjs && node tests/hr-logic-p2.mjs && node tests/hr-import-test.mjs && node tests/hr-audit-p3.mjs && node tests/hr-logic-p3.mjs && node tests/hr-audit-p4.mjs && node tests/hr-logic-p4.mjs && node tests/hr-audit-p5.mjs && node tests/hr-logic-p5.mjs && node tests/hr-audit-p6.mjs && node tests/hr-logic-p6.mjs && node tests/hr-audit-security.mjs && node tests/hr-seed-t2.mjs && node tests/hr-audit-all.mjs",
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix",
+    "format": "prettier --write src/",
+    "format:check": "prettier --check src/",
+    "analyze": "npm run build && open dist/stats.html",
+    "new": "node scripts/new-page.mjs",
+    "screenshots": "node scripts/screenshots.mjs",
+    "smoke": "node scripts/smoke.mjs",
+    "deploy:preview": "bash scripts/deploy-preview.sh",
+    "prepublishOnly": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ar4web/Dash.git"
+  },
+  "keywords": [
+    "admin",
+    "dashboard",
+    "hr",
+    "hris",
+    "payroll",
+    "compliance",
+    "bilingual",
+    "arabic",
+    "rtl",
+    "html",
+    "css",
+    "scss",
+    "vanilla-js",
+    "echarts",
+    "datatables",
+    "vite",
+    "pwa",
+    "dark-mode",
+    "command-palette",
+    "theme-generator"
+  ],
+  "author": "Dash contributors",
+  "license": "MIT",
+  "main": "src/main-v4.js",
+  "types": "types/dash.d.ts",
+  "exports": {
+    ".": "./src/main-v4.js",
+    "./v4/*": "./src/v4/*.js",
+    "./scss/*": "./src/scss/*",
+    "./types": "./types/dash.d.ts",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "src",
+    "production",
+    "types",
+    "vite.config.js"
+  ],
+  "bugs": {
+    "url": "https://github.com/ar4web/Dash/issues"
+  },
+  "homepage": "https://github.com/ar4web/Dash#readme",
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.62.1",
+    "eslint": "^10.8.0",
+    "eslint-config-prettier": "^10.1.8",
+    "jsdom": "^30.0.1",
+    "playwright": "^1.62.1",
+    "prettier": "^3.9.6",
+    "rollup-plugin-visualizer": "^7.0.1",
+    "sass": "^1.102.0",
+    "terser": "^5.49.2",
+    "vite": "^8.2.0",
+    "vitest": "^5.0.0"
+  },
+  "dependencies": {
+    "datatables.net": "^3.0.1",
+    "echarts": "^6.1.0",
+    "leaflet": "^1.9.4",
+    "xlsx": "^0.18.5"
+  }
+}

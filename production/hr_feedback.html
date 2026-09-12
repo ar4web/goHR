@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="nav.hr-feedback">Feedback | Dash</title>
+<link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
+<script type="module" src="/src/main-v4.js"></script>
+</head>
+<body data-shell="admin" data-page="hr-feedback" data-breadcrumb="Home > Feedback">
+
+<main class="main">
+<div class="page-wrapper" data-hr-feedback>
+
+  <div class="page-header">
+    <div class="page-header-row">
+      <div>
+        <div class="page-pretitle" data-i18n="hr.ui.pretitle">HR &amp; Operations</div>
+        <h1 class="page-title" data-i18n="nav.hr-feedback">Feedback</h1>
+      </div>
+      <div class="page-actions">
+        <button class="btn btn-outline" id="fb-export-xlsx">Excel</button>
+        <button class="btn btn-outline" id="fb-export-csv">CSV</button>
+        <button class="btn btn-primary" id="fb-new" data-i18n="hr.p6.newFeedback">Give feedback</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="hr-stat-cards">
+    <div class="hr-stat"><div class="k" data-i18n="hr.p6.entries">Entries</div><div class="v" id="fb-stat-total">0</div></div>
+    <div class="hr-stat"><div class="k">💐 <span data-i18n="hr.p6.praise">Praise</span></div><div class="v" id="fb-stat-praise">0</div></div>
+    <div class="hr-stat"><div class="k">🌱 <span data-i18n="hr.p6.coaching">Coaching</span></div><div class="v" id="fb-stat-coach">0</div></div>
+    <div class="hr-stat"><div class="k">📣 <span data-i18n="hr.p6.shoutout">Shoutout</span></div><div class="v" id="fb-stat-shout">0</div></div>
+  </div>
+
+  <div class="page-actions" style="display:flex;gap:8px;margin-bottom:14px">
+    <button class="btn btn-outline btn-sm btn-primary" data-fb-kind="" data-i18n="common.all">All</button>
+    <button class="btn btn-outline btn-sm" data-fb-kind="praise">💐</button>
+    <button class="btn btn-outline btn-sm" data-fb-kind="coaching">🌱</button>
+    <button class="btn btn-outline btn-sm" data-fb-kind="shoutout">📣</button>
+  </div>
+
+  <div class="hr-wall" id="fb-wall"></div>
+
+</div>
+</main>
+
+<script type="module">
+import { initFeedback } from '/src/v4/feedback.js';
+initFeedback();
+</script>
+
+</body>
+</html>

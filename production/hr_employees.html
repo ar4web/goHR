@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="nav.hr-employees">Employees | Dash</title>
+<link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
+<script type="module" src="/src/main-v4.js"></script>
+</head>
+<body data-shell="admin" data-page="hr-employees" data-breadcrumb="Home > Employees">
+
+<main class="main">
+<div class="page-wrapper" data-hr-employees>
+
+  <div class="page-header">
+    <div class="page-header-row">
+      <div>
+        <div class="page-pretitle" data-i18n="hr.ui.pretitle">HR &amp; Operations</div>
+        <h1 class="page-title" data-i18n="hr.nav.employees">Employees</h1>
+      </div>
+      <div class="page-actions">
+        <button class="btn btn-outline" id="emp-import" data-i18n="common.import">Import</button>
+        <button class="btn btn-primary" id="emp-export" data-i18n="common.export">Export</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row col-3" style="margin-bottom:16px">
+    <div class="card"><div class="stat"><div class="stat-content"><div class="stat-label" data-i18n="hr.employees.total">Total</div><div class="stat-value-row"><span class="stat-value" id="emp-stat-total">0</span></div></div></div></div>
+    <div class="card"><div class="stat"><div class="stat-content"><div class="stat-label" data-i18n="hr.employees.saudi">Saudi</div><div class="stat-value-row"><span class="stat-value" id="emp-stat-saudi">0</span></div></div></div></div>
+    <div class="card"><div class="stat"><div class="stat-content"><div class="stat-label" data-i18n="hr.employees.expat">Expat</div><div class="stat-value-row"><span class="stat-value" id="emp-stat-expat">0</span></div></div></div></div>
+    <div class="card"><div class="stat"><div class="stat-content"><div class="stat-label" data-i18n="status.deployed">Deployed</div><div class="stat-value-row"><span class="stat-value" id="emp-stat-deployed">0</span></div></div></div></div>
+    <div class="card"><div class="stat"><div class="stat-content"><div class="stat-label" data-i18n="status.bench">Bench</div><div class="stat-value-row"><span class="stat-value" id="emp-stat-bench">0</span></div></div></div></div>
+    <div class="card"><div class="stat"><div class="stat-content"><div class="stat-label" data-i18n="hr.employees.saudRate">Saudization (est.)</div><div class="stat-value-row"><span class="stat-value" id="emp-stat-saud">0%</span></div></div></div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header" style="gap:12px;flex-wrap:wrap">
+      <div class="users-filters">
+        <div class="search-box" style="width:240px">
+          <svg class="s-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="5"/><path d="M11 11l3.5 3.5"/></svg>
+          <input type="text" id="emp-search" data-i18n-ph="common.search" placeholder="Search" aria-label="Search employees">
+        </div>
+        <select class="form-control" id="emp-group" style="width:140px" aria-label="Filter by group">
+          <option value="" data-i18n="hr.employees.allGroups">All groups</option>
+          <option value="saudi" data-i18n="hr.employees.saudi">Saudi</option>
+          <option value="expat" data-i18n="hr.employees.expat">Expat</option>
+        </select>
+        <select class="form-control" id="emp-status" style="width:150px" aria-label="Filter by status">
+          <option value="" data-i18n="hr.employees.allStatus">All statuses</option>
+          <option value="active" data-i18n="status.active">Active</option>
+          <option value="probation" data-i18n="status.probation">Probation</option>
+          <option value="on-leave" data-i18n="status.on-leave">On leave</option>
+          <option value="inactive" data-i18n="status.inactive">Inactive</option>
+        </select>
+        <select class="form-control" id="emp-qiwa" style="width:150px" aria-label="Filter by Qiwa">
+          <option value="" data-i18n="hr.employees.qiwaAll">Qiwa: all</option>
+          <option value="authenticated" data-i18n="status.authenticated">Authenticated</option>
+          <option value="sent" data-i18n="status.sent">Sent</option>
+          <option value="draft" data-i18n="status.draft">Draft</option>
+        </select>
+      </div>
+    </div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th class="cb-col"><input type="checkbox" id="emp-select-all" aria-label="Select all"></th>
+              <th data-i18n="hr.employees.worker">Worker</th>
+              <th data-i18n="hr.employees.nationality">Nationality</th>
+              <th data-i18n="hr.employees.profession">Profession</th>
+              <th data-i18n="hr.employees.deployment">Deployment</th>
+              <th data-i18n="hr.employees.iqama">Iqama</th>
+              <th data-i18n="hr.employees.qiwa">Qiwa</th>
+              <th><span class="sr-only" data-i18n="common.actions">Actions</span></th>
+            </tr>
+          </thead>
+          <tbody id="emp-rows"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+</main>
+
+<script type="module">
+import { initEmployees } from '/src/v4/employees.js';
+initEmployees();
+</script>
+
+</body>
+</html>

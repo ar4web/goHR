@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="nav.hr-my-team">My team | Dash</title>
+<link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
+<script type="module" src="/src/main-v4.js"></script>
+</head>
+<body data-shell="admin" data-page="hr-my-team" data-breadcrumb="Home > My team">
+
+<main class="main">
+<div class="page-wrapper" data-hr-myteam>
+
+  <div class="page-header">
+    <div class="page-header-row">
+      <div>
+        <div class="page-pretitle" data-i18n="hr.ui.pretitle">HR &amp; Operations</div>
+        <h1 class="page-title" data-i18n="nav.hr-my-team">My team</h1>
+      </div>
+    </div>
+  </div>
+
+  <div class="hr-controls">
+    <select class="form-control" id="tm-mgr" aria-label="Manager"></select>
+  </div>
+
+  <div class="hr-stat-cards">
+    <div class="hr-stat"><div class="k" data-i18n="hr.p2.headcount">Headcount</div><div class="v" id="tm-stat-head">0</div></div>
+    <div class="hr-stat"><div class="k" data-i18n="hr.p2.present">Present</div><div class="v" id="tm-stat-present">0</div></div>
+    <div class="hr-stat"><div class="k" data-i18n="hr.p2.onLeave">On leave</div><div class="v" id="tm-stat-leave">0</div></div>
+    <div class="hr-stat"><div class="k" data-i18n="hr.p2.pending">Pending</div><div class="v" id="tm-stat-pend">0</div></div>
+  </div>
+
+  <div id="tm-grid" style="margin-bottom:16px"></div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-title" data-i18n="hr.p2.pendingReqs">Pending requests</div></div>
+    <div class="card-body" id="tm-pend"></div>
+  </div>
+
+</div>
+</main>
+
+<script type="module">
+import { initMyTeam } from '/src/v4/my-team.js';
+initMyTeam();
+</script>
+
+</body>
+</html>

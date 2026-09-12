@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Locked | Dash</title>
+<link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
+<script type="module" src="/src/main-v4.js"></script>
+<meta http-equiv="refresh" content="0;url=landing.html">
+</head>
+<body>
+
+<div class="auth-page">
+  <p style="text-align:center;font-size:13px;color:var(--text-muted);max-width:420px;margin:24px auto">Sign-in moves to the role gateway. <a href="landing.html">Continue</a> · انتقل إلى بوابة الدخول. <a href="landing.html">متابعة</a></p>
+  <div class="auth-card lock-screen">
+    <div class="lock-avatar" aria-hidden="true">
+      <div class="lock-avatar-circle" style="background:linear-gradient(135deg,var(--primary),var(--primary-dk))">A</div>
+      <div class="lock-icon">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="7" width="10" height="7" rx="1.5"/><path d="M5 7V5a3 3 0 016 0v2"/></svg>
+      </div>
+    </div>
+
+    <div class="auth-title" style="text-align:center;margin-top:14px">Welcome back, Adam</div>
+    <div class="auth-subtitle" style="text-align:center">Your session was locked for security. Enter your password to continue.</div>
+
+    <form onsubmit="event.preventDefault(); window.location.href='index.html';">
+      <div class="form-group">
+        <label class="form-label" for="password">Password</label>
+        <div class="input-group">
+          <svg class="input-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="7" width="10" height="7" rx="1.5"/><path d="M5 7V5a3 3 0 016 0v2"/></svg>
+          <input type="password" id="password" class="form-control" placeholder="••••••••" required autofocus>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;height:38px">
+        Unlock
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      Not Adam? <a href="login.html">Sign in as someone else</a>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

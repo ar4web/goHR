@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="nav.hr-documents">Vault | Dash</title>
+<link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
+<script type="module" src="/src/main-v4.js"></script>
+</head>
+<body data-shell="admin" data-page="hr-documents" data-breadcrumb="Home > Vault">
+
+<main class="main">
+<div class="page-wrapper" data-hr-documents>
+
+  <div class="page-header">
+    <div class="page-header-row">
+      <div>
+        <div class="page-pretitle" data-i18n="hr.ui.pretitle">HR &amp; Operations</div>
+        <h1 class="page-title" data-i18n="hr.nav.documents">Vault</h1>
+      </div>
+      <div class="page-actions">
+        <button class="btn btn-outline" id="doc-import" data-i18n="common.import">Import</button>
+        <button class="btn btn-outline" id="doc-export" data-i18n="common.export">Export</button>
+        <button class="btn btn-primary" id="doc-upload" data-i18n="common.upload">Upload</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row col-2" style="margin-bottom:16px">
+    <div class="card"><div class="stat"><div class="stat-content"><div class="stat-label" data-i18n="hr.documents.total">Documents</div><div class="stat-value-row"><span class="stat-value" id="doc-stat-total">0</span></div></div></div></div>
+    <div class="card"><div class="stat"><div class="stat-content"><div class="stat-label" data-i18n="hr.documents.expiring">Expiring ≤ 90d</div><div class="stat-value-row"><span class="stat-value" id="doc-stat-exp">0</span></div></div></div></div>
+    <div class="card"><div class="stat"><div class="stat-content"><div class="stat-label" data-i18n="status.expired">Expired</div><div class="stat-value-row"><span class="stat-value" id="doc-stat-dead">0</span></div></div></div></div>
+    <div class="card"><div class="stat"><div class="stat-content"><div class="stat-label" data-i18n="hr.documents.coverage">Full coverage</div><div class="stat-value-row"><span class="stat-value" id="doc-stat-cover">0</span></div></div></div></div>
+  </div>
+
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-header" style="gap:12px;flex-wrap:wrap">
+      <div class="card-title" data-i18n="hr.documents.vault">Vault</div>
+      <div class="card-options users-filters" style="display:flex;gap:8px;flex-wrap:wrap">
+        <div class="search-box" style="width:200px">
+          <svg class="s-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="5"/><path d="M11 11l3.5 3.5"/></svg>
+          <input type="text" id="doc-search" data-i18n-ph="common.search" placeholder="Search" aria-label="Search vault">
+        </div>
+        <select class="form-control" id="doc-type" style="width:170px" aria-label="Filter by type"></select>
+        <label style="display:flex;gap:6px;align-items:center;font-size:12.5px;white-space:nowrap">
+          <input type="checkbox" id="doc-expiring"> <span data-i18n="hr.documents.expiring">Expiring ≤ 90d</span>
+        </label>
+      </div>
+    </div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th data-i18n="hr.documents.doc">Document</th>
+              <th data-i18n="hr.documents.type">Type</th>
+              <th data-i18n="hr.documents.linked">Linked to</th>
+              <th data-i18n="hr.documents.uploaded">Uploaded</th>
+              <th data-i18n="hr.documents.expires">Expires</th>
+              <th><span class="sr-only" data-i18n="common.actions">Actions</span></th>
+            </tr>
+          </thead>
+          <tbody id="doc-rows"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-title" data-i18n="hr.documents.gaps">Coverage gaps</div></div>
+    <div class="card-body" id="doc-gaps"></div>
+  </div>
+
+</div>
+</main>
+
+<script type="module">
+import { initDocuments } from '/src/v4/documents.js';
+initDocuments();
+</script>
+
+</body>
+</html>

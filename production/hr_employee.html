@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="nav.hr-employees">Employee file | Dash</title>
+<link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
+<script type="module" src="/src/main-v4.js"></script>
+</head>
+<body data-shell="admin" data-page="hr-employees" data-breadcrumb="Home > Employees > File">
+
+<main class="main">
+<div class="page-wrapper" data-hr-employee>
+
+  <div class="page-header">
+    <div class="page-header-row">
+      <div>
+        <div class="page-pretitle"><a href="hr_employees.html" data-i18n="hr.nav.employees">Employees</a></div>
+        <h1 class="page-title" data-i18n="hr.employee.file">Employee file</h1>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body" id="emp360-head"></div>
+  </div>
+
+  <div class="card" style="margin-top:12px">
+    <div class="card-body" id="emp360-body"></div>
+  </div>
+
+</div>
+</main>
+
+<script type="module">
+import { initEmployeeDetail } from '/src/v4/employee-detail.js';
+initEmployeeDetail();
+</script>
+
+</body>
+</html>

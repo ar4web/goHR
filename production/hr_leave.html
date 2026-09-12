@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="nav.hr-leave">Leave | Dash</title>
+<link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
+<script type="module" src="/src/main-v4.js"></script>
+</head>
+<body data-shell="admin" data-page="hr-leave" data-breadcrumb="Home > Leave">
+
+<main class="main">
+<div class="page-wrapper" data-hr-leave>
+
+  <div class="page-header">
+    <div class="page-header-row">
+      <div>
+        <div class="page-pretitle" data-i18n="hr.ui.pretitle">HR &amp; Operations</div>
+        <h1 class="page-title" data-i18n="nav.hr-leave">Leave</h1>
+      </div>
+      <div class="page-actions">
+        <button class="btn btn-outline" id="lv-import" data-i18n="common.import">Import</button>
+        <button class="btn btn-outline" id="lv-export" data-i18n="common.export">Export</button>
+        <button class="btn btn-primary" id="lv-new" data-i18n="hr.p2.newRequest">New request</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="hr-controls">
+    <select class="form-control" id="lv-who" aria-label="Employee"></select>
+  </div>
+
+  <div class="row">
+    <div class="card" style="flex:1;min-width:280px">
+      <div class="card-header"><div class="card-title" data-i18n="hr.p2.balances">Balances</div></div>
+      <div class="card-body" id="lv-balances" style="text-align:center"></div>
+    </div>
+    <div class="card" style="flex:1;min-width:280px">
+      <div class="card-header"><div class="card-title" data-i18n="hr.p2.types">Leave types</div></div>
+      <div class="card-body" id="lv-types"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-title" data-i18n="hr.p2.myReqs">My requests</div></div>
+    <div class="card-body" id="lv-mine"></div>
+  </div>
+
+</div>
+</main>
+
+<script type="module">
+import { initLeave } from '/src/v4/leave.js';
+initLeave();
+</script>
+
+</body>
+</html>
