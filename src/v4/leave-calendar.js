@@ -2,17 +2,13 @@
 // Month grid: weekends + Hijri days + holidays + leave overlays. Idempotent.
 
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
-import { fmtDate } from './hr-locale.js';
+import { fmtDate, L} from './hr-locale.js';
 import { getSeed } from './hr-api.js';
 import { LEAVE_TYPES } from './hr-seed.js';
 
 let booted = false;
 let cursor = '';
 let picked = '';
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 function pad(n) {
   return String(n).padStart(2, '0');

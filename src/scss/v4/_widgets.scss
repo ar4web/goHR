@@ -7,7 +7,7 @@
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 16px;
+  padding: var(--space-3) var(--space-4);
 }
 .stat-icon {
   width: 40px; height: 40px;
@@ -39,7 +39,7 @@
 }
 .stat-value {
   font-size: 22px;
-  font-weight: 600;
+  font-weight: var(--font-weight-bold);
   letter-spacing: -0.5px;
   line-height: 1.2;
 }
@@ -290,6 +290,24 @@
 }
 .donut-legend-item .dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
 .donut-legend-item .pct { margin-inline-start: auto; font-weight: var(--font-weight-bold); color: var(--text); font-size: 11.5px; }
+// Chart footer legend row + swatch item (shared with stat cards).
+.chart-legend {
+  display: flex;
+  gap: 20px;
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+.legend-inline {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.legend-inline .swatch {
+  width: 10px;
+  height: 3px;
+  border-radius: 2px;
+  display: inline-block;
+}
 
 // ────────────────────────
 //  APP VERSIONS (progress)

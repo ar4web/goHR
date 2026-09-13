@@ -3,6 +3,7 @@
 // model and re-render. Uploads are simulated.
 
 import { showToast } from './toast.js';
+import { escapeHtml } from './markup.js';
 import { showModal } from './modal.js';
 import { openMenu } from './menus.js';
 
@@ -69,8 +70,6 @@ const FILES = [
 
 let currentId = 'root';
 let viewMode = 'grid'; // or 'list'
-
-function escapeHtml(s) { return String(s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
 function getNode(id) { return TREE.find((n) => n.id === id); }
 

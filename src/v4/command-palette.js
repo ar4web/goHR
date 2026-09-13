@@ -6,6 +6,7 @@
 
 import { NAV, SETTINGS_NAV } from './shell-render.js';
 import { showToast } from './toast.js';
+import { escapeHtml } from './markup.js';
 import { showModal } from './modal.js';
 
 let host = null;
@@ -55,8 +56,6 @@ function buildItems() {
     { label: 'Toggle theme', keywords: 'theme dark light mode toggle', action: toggleTheme },
     { label: 'Open profile', keywords: 'profile account user me', action: () => { window.location.href = 'profile.html'; } },
     { label: 'Open settings', keywords: 'settings preferences config', action: () => { window.location.href = 'settings.html'; } },
-    { label: 'Theme generator', keywords: 'theme color customize brand', action: () => { window.location.href = 'theme.html'; } },
-    { label: 'Help & support', keywords: 'help faq support docs', action: () => { window.location.href = 'faq.html'; } },
     {
       label: 'Sign out',
       keywords: 'sign out logout exit',
@@ -158,10 +157,6 @@ function renderList() {
   // Scroll active into view if present
   const active = listEl.querySelector('.cmdk-item.active');
   if (active) {active.scrollIntoView({ block: 'nearest' });}
-}
-
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
 
 function move(delta) {

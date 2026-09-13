@@ -3,6 +3,7 @@
 // mandatory training (safety, onboarding) actually happened.
 
 import { showToast } from './toast.js';
+import { L, setText } from './hr-locale.js';
 import { showModal } from './modal.js';
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
 import { getSeed, patchSeedRow, saveImportedRows } from './hr-api.js';
@@ -12,10 +13,6 @@ import { logAudit } from './hr-audit.js';
 let booted = false;
 
 const ST_CLS = { planned: 'blue', done: 'green', cancelled: 'yellow' };
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 function empName(code) {
   const e = getSeed('employees').find(x => x.code === code);
@@ -61,21 +58,16 @@ function nextId() {
 }
 
 function renderAll() {
-  const set = (id, v) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.textContent = v;
-    }
-  };
+
   const list = getSeed('trainings');
   const done = list.filter(tr => tr.status === 'done');
-  set('tr-stat-planned', String(list.filter(tr => tr.status === 'planned').length));
-  set('tr-stat-done', String(done.length));
-  set(
+  setText('tr-stat-planned', String(list.filter(tr => tr.status === 'planned').length));
+  setText('tr-stat-done', String(done.length));
+  setText(
     'tr-stat-hours',
     String(done.reduce((s, tr) => s + (Number(tr.hours) || 0) * (tr.attendees?.length || 0), 0))
   );
-  set(
+  setText(
     'tr-stat-spend',
     done
       .reduce((s, tr) => s + (Number(tr.cost) || 0), 0)

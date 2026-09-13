@@ -4,6 +4,7 @@
 // the registers. Probation >180 days is blocked at issue (§0.4).
 
 import { showToast } from './toast.js';
+import { L, setText } from './hr-locale.js';
 import { showModal } from './modal.js';
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
 import { renderTemplate, probationOk, contractEnd, daysUntil, expiryBand } from './hr-statutory.js';
@@ -33,10 +34,6 @@ const BAND_CLS = {
   ok: 'green',
   missing: 'blue'
 };
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 function tpl(code) {
   return getSeed('templates').find(x => x.code === code);
@@ -100,12 +97,7 @@ function nextId() {
 }
 
 function renderStats() {
-  const set = (id, v) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.textContent = v;
-    }
-  };
+
   const list = getSeed('contracts');
   const today = new Date().toISOString().slice(0, 10);
   const exp = list.filter(c => {
@@ -114,10 +106,10 @@ function renderStats() {
     }
     return daysUntil(c.end, today) <= 90;
   }).length;
-  set('ct-stat-active', String(list.filter(c => c.status === 'active').length));
-  set('ct-stat-exp', String(exp));
-  set('ct-stat-sign', String(list.filter(c => c.sign !== 'signed').length));
-  set('ct-stat-draft', String(list.filter(c => c.status === 'draft').length));
+  setText('ct-stat-active', String(list.filter(c => c.status === 'active').length));
+  setText('ct-stat-exp', String(exp));
+  setText('ct-stat-sign', String(list.filter(c => c.sign !== 'signed').length));
+  setText('ct-stat-draft', String(list.filter(c => c.status === 'draft').length));
 }
 
 function renderRows() {

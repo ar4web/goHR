@@ -1,190 +1,112 @@
 # AGENTS.md
 
-Cross-tool agent instructions for Dash. Read by Aider, Cline, Codex, Continue, and any tool following the [agents.md](https://agents.md) convention. Claude Code reads `CLAUDE.md`; Cursor reads `.cursor/rules/`; GitHub Copilot reads `.github/copilot-instructions.md`. Content is intentionally overlapping — each tool only sees its own file.
+Dash (`1.0.0`) — internal bilingual (EN/AR) HR command center for KSA. 108 HTML
+pages in `production/`, Vite 8 (Rolldown), vanilla ES2022, SCSS only. No
+Bootstrap, no jQuery, no SPA framework. Heavy deps (ECharts 6, DataTables.net 3,
+Leaflet 1.9, `xlsx`) are lazy-imported per page. Counterparts: `CLAUDE.md`,
+`.cursor/rules/`, `.github/copilot-instructions.md` — content overlaps on purpose.
 
-## What this is
+## Setup & commands
 
-Dash (`1.0.0`) — internal HR command center. 108 server-rendered HTML pages in [production/](production/), built with **Vite 8** (Rolldown). **Vanilla ES2022**, no Bootstrap, no jQuery, no SPA framework. SCSS only. Heavyweight runtime deps are limited to **ECharts 6**, **DataTables.net 3**, **Leaflet 1.9**, and **xlsx** — all lazy-imported per page.
+Requires Node 20 (`.nvmrc`) + npm. No DB, no env vars; seed data works offline.
 
-Live preview: `npm run dev` (Vite on :9173).
+```bash
+nvm use && npm install
+npm run dev                # :9173 (PORT=… to override), opens /production/index.html
+npm run preview            # serve dist/ on :9174
+npm run build              # → dist/ ; subpath: BASE_PATH=/Dash/ npm run build
+
+npm test                   # 16× node suites: hr-audit-*, hr-logic-*, import, seed, security
+node tests/hr-logic-p1.mjs # single static/logic suite (any file in tests/*.mjs)
+npm run test:runtime        # vitest + jsdom (tests/runtime-smoke.test.js only)
+npx vitest run tests/runtime-smoke.test.js -t "<name>"  # single runtime test
+
+npm run lint               # ESLint over src/ only — 0 errors required
+npm run lint:fix
+npx prettier --check <touched files>  # format gate is touched-lines only
+npm run new -- <slug>      # scaffold production/<slug>.html
+npm run smoke              # boot dev server, assert 200 on every page
+```
 
 ## Workflow
 
-Work ships chunk by chunk: code one concern → run every gate → commit + push
-immediately (see [docs/workflow.md](docs/workflow.md)). Gates: `npm test`
-(static + HR logic, all green), `npm run test:runtime` (vitest + jsdom, all
-green), `npm run lint` (0 errors), Prettier-clean touched lines, dev-server
-smoke of touched pages (EN + AR, desktop + mobile widths).
+Chunk loop: code one concern → run all gates → commit + push immediately
+(see `docs/workflow.md`). Gates: `npm test` + `npm run test:runtime` (all green),
+`npm run lint` (0 errors), Prettier-clean touched lines, dev smoke of touched
+pages in EN + AR at desktop + mobile widths.
 
 Standing rules: bilingual UI (EN/AR) on everything new; KSA-first HR logic
 (labor law, GOSI, ZATCA, Nitaqat, Ajeer); no page deletions; settings-driven
-behavior; Excel import + export on data grids.
-
-## Setup
-
-```bash
-npm install
-npm run dev               # Vite dev server on :9173 → opens /production/index.html
-```
-
-Build / preview / deploy:
-
-```bash
-npm run build             # → dist/
-npm run preview           # serve built dist/ on :9174
-npm run deploy:preview    # build + sync to R2 with cache headers
-```
+behavior (never hardcode owner values); Excel import + export on data grids.
 
 ## Architecture
 
-- **Single entry** [src/main-v4.js](src/main-v4.js). Imports `scss/v4/main.scss`, mounts the shell, runs `initCharts/initTables/initCommandPalette/initPageActions`, then lazy-imports page-specific modules guarded by DOM presence (`if (document.getElementById('inbox-root')) import(...)`).
-- **Shell injection at build time.** [vite.config.js](vite.config.js)'s `shellInjectionPlugin` inlines sidebar/topbar/footer into every page whose body has `data-shell="admin"`. No FOUC. Runtime [src/v4/shell.js](src/v4/shell.js) `mountShell()` is a fallback for opening raw HTML.
-- **Auto-discovered entries.** `discoverEntries()` in [vite.config.js](vite.config.js) walks `production/*.html` and registers each as a Rollup input. No hand-maintained input list.
-- **Three lazy vendor chunks**: `vendor-echarts` (chart pages), `vendor-tables` (table pages), `vendor-maps` (map page). `xlsx` lazy-imports without a split chunk. Everything else ships in the main chunk.
-- **NAV is one constant.** `NAV` in [src/v4/shell-render.js](src/v4/shell-render.js), 1 group. Pages match into NAV by `data-page` ↔ leaf `key`.
-- **Theming via CSS custom properties.** Tokens in [src/scss/v4/_tokens.scss](src/scss/v4/_tokens.scss) under `:root` and `[data-theme="dark"]`. The shell applies `data-theme` on `<html>` from `localStorage` at startup (defaulting to `prefers-color-scheme`).
-- **PWA.** Service worker registered only in `import.meta.env.PROD`. `site.webmanifest` + meta tags injected into every page by the Vite plugin. Subpath-safe: paths use `import.meta.env.BASE_URL`.
-
-## Directory layout
-
-```text
-src/
-  main-v4.js               # Entry — mounts shell, lazy-loads modules
-  scss/v4/                 # 12 partials, main.scss is the @use'd entry
-  v4/
-    shell.js               # mountShell — runtime shell behavior
-    shell-render.js        # Pure renderers + NAV + ICONS
-    menus.js               # openMenu / openPanel
-    modal.js               # showModal
-    toast.js               # showToast
-    charts.js              # ECharts wrapper + factories
-    tables.js              # DataTables wrapper
-    command-palette.js     # ⌘K
-    page-actions.js
-    inbox.js kanban.js calendar.js settings.js file-manager.js
-    form-controls.js       # Date range, multi-select, rich text
-    details.js markup.js data-adapter.js
-    product-images.js product-mockups.js
-    hr-*.js payroll.js eosb.js gosi.js wps.js visas.js …  # HR modules
-    i18n.js                # EN/AR dictionaries + branding
-production/                # 108 HTML entry pages (auto-discovered)
-public/                    # Copied verbatim to dist/
-tests/                     # hr-audit-*, hr-logic-*, runtime-smoke.test.js
-types/dash.d.ts            # Type declarations for the public JS surface
-scripts/
-  new-page.mjs             # npm run new -- <slug>
-  screenshots.mjs          # npm run screenshots
-  smoke.mjs                # npm run smoke
-  deploy-preview.sh        # npm run deploy:preview
-examples/                  # Standalone integrations (Express/SQLite, etc.)
-```
+- Single entry `src/main-v4.js`: imports `scss/v4/main.scss`, calls
+  `mountShell()/initI18n()/initCharts()/initTables()/initCommandPalette()/initPageActions()`,
+  then lazy-imports page modules behind DOM-presence guards
+  (`if (document.getElementById('inbox-root')) import(...)`). Never add per-page `<script>` entries.
+- Shell injection at build/dev time: `shellInjectionPlugin` in `vite.config.js`
+  inlines sidebar/topbar/footer into bodies with `data-shell="admin"`. Runtime
+  `mountShell()` in `src/v4/shell.js` only wires handlers + fallback. Pages
+  without `data-shell="admin"` (login, errors) get no shell.
+- Entries auto-discovered: `discoverEntries()` walks `production/*.html` — drop
+  a file in, it's live. Never edit `rollupOptions.input`.
+- `NAV` in `src/v4/shell-render.js` is the single sidebar source; leaf `key`
+  must match body's `data-page`. New icons go in `ICONS` in the same file.
+- Breadcrumb: `data-breadcrumb="Home > …"`. Segments matching a NAV label
+  auto-link (parent → first child); override with pipe
+  (`Projects|projects.html`); last segment never links; unmatched segments render
+  as plain text — drop grouping-only levels instead of shipping dead crumbs.
+- Theming: tokens in `src/scss/v4/_tokens.scss` (`:root` + `[data-theme="dark"]`).
+  Pre-paint script sets `data-theme` from `localStorage`, dark when unset. Service
+  worker registers only under `import.meta.env.PROD`.
+- Subpath-safe: relative paths in `production/*.html`, `import.meta.env.BASE_URL`
+  in JS, `${base}` in the Vite plugin. Never hard-code leading `/`.
+- Only three lazy vendor chunks (`vendor-echarts/-tables/-maps` matched by
+  `node_modules` path); `xlsx` lazy-imports without a chunk. Everything else is main chunk.
 
 ## Conventions
 
-1. **Vanilla DOM only.** `querySelector`, `classList`, `addEventListener`. No jQuery, no SPA framework.
-2. **Lazy import per-page modules** with a DOM-presence guard so the main bundle never ships unused code.
-3. **Idempotent `init<Name>()` exports.** Safe to call when the root element is absent; safe to call twice.
-4. **Event delegation on `document`** for common interactions (toggles, todo checkboxes, chart tabs) — see the bottom of [src/main-v4.js](src/main-v4.js). Components that own their state (inbox, kanban, command palette) register on their own root.
-5. **`showModal()` / `showToast()`** ([v4/modal.js](src/v4/modal.js), [v4/toast.js](src/v4/toast.js)) for overlays; **`openMenu()` / `openPanel()`** ([v4/menus.js](src/v4/menus.js)) for dropdowns and slide-outs. Both handle outside-click / escape / focus return.
-6. **CSS custom properties for colors.** Never hex literals in components. Charts read them via `getComputedStyle(document.documentElement).getPropertyValue('--…')` so dark-mode redraw is automatic.
-7. **Subpath-safe URLs.** Use `import.meta.env.BASE_URL` in JS and `${base}` in the Vite plugin. Inside `production/*.html`, use relative paths.
-8. **No `console.*` in shipped code.** Terser drops them in production builds; lint flags them so you catch them earlier.
-9. **ESLint + Prettier** (single quotes, semicolons, 2-space indent). Run before committing; CI doesn't gate.
-10. **Shell opt-in.** Pages without `data-shell="admin"` don't get a sidebar/topbar (login, marketing, error pages).
+- Vanilla DOM only (`querySelector`/`classList`/`addEventListener`).
+- Page modules export one idempotent `init<Name>()`: safe with root absent, safe twice.
+- Shared interactions delegate on `document` (bottom of `src/main-v4.js`);
+  stateful components (inbox, kanban, palette) bind on their own root.
+- Overlays only via `showModal()`/`showToast()` (`src/v4/modal.js`, `toast.js`)
+  and `openMenu()`/`openPanel()` (`src/v4/menus.js`) — they own backdrop/escape/focus.
+- Colors via `var(--…)` tokens only, never hex in components. Charts read tokens
+  with `getComputedStyle(document.documentElement).getPropertyValue('--…')`.
+- RTL: logical properties (`margin-inline-start`), never physical (`margin-left`) —
+  the static audit enforces this. Spacing scale: `var(--space-1…6)` (4/8/12/16/24/32px).
+- No `console.*` in shipped code (Terser drops it; lint warns). SCSS in partials
+  by surface (`_components` shared, `_widgets` dashboard, `_pages` single-page,
+  `_apps` chat/kanban/files, `_hr.scss`/`_ksa.scss` HR/Saudi); no inline `<style>`.
+- New strings ship EN + AR (`data-i18n` or `hr.*` dicts in `src/v4/i18n.js`).
 
-## Anti-patterns
-
-- Don't add jQuery, Bootstrap, or any SPA framework. The whole pitch of v4 is "vanilla and small."
-- Don't write Vite entry input lists by hand — drop the file in `production/`.
-- Don't hand-roll your own modal/toast/dropdown — use [v4/modal.js](src/v4/modal.js), [v4/toast.js](src/v4/toast.js), [v4/menus.js](src/v4/menus.js).
-- Don't hard-code `/` in asset paths. Use `import.meta.env.BASE_URL`.
-- Don't bypass `mountShell()` to wire up sidebar/topbar yourself — set `data-shell="admin"` and let the Vite plugin inject.
-- Don't import all of ECharts. Use modular imports — match the pattern in [src/v4/charts.js](src/v4/charts.js).
-- Don't edit files in `dist/`, `node_modules/`, or `docs/screenshots/` — generated.
-- Don't introduce a build step besides Vite. No PostCSS pipeline, no Webpack alongside, no Tailwind.
-- Don't use `new bootstrap.Modal(...)` — there is no Bootstrap.
-
-## Recipes
-
-### Add a new page
-
-Preferred — scaffolder writes the HTML, body attributes, and (optionally) the NAV entry:
+## New page / chart / table
 
 ```bash
-npm run new -- reports --title "Reports" --nav-group "Admin"
-npm run new -- user-roles --title "User roles" \
-  --breadcrumb "Home > User management|user_management.html > Roles" \
-  --nav-group "Admin" --icon profile
+npm run new -- <slug> --title "Name" --nav-group "Admin" \
+  --breadcrumb "Home > Group|page.html > Name" --icon profile
 ```
 
-By hand:
+By hand: `production/<slug>.html` with
+`<body data-shell="admin" data-page="<slug>" data-breadcrumb="Home > …">` +
+`<script type="module" src="/src/main-v4.js">`, then add `{ key, href, text, icon }`
+to `NAV` (`key` = `data-page`). Chart: `<div class="chart" data-chart="<id>">` +
+`case '<id>':` in `initCharts()` (`src/v4/charts.js`, modular ECharts imports).
+Table: `<table class="table" data-datatable>` (`data-orderable="false"`,
+`data-page-length="25"`).
 
-1. `production/<slug>.html` with `<body data-shell="admin" data-page="<slug>" data-breadcrumb="Home > …">` and a `<script type="module" src="/src/main-v4.js"></script>` in `<head>`.
-2. Append to the right group in `NAV` in [src/v4/shell-render.js](src/v4/shell-render.js). `key` matches `data-page`.
-3. New icon? Add to `ICONS` in the same file (inline SVG, `currentColor` stroke).
+## Don't
 
-Breadcrumb segments link automatically when their text matches a NAV item (`Forms` → `form.html`; a parent group resolves to its first child). Point anywhere else with a pipe — `data-breadcrumb="Home > Projects|projects.html > Acme Redesign"`. The last segment is the current page and is never a link. A segment with no match and no explicit target renders as plain text, so drop grouping-only levels (`Apps`, `Layouts`) rather than shipping a dead crumb.
+- Add jQuery/Bootstrap/SPA framework/Tailwind/extra build steps; edit
+  `dist/`, `node_modules/`, `docs/screenshots/` (generated); delete pages.
+- `import * as echarts`; `new bootstrap.Modal()`; hand-rolled modal/toast/dropdown;
+  hardcoded `/` asset paths; physical-direction CSS; hardcoded colors.
+- Bump CDN scripts with pinned `integrity=` without updating hashes.
 
-### Add a chart
+## Pointers
 
-1. `<div class="card chart-card"><div class="chart" data-chart="<id>"></div></div>` in the page.
-2. Add a `case '<id>':` in `initCharts()` in [src/v4/charts.js](src/v4/charts.js) that builds and returns the ECharts `option`.
-3. Read colors via `getComputedStyle(document.documentElement).getPropertyValue('--token-name')` — dark mode redraw is automatic.
-
-### Add a modal or toast
-
-```js
-import { showModal } from './v4/modal.js';
-showModal({
-  title: 'Delete project?',
-  body: 'This cannot be undone.',
-  actions: [
-    { label: 'Cancel', variant: 'ghost' },
-    { label: 'Delete', variant: 'danger', action: () => { /* … */ } }
-  ]
-});
-
-import { showToast } from './v4/toast.js';
-showToast('Saved', { variant: 'success' });
-```
-
-### Add a page-local module
-
-```js
-// At the bottom of src/main-v4.js:
-if (document.querySelector('.reports-root')) {
-  import('./v4/reports.js').then((m) => m.initReports());
-}
-```
-
-Export a single `initReports()` from `src/v4/reports.js`. Guard re-entry; idempotent.
-
-## Subpath / deploy
-
-```bash
-BASE_PATH=/Dash/ npm run build                # build under a subpath
-PREVIEW_BUCKET=myremote:previews/dash npm run deploy:preview  # build + rclone sync
-```
-
-[scripts/deploy-preview.sh](scripts/deploy-preview.sh) does three passes: long-cache for hashed assets, short-cache for HTML, no-cache for `sw.js` and `site.webmanifest`. This works around Cloudflare APO pinning stale HTML at deleted hashed asset URLs.
-
-## TypeScript
-
-No `.ts` files, but [types/dash.d.ts](types/dash.d.ts) declares the public JS surface. `package.json` `"types"` points to it; VS Code / your editor picks it up automatically for IntelliSense across `src/v4/*.js`.
-
-## Commands reference
-
-```bash
-npm run dev                # Dev server on :9173 (PORT to override)
-npm run build              # Production build → dist/
-npm run preview            # Serve dist/ on :9174
-npm run lint               # ESLint
-npm run lint:fix
-npm run format             # Prettier write
-npm run format:check
-npm run new -- <slug>      # Scaffold a page
-npm run screenshots        # 22 pages × light+dark → docs/screenshots/
-npm run smoke              # Boot dev server, fetch every page, assert 200
-npm run analyze            # Build + open dist/stats.html
-npm run deploy:preview     # Build + R2 sync
-```
+- Full architecture brief: `CLAUDE.md`. Contributor loop + gates: `CONTRIBUTING.md`, `docs/workflow.md`.
+- Bundle/shell/lazy imports: `docs/architecture.md`. Deploy/cache headers: `docs/deployment.md`, `scripts/deploy-preview.sh`.
+- Public JS surface types: `types/dash.d.ts`.

@@ -3,6 +3,7 @@
 // attribute to the currently-selected demo user (hr:my-code).
 
 import { showToast } from './toast.js';
+import { L, setText } from './hr-locale.js';
 import { showModal } from './modal.js';
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
 import { getSeed, patchSeedRow, saveImportedRows } from './hr-api.js';
@@ -12,10 +13,6 @@ import { logAudit } from './hr-audit.js';
 let booted = false;
 
 const ST_CLS = { draft: 'blue', published: 'green', archived: 'yellow' };
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 function me() {
   try {
@@ -52,16 +49,11 @@ function nextId() {
 }
 
 function renderAll() {
-  const set = (id, v) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.textContent = v;
-    }
-  };
+
   const list = getSeed('announcements');
-  set('an-stat-pub', String(list.filter(a => a.status === 'published').length));
-  set('an-stat-draft', String(list.filter(a => a.status === 'draft').length));
-  set('an-stat-exp', String(list.filter(expired).length));
+  setText('an-stat-pub', String(list.filter(a => a.status === 'published').length));
+  setText('an-stat-draft', String(list.filter(a => a.status === 'draft').length));
+  setText('an-stat-exp', String(list.filter(expired).length));
   const el = document.getElementById('an-list');
   if (el) {
     el.innerHTML = list

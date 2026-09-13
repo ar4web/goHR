@@ -4,7 +4,7 @@
 import { showToast } from './toast.js';
 import { showModal } from './modal.js';
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
-import { fmtSAR, fmtDate, fmtHijri, initialsOf, maskIban } from './hr-locale.js';
+import { fmtSAR, fmtDate, fmtHijri, initialsOf, maskIban, L} from './hr-locale.js';
 import { calcGosi, calcEOSB, daysUntil, annualEntitlement, ajeerCheck } from './hr-statutory.js';
 import { getSeed } from './hr-api.js';
 import { exportData } from './import-export.js';
@@ -25,10 +25,6 @@ const AV = {
 
 let booted = false;
 let activeTab = 'overview';
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 function emp() {
   const code = new URLSearchParams(window.location.search).get('code') || 'EMP-0001';

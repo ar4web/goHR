@@ -202,7 +202,7 @@ function shellInjectionPlugin() {
         const metaPwa = `<link rel="stylesheet" href="/src/scss/v4/main.scss">
 <link rel="manifest" href="${base}site.webmanifest">
 <meta name="theme-color" content="#1ABB9C" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#1a2332" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#111111" media="(prefers-color-scheme: dark)">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -238,7 +238,7 @@ function shellInjectionPlugin() {
         // neither dark mode nor RTL flashes the wrong way round. Painting
         // the backdrop here too kills the default-white flash between page
         // loads (multi-page app: every sidebar click swaps documents).
-        const prePaint = `<script>(function(){try{var t=localStorage.getItem('theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;var theme=t||(d?'dark':'light');document.documentElement.setAttribute('data-theme',theme);document.documentElement.style.background=theme==='dark'?'#0f1623':'#f5f7fb';var dir=localStorage.getItem('dir');if(dir==='rtl'||dir==='ltr'){document.documentElement.setAttribute('dir',dir);}}catch(e){}})();</script>`;
+        const prePaint = `<script>(function(){try{var t=localStorage.getItem('theme');var theme=t||'dark';document.documentElement.setAttribute('data-theme',theme);document.documentElement.style.background=theme==='dark'?'#111111':'#f5f7fb';var dir=localStorage.getItem('dir');if(dir==='rtl'||dir==='ltr'){document.documentElement.setAttribute('dir',dir);}}catch(e){}})();</script>`;
         out = out.replace(/<\/head>/i, `${prePaint}\n</head>`);
 
         // Admin-shell injection only fires for pages with body[data-shell="admin"].
@@ -279,12 +279,14 @@ export default defineConfig(({ command }) => ({
     outDir: 'dist',
     emptyOutDir: true,
     chunkSizeWarningLimit: 1000,
+    cssMinify: true,
     // No source maps in production: 102 .map files (~7MB, incl. a 5.7MB
     // echarts map) shipped to every user with zero runtime benefit.
     // `npm run build:dev` keeps sourcemaps for debugging.
     sourcemap: process.env.NODE_ENV === 'production' ? false : true,
     target: 'es2022',
     rollupOptions: {
+      treeshake: true,
       plugins: [
         // Bundle analyzer - generates stats.html file
         visualizer({
@@ -324,29 +326,11 @@ export default defineConfig(({ command }) => ({
       // dropping the file in — no config edit needed.
       input: discoverEntries()
     },
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true,
-        drop_debugger: true,
-        unsafe_comps: true,
-        passes: 3,
-        pure_getters: true,
-        reduce_vars: true,
-        collapse_vars: true,
-        dead_code: true,
-        unused: true
-      },
-      mangle: {
-        safari10: true
-      },
-      format: {
-        comments: false
-      }
-    }
+    minify: 'esbuild'
   },
   esbuild: {
-    target: 'es2022'
+    target: 'es2022',
+    drop: ['console', 'debugger']
   },
   server: {
     // Entry HTMLs live in production/, not at the project root.

@@ -226,7 +226,7 @@ export function initPageActions() {
     if (!btn) {return;}
 
     // Buttons inside floating UI / interactive lists handle themselves.
-    if (btn.closest('.menu-popover, .toast-host, .calendar-grid, #inbox-list, #inbox-root, #fm-grid, .modal-backdrop, [data-rich-text]')) {return;}
+    if (btn.closest('.menu-popover, .toast-host, .calendar-grid, #inbox-list, #inbox-root, #fm-grid, .modal-backdrop')) {return;}
     if (btn.matches(SKIP_SELECTOR)) {return;}
     if (!btn.matches('.btn, .tb-btn')) {return;}
 

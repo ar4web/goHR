@@ -2,6 +2,7 @@
 // E-contracts per deployment: issue / renew / return + profession match. Idempotent.
 
 import { showToast } from './toast.js';
+import { L, setText } from './hr-locale.js';
 import { showModal } from './modal.js';
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
 import { daysUntil, permitStatus, professionMatch } from './hr-statutory.js';
@@ -12,10 +13,6 @@ import { PROFESSIONS } from './hr-seed.js';
 
 let booted = false;
 let statusFilter = '';
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 function empName(code) {
   const e = getSeed('employees').find(x => x.code === code);
@@ -66,17 +63,12 @@ function rows() {
 }
 
 function renderStats() {
-  const set = (id, v) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.textContent = v;
-    }
-  };
+
   const list = getSeed('ajeerPermits');
-  set('aj-stat-active', list.filter(p => dispStatus(p) === 'active').length);
-  set('aj-stat-expiring', list.filter(p => dispStatus(p) === 'expiring').length);
-  set('aj-stat-expired', list.filter(p => ['expired', 'missing'].includes(dispStatus(p))).length);
-  set('aj-stat-returned', list.filter(p => p.status === 'returned').length);
+  setText('aj-stat-active', list.filter(p => dispStatus(p) === 'active').length);
+  setText('aj-stat-expiring', list.filter(p => dispStatus(p) === 'expiring').length);
+  setText('aj-stat-expired', list.filter(p => ['expired', 'missing'].includes(dispStatus(p))).length);
+  setText('aj-stat-returned', list.filter(p => p.status === 'returned').length);
 }
 
 const ST_CLS = {

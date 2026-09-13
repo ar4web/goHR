@@ -7,7 +7,7 @@
 import { showToast } from './toast.js';
 import { showModal } from './modal.js';
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
-import { fmtSAR } from './hr-locale.js';
+import { fmtSAR, L, setText} from './hr-locale.js';
 import { calcPayLine, isBlockedDeduction } from './hr-statutory.js';
 import { getSeed, patchSeedRow } from './hr-api.js';
 import { exportData, exportCSV } from './import-export.js';
@@ -24,10 +24,6 @@ const DED_CATS = [
 ];
 
 const ST_CLS = { draft: 'blue', approved: 'yellow', paid: 'green' };
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 function emp(code) {
   return getSeed('employees').find(e => e.code === code);
@@ -79,18 +75,13 @@ function renderRunSelect() {
 }
 
 function renderHead(run) {
-  const set = (id, v) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.textContent = v;
-    }
-  };
+
   const chip = document.getElementById('pr-status');
   if (chip) {
     chip.innerHTML = statusChip(run.status);
   }
-  set('pr-month', run.month);
-  set('pr-paidon', run.paidOn || '—');
+  setText('pr-month', run.month);
+  setText('pr-paidon', run.paidOn || '—');
   const ap = document.getElementById('pr-approve');
   const py = document.getElementById('pr-pay');
   if (ap) {
@@ -106,17 +97,12 @@ function renderHead(run) {
 }
 
 function renderStats(rows) {
-  const set = (id, v) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.textContent = v;
-    }
-  };
+
   const tt = totals(rows);
-  set('pr-stat-gross', fmtSAR(tt.gross));
-  set('pr-stat-gosi', fmtSAR(tt.gosi));
-  set('pr-stat-ded', fmtSAR(tt.ded));
-  set('pr-stat-net', fmtSAR(tt.net));
+  setText('pr-stat-gross', fmtSAR(tt.gross));
+  setText('pr-stat-gosi', fmtSAR(tt.gosi));
+  setText('pr-stat-ded', fmtSAR(tt.ded));
+  setText('pr-stat-net', fmtSAR(tt.net));
 }
 
 function renderRows(run, rows) {

@@ -12,8 +12,18 @@ import { initI18n } from './v4/i18n.js';
 
 mountShell();
 initI18n();
-initCharts();
-initTables();
+// Heavy last: charts (echarts) + grids (datatables) mount after first paint
+// so shell, text and LCP settle first. Skeletons cover the wait; idle fires
+// ASAP when the main thread is free, setTimeout covers jsdom/no-idle.
+const whenIdle = (fn) => {
+  if (typeof window !== 'undefined' && typeof window.requestIdleCallback === 'function') {
+    window.requestIdleCallback(fn, { timeout: 1500 });
+  } else {
+    setTimeout(fn, 0);
+  }
+};
+whenIdle(initCharts);
+whenIdle(initTables);
 initCommandPalette();
 initPageActions();
 
@@ -36,9 +46,6 @@ if (document.querySelector('.calendar-grid')) {
 }
 if (document.querySelector('.settings-content')) {
   import('./v4/settings.js').then((m) => m.initSettings());
-}
-if (document.querySelector('[data-date-range], [data-rich-text], [data-multi-select]')) {
-  import('./v4/form-controls.js').then((m) => m.initFormControls());
 }
 
 // ────────────────────────

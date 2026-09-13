@@ -3,16 +3,13 @@
 // Published/acked reviews are immutable; every transition is audit-logged.
 
 import { showToast } from './toast.js';
+import { L, setHtml } from './hr-locale.js';
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
 import { getSeed, patchSeedRow } from './hr-api.js';
 import { REVIEW_FLOW, reviewLabel } from './reviews.js';
 import { logAudit } from './hr-audit.js';
 
 let booted = false;
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 function cur() {
   const id = new URLSearchParams(location.search).get('id');
@@ -57,15 +54,10 @@ function render() {
     root.innerHTML = `<div class="hr-empty">${L('Review not found', 'التقييم غير موجود')}</div>`;
     return;
   }
-  const set = (id, v) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.innerHTML = v;
-    }
-  };
-  set('rw-title', `${r.id} · ${empName(r.emp)} · <span dir="ltr">${r.cycle}</span>`);
+
+  setHtml('rw-title', `${r.id} · ${empName(r.emp)} · <span dir="ltr">${r.cycle}</span>`);
   const idx = REVIEW_FLOW.indexOf(r.status);
-  set(
+  setHtml(
     'rw-flow',
     REVIEW_FLOW.map(
       (s, i) =>
@@ -73,7 +65,7 @@ function render() {
     ).join(' → ')
   );
   const dis = locked(r);
-  set(
+  setHtml(
     'rw-self',
     `<div class="hr-form-2col">
       <div class="form-group"><label class="form-label" for="rw-self-r">${L('Self rating', 'التقييم الذاتي')}</label>${rateSelect('rw-self-r', r.selfRating, dis || r.status !== 'self')}</div>
@@ -81,7 +73,7 @@ function render() {
     <div class="form-group"><label class="form-label" for="rw-self-n">${L('Self notes', 'ملاحظات ذاتية')}</label>
       <textarea class="form-control" id="rw-self-n" rows="2"${dis || r.status !== 'self' ? ' disabled' : ''}>${r.selfNotes || ''}</textarea></div>`
   );
-  set(
+  setHtml(
     'rw-mgr',
     `<div class="hr-form-2col">
       <div class="form-group"><label class="form-label" for="rw-mgr-r">${L('Manager rating', 'تقييم المدير')}</label>${rateSelect('rw-mgr-r', r.mgrRating, dis || r.status !== 'manager')}</div>
@@ -89,7 +81,7 @@ function render() {
     <div class="form-group"><label class="form-label" for="rw-mgr-n">${L('Manager notes', 'ملاحظات المدير')}</label>
       <textarea class="form-control" id="rw-mgr-n" rows="2"${dis || r.status !== 'manager' ? ' disabled' : ''}>${r.mgrNotes || ''}</textarea></div>`
   );
-  set(
+  setHtml(
     'rw-cal',
     `<div class="form-group"><label class="form-label" for="rw-final-r">${L('Final rating', 'التقييم النهائي')}</label>
       ${rateSelect('rw-final-r', r.finalRating, dis || r.status !== 'calibrated')}</div>

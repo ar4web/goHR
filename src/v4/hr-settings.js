@@ -2,6 +2,7 @@
 // Brand · Nitaqat · Licence · Language · Departments · Professions · Reset.
 
 import { showToast } from './toast.js';
+import { L } from './hr-locale.js';
 import { showModal } from './modal.js';
 import { t, currentLang, setLang, LANG_EVENT, applyI18n, applyBranding } from './i18n.js';
 import {
@@ -24,10 +25,6 @@ import { getSeed } from './hr-api.js';
 import { DEPARTMENTS, APPROVAL_CHAINS, ROLES } from './hr-seed.js';
 
 let booted = false;
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 function customLists() {
   let lists = { departments: null, professions: null };

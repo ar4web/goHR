@@ -4,17 +4,14 @@
 // client-side hiding as a security boundary.
 
 import { showToast } from './toast.js';
-import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
+import { L, setText } from './hr-locale.js';
+import { t, LANG_EVENT, applyI18n } from './i18n.js';
 import { getSeed } from './hr-api.js';
 import { getSettings, saveSettings } from './hr-statutory.js';
 import { logAudit } from './hr-audit.js';
 
 let booted = false;
 const VIEW_KEY = 'hr:role-view';
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 // Sidebar page keys grouped the way the nav renders them.
 export const ROLE_MODULES = [
@@ -106,17 +103,12 @@ export function canShow(page) {
 }
 
 function renderAll() {
-  const set = (id, v) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.textContent = v;
-    }
-  };
+
   const roles = getSeed('roles');
-  set('ro-stat-total', String(roles.length));
+  setText('ro-stat-total', String(roles.length));
   const scopes = roleScopes();
-  set('ro-stat-custom', String(Object.keys(getSettings().roles?.scopes || {}).length));
-  set('ro-stat-view', roles.find(r => r.code === viewedRole())?.label || viewedRole());
+  setText('ro-stat-custom', String(Object.keys(getSettings().roles?.scopes || {}).length));
+  setText('ro-stat-view', roles.find(r => r.code === viewedRole())?.label || viewedRole());
   const sel = document.getElementById('ro-preview');
   if (sel && !sel.options.length) {
     sel.innerHTML = roles.map(r => `<option value="${r.code}">${r.label}</option>`).join('');

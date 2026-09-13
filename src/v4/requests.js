@@ -4,17 +4,13 @@
 import { showToast } from './toast.js';
 import { showModal } from './modal.js';
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
-import { fmtSAR } from './hr-locale.js';
+import { fmtSAR, L, setText} from './hr-locale.js';
 import { getSeed, patchSeedRow, saveImportedRows } from './hr-api.js';
 import { exportData } from './import-export.js';
 import { openImportModal } from './import-modal.js';
 import { SITES, PROFESSIONS } from './hr-seed.js';
 
 let booted = false;
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 const FLOW = ['sourcing', 'proposed', 'deploying', 'fulfilled'];
 const FLOW_LBL = {
@@ -54,23 +50,18 @@ function openReqs() {
 }
 
 function renderStats() {
-  const set = (id, v) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.textContent = v;
-    }
-  };
+
   const open = openReqs();
-  set('rq-stat-open', open.length);
-  set(
+  setText('rq-stat-open', open.length);
+  setText(
     'rq-stat-qty',
     open.reduce((s, r) => s + (r.qty || 0), 0)
   );
-  set(
+  setText(
     'rq-stat-filled',
     open.reduce((s, r) => s + Math.min(r.filled || 0, r.qty || 0), 0)
   );
-  set('rq-stat-done', getSeed('requests').filter(r => r.status === 'fulfilled').length);
+  setText('rq-stat-done', getSeed('requests').filter(r => r.status === 'fulfilled').length);
 }
 
 function statusChip(st) {

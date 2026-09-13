@@ -116,7 +116,7 @@
           <div class="card-subtitle">Choose how we contact you.</div>
         </div>
       </div>
-      <div class="card-body" style="padding:6px 16px">
+      <div class="card-body card-body-sm">
         <div class="toggle-row"><div><div class="label">Product updates</div><div class="desc">Get notified about new features and improvements.</div></div><div class="toggle on"></div></div>
         <div class="toggle-row"><div><div class="label">Weekly digest</div><div class="desc">A summary of activity, every Monday.</div></div><div class="toggle on"></div></div>
         <div class="toggle-row"><div><div class="label">Security alerts</div><div class="desc">Sign-ins from new devices and password changes.</div></div><div class="toggle on"></div></div>
@@ -200,43 +200,43 @@
       </div>
       <div class="card-body">
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px">
-          <div style="text-align:center;padding:14px 8px;border:1px solid var(--border-color-light);border-radius:var(--radius);background:var(--primary-lt)">
-            <div style="width:44px;height:44px;border-radius:50%;background:var(--primary);color:white;display:flex;align-items:center;justify-content:center;margin:0 auto 8px">
+          <div class="tile tile-active">
+            <div class="icon-badge" style="background:var(--primary);color:white">
               <svg width="22" height="22" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1l2 5 5 .5-4 3.5 1 5-4-2.5-4 2.5 1-5-4-3.5 5-.5z"/></svg>
             </div>
             <div style="font-size:12px;font-weight:600;color:var(--text)">Top contributor</div>
             <div style="font-size:10.5px;color:var(--text-muted);margin-top:2px">100+ PRs</div>
           </div>
-          <div style="text-align:center;padding:14px 8px;border:1px solid var(--border-color-light);border-radius:var(--radius)">
-            <div style="width:44px;height:44px;border-radius:50%;background:var(--yellow-lt);color:var(--yellow);display:flex;align-items:center;justify-content:center;margin:0 auto 8px">
+          <div class="tile">
+            <div class="icon-badge" style="background:var(--yellow-lt);color:var(--yellow)">
               <svg width="22" height="22" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="9" r="5"/><path d="M8 14l-2 1 1-3"/></svg>
             </div>
             <div style="font-size:12px;font-weight:600;color:var(--text)">Reviewer</div>
             <div style="font-size:10.5px;color:var(--text-muted);margin-top:2px">50+ reviews</div>
           </div>
-          <div style="text-align:center;padding:14px 8px;border:1px solid var(--border-color-light);border-radius:var(--radius)">
-            <div style="width:44px;height:44px;border-radius:50%;background:var(--purple-lt);color:var(--purple);display:flex;align-items:center;justify-content:center;margin:0 auto 8px">
+          <div class="tile">
+            <div class="icon-badge" style="background:var(--purple-lt);color:var(--purple)">
               <svg width="22" height="22" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1l7 13H1L8 1z"/></svg>
             </div>
             <div style="font-size:12px;font-weight:600;color:var(--text)">Early adopter</div>
             <div style="font-size:10.5px;color:var(--text-muted);margin-top:2px">Joined 2014</div>
           </div>
-          <div style="text-align:center;padding:14px 8px;border:1px solid var(--border-color-light);border-radius:var(--radius)">
-            <div style="width:44px;height:44px;border-radius:50%;background:var(--blue-lt);color:var(--blue);display:flex;align-items:center;justify-content:center;margin:0 auto 8px">
+          <div class="tile">
+            <div class="icon-badge" style="background:var(--blue-lt);color:var(--blue)">
               <svg width="22" height="22" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h10M3 10h10M3 14h6"/></svg>
             </div>
             <div style="font-size:12px;font-weight:600;color:var(--text)">Documenter</div>
             <div style="font-size:10.5px;color:var(--text-muted);margin-top:2px">25+ articles</div>
           </div>
-          <div style="text-align:center;padding:14px 8px;border:1px solid var(--border-color-light);border-radius:var(--radius)">
-            <div style="width:44px;height:44px;border-radius:50%;background:var(--green-lt);color:var(--green);display:flex;align-items:center;justify-content:center;margin:0 auto 8px">
+          <div class="tile">
+            <div class="icon-badge" style="background:var(--green-lt);color:var(--green)">
               <svg width="22" height="22" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8l3 3 7-7"/></svg>
             </div>
             <div style="font-size:12px;font-weight:600;color:var(--text)">Reliable</div>
             <div style="font-size:10.5px;color:var(--text-muted);margin-top:2px">98% on-time</div>
           </div>
-          <div style="text-align:center;padding:14px 8px;border:1px solid var(--border-color-light);border-radius:var(--radius);opacity:.5">
-            <div style="width:44px;height:44px;border-radius:50%;background:var(--bg-surface-secondary);color:var(--text-muted);display:flex;align-items:center;justify-content:center;margin:0 auto 8px">
+          <div class="tile tile-dim">
+            <div class="icon-badge" style="background:var(--bg-surface-secondary);color:var(--text-muted)">
               <svg width="22" height="22" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="6" width="8" height="6" rx="1.5"/><path d="M6 6V4a2 2 0 014 0v2"/></svg>
             </div>
             <div style="font-size:12px;font-weight:600;color:var(--text)">Locked</div>
@@ -256,38 +256,38 @@
           <div class="card-subtitle">Sign in faster with these providers.</div>
         </div>
       </div>
-      <div class="card-body" style="display:flex;flex-direction:column;gap:10px">
-        <div style="display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--border-color-light);border-radius:var(--radius)">
+      <div class="card-body stack-col-sm">
+        <div class="social-row">
           <div style="width:36px;height:36px;border-radius:8px;background:#0e1117;color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px">GH</div>
           <div style="flex:1">
             <div style="font-size:13px;font-weight:600;color:var(--text)">GitHub</div>
-            <div style="font-size:11.5px;color:var(--text-muted)">@adam · connected since 2014</div>
+            <div class="caption-muted">@adam · connected since 2014</div>
           </div>
           <span class="status status-green">Connected</span>
           <button class="btn btn-outline btn-sm">Disconnect</button>
         </div>
-        <div style="display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--border-color-light);border-radius:var(--radius)">
+        <div class="social-row">
           <div style="width:36px;height:36px;border-radius:8px;background:#4285f4;color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px">G</div>
           <div style="flex:1">
             <div style="font-size:13px;font-weight:600;color:var(--text)">Google</div>
-            <div style="font-size:11.5px;color:var(--text-muted)">adam@example.com</div>
+            <div class="caption-muted">adam@example.com</div>
           </div>
           <span class="status status-green">Connected</span>
           <button class="btn btn-outline btn-sm">Disconnect</button>
         </div>
-        <div style="display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--border-color-light);border-radius:var(--radius)">
+        <div class="social-row">
           <div style="width:36px;height:36px;border-radius:8px;background:#4a154b;color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px">SL</div>
           <div style="flex:1">
             <div style="font-size:13px;font-weight:600;color:var(--text)">Slack</div>
-            <div style="font-size:11.5px;color:var(--text-muted)">acme workspace</div>
+            <div class="caption-muted">acme workspace</div>
           </div>
           <button class="btn btn-primary btn-sm">Connect</button>
         </div>
-        <div style="display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--border-color-light);border-radius:var(--radius)">
+        <div class="social-row">
           <div style="width:36px;height:36px;border-radius:8px;background:#000;color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px">𝕏</div>
           <div style="flex:1">
             <div style="font-size:13px;font-weight:600;color:var(--text)">X (Twitter)</div>
-            <div style="font-size:11.5px;color:var(--text-muted)">@adam</div>
+            <div class="caption-muted">@adam</div>
           </div>
           <button class="btn btn-primary btn-sm">Connect</button>
         </div>

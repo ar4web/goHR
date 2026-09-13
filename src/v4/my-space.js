@@ -3,17 +3,13 @@
 
 import { showToast } from './toast.js';
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
-import { fmtSAR, fmtDate, fmtHijri, initialsOf } from './hr-locale.js';
+import { fmtSAR, fmtDate, fmtHijri, initialsOf, L} from './hr-locale.js';
 import { calcGosi, calcEOSB, annualEntitlement } from './hr-statutory.js';
 import { getSeed } from './hr-api.js';
 import { CLIENTS, SITES } from './hr-seed.js';
 
 let booted = false;
 let who = null;
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 function name(e) {
   return currentLang() === 'ar' ? e.nameAr || e.nameEn : e.nameEn;

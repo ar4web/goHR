@@ -4,7 +4,7 @@
 import { showToast } from './toast.js';
 import { showModal } from './modal.js';
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
-import { fmtSAR } from './hr-locale.js';
+import { fmtSAR, L, setText} from './hr-locale.js';
 import {
   ajeerCheck,
   yearsBetween,
@@ -21,10 +21,6 @@ import { SEED_LICENCE } from './hr-seed.js';
 let booted = false;
 let clientFilter = '';
 let gateFilter = '';
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 function licenceSettings() {
   try {
@@ -96,18 +92,13 @@ function rows() {
 }
 
 function renderStats() {
-  const set = (id, v) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.textContent = v;
-    }
-  };
+
   const list = getSeed('assignments');
   const active = list.filter(a => a.status === 'active');
-  set('as-stat-active', active.length);
-  set('as-stat-blocked', active.filter(a => !gateOf(a).ok).length);
-  set('as-stat-expiring', active.filter(a => permitStatus(a.ajeerExp) === 'expiring').length);
-  set('as-stat-returned', list.filter(a => a.status === 'returned').length);
+  setText('as-stat-active', active.length);
+  setText('as-stat-blocked', active.filter(a => !gateOf(a).ok).length);
+  setText('as-stat-expiring', active.filter(a => permitStatus(a.ajeerExp) === 'expiring').length);
+  setText('as-stat-returned', list.filter(a => a.status === 'returned').length);
 }
 
 function gateChip(a) {

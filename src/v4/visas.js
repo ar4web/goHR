@@ -5,19 +5,16 @@ import { showToast } from './toast.js';
 import { showModal } from './modal.js';
 import { openMenu } from './menus.js';
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
-import { fmtSAR, fmtDate } from './hr-locale.js';
+import { fmtSAR, fmtDate, L, setText} from './hr-locale.js';
 import { daysUntil, expiryBand } from './hr-statutory.js';
 import { getSeed, saveImportedRows, patchSeedRow } from './hr-api.js';
-import { exportData, templateCSV, templateXLSX, importFile } from './import-export.js';
+import { exportData } from './import-export.js';
+import { openImportModal } from './import-modal.js';
 import { AGENTS, VISA_BLOCKS, PROFESSIONS } from './hr-seed.js';
 import { escapeHtml as esc } from './markup.js';
 
 let booted = false;
 let statusFilter = '';
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 function empName(code) {
   const e = getSeed('employees').find(x => x.code === code);
@@ -68,18 +65,13 @@ function renderStats() {
   const expiring = visas.filter(
     v => v.status === 'awaiting' && v.validUntil && daysUntil(v.validUntil) <= 90
   ).length;
-  const set = (id, v) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.textContent = v;
-    }
-  };
-  set('visa-stat-blocks', VISA_BLOCKS.length);
-  set('visa-stat-quota', quota);
-  set('visa-stat-used', used);
-  set('visa-stat-avail', Math.max(0, quota - used));
-  set('visa-stat-awaiting', awaiting);
-  set('visa-stat-expiring', expiring);
+
+  setText('visa-stat-blocks', VISA_BLOCKS.length);
+  setText('visa-stat-quota', quota);
+  setText('visa-stat-used', used);
+  setText('visa-stat-avail', Math.max(0, quota - used));
+  setText('visa-stat-awaiting', awaiting);
+  setText('visa-stat-expiring', expiring);
 }
 
 function renderBlocks() {
@@ -192,110 +184,6 @@ const IMPORT_SCHEMA = [
   { key: 'validUntil', en: 'Valid until (YYYY-MM-DD)', ar: 'صالحة حتى', type: 'date' }
 ];
 
-function openImportModal() {
-  const lang = currentLang();
-  showModal({
-    title: lang === 'ar' ? 'استيراد تأشيرات (Excel / CSV)' : 'Import visas (Excel / CSV)',
-    size: 'lg',
-    body: `
-      <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
-        <button type="button" class="btn btn-outline btn-sm" data-tpl="csv">${t('common.template')} CSV</button>
-        <button type="button" class="btn btn-outline btn-sm" data-tpl="xlsx">${t('common.template')} Excel</button>
-      </div>
-      <label class="btn btn-outline" style="cursor:pointer">${t('common.chooseFile')} (.xlsx, .csv)
-        <input type="file" data-imp-file accept=".xlsx,.xls,.csv" hidden>
-      </label>
-      <div data-imp-result style="margin-top:12px;font-size:12.5px"></div>`,
-    actions: [
-      { label: t('common.cancel'), variant: 'ghost' },
-      {
-        label: t('common.import'),
-        variant: 'primary',
-        action: ({ body, close }) => {
-          const pending = body._pending;
-          if (!pending || !pending.rows.length) {
-            showToast(lang === 'ar' ? 'اختر ملفًا صالحًا أولًا' : 'Choose a valid file first', {
-              variant: 'warning'
-            });
-            return false;
-          }
-          if (pending.errors.length) {
-            showToast(lang === 'ar' ? 'أصلح الأخطاء أولًا' : 'Fix validation errors first', {
-              variant: 'warning'
-            });
-            return false;
-          }
-          const rows = pending.rows.map(r => ({
-            no: r.no,
-            block: r.block || '',
-            ob: '',
-            emp: '',
-            type: r.type || 'work',
-            issued: r.issued || '',
-            validUntil: r.validUntil || '',
-            entry: '',
-            status: 'awaiting'
-          }));
-          saveImportedRows('visas', rows);
-          renderAll();
-          showToast(
-            lang === 'ar' ? `تم استيراد ${rows.length} تأشيرة` : `Imported ${rows.length} visas`,
-            { variant: 'success' }
-          );
-          close();
-          return true;
-        }
-      }
-    ]
-  });
-  const dlg = document.querySelector('.modal-backdrop:last-child') || document;
-  dlg.addEventListener('click', ev => {
-    const tpl = ev.target.closest('[data-tpl]');
-    if (!tpl) {
-      return;
-    }
-    const cols = IMPORT_SCHEMA.map(f => ({ key: f.key, label: lang === 'ar' ? f.ar : f.en }));
-    const ex = {
-      no: 'V-2026-900',
-      block: 'VB-2026-01',
-      type: 'work',
-      issued: '2026-09-01',
-      validUntil: '2027-08-31'
-    };
-    if (tpl.dataset.tpl === 'xlsx') {
-      templateXLSX('visas', cols, ex);
-    } else {
-      templateCSV('visas', cols, ex);
-    }
-  });
-  dlg.addEventListener('change', async ev => {
-    const input = ev.target.closest('[data-imp-file]');
-    if (!input || !input.files[0]) {
-      return;
-    }
-    const box = dlg.querySelector('[data-imp-result]');
-    box.textContent = '…';
-    try {
-      const res = await importFile(input.files[0], IMPORT_SCHEMA);
-      const bodyEl = dlg.querySelector('.modal-body');
-      if (bodyEl) {
-        bodyEl._pending = res;
-      }
-      if (!res.rows.length) {
-        box.innerHTML = '<span class="status status-red">0 rows</span>';
-        return;
-      }
-      const errHtml = res.errors
-        .slice(0, 10)
-        .map(e => `<div>row ${esc(e.row)} · ${esc(e.field)} · ${esc(e.message)}</div>`)
-        .join('');
-      box.innerHTML = `<span class="status status-${res.errors.length ? 'red' : 'green'}">${res.rows.length} rows · ${res.errors.length} errors</span><div style="margin-top:8px;color:var(--text-muted)">${errHtml}</div>`;
-    } catch (_err) {
-      box.innerHTML = '<span class="status status-red">parse-error</span>';
-    }
-  });
-}
-
 const EXPORT_COLS = [
   { key: 'no', label: 'Visa no.' },
   { key: 'block', label: 'Block' },
@@ -335,7 +223,37 @@ export function initVisas() {
       }
     ]);
   });
-  document.getElementById('visa-import')?.addEventListener('click', openImportModal);
+  document.getElementById('visa-import')?.addEventListener('click', () => {
+    openImportModal({
+      titleEn: 'Import visas (Excel / CSV)',
+      titleAr: 'استيراد تأشيرات (Excel / CSV)',
+      filename: 'visas',
+      schema: IMPORT_SCHEMA,
+      example: {
+        no: 'V-2026-900',
+        block: 'VB-2026-01',
+        type: 'work',
+        issued: '2026-09-01',
+        validUntil: '2027-08-31'
+      },
+      onImport: (rows) => {
+        const mapped = rows.map(r => ({
+          no: r.no,
+          block: r.block || '',
+          ob: '',
+          emp: '',
+          type: r.type || 'work',
+          issued: r.issued || '',
+          validUntil: r.validUntil || '',
+          entry: '',
+          status: 'awaiting'
+        }));
+        saveImportedRows('visas', mapped);
+        renderAll();
+        return mapped.length;
+      }
+    });
+  });
   document.getElementById('visa-rows')?.addEventListener('click', e => {
     const btn = e.target.closest('[data-arrive]');
     if (btn) {

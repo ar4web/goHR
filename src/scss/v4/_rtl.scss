@@ -100,3 +100,16 @@
 [dir="rtl"] .nav-label {
   letter-spacing: 0;
 }
+
+// 7. Dashboard headers + label states — tracking splits Arabic cursive joining.
+// Covers optimized stat metrics, card headers, dividers, palette sections,
+// settings titles, and ticker band.
+[dir="rtl"] .stat-label,
+[dir="rtl"] .card-title,
+[dir="rtl"] .card-subtitle,
+[dir="rtl"] .divider-label,
+[dir="rtl"] .cmdk-section,
+[dir="rtl"] .settings-col-title,
+[dir="rtl"] .ticker-band {
+  letter-spacing: 0 !important;
+}

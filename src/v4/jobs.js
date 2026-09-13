@@ -5,7 +5,7 @@
 import { showToast } from './toast.js';
 import { showModal } from './modal.js';
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
-import { fmtSAR } from './hr-locale.js';
+import { fmtSAR, L, setText} from './hr-locale.js';
 import { getSeed, patchSeedRow, saveImportedRows } from './hr-api.js';
 import { PROFESSIONS } from './hr-seed.js';
 import { exportData, exportCSV } from './import-export.js';
@@ -13,10 +13,6 @@ import { exportData, exportCSV } from './import-export.js';
 let booted = false;
 
 const ST_CLS = { open: 'green', filled: 'blue', closed: 'red', draft: 'yellow' };
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 function titleOf(j) {
   return currentLang() === 'ar' ? j.titleAr || j.titleEn : j.titleEn;
@@ -54,21 +50,16 @@ function nextId() {
 }
 
 function renderAll() {
-  const set = (id, v) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.textContent = v;
-    }
-  };
+
   const list = getSeed('jobs');
   const open = list.filter(j => j.status === 'open');
-  set('jb-stat-open', String(open.length));
-  set(
+  setText('jb-stat-open', String(open.length));
+  setText(
     'jb-stat-hc',
     String(open.reduce((s, j) => s + Math.max(0, (j.headcount || 0) - (j.hired || 0)), 0))
   );
-  set('jb-stat-filled', String(list.filter(j => j.status === 'filled').length));
-  set('jb-stat-draft', String(list.filter(j => j.status === 'draft').length));
+  setText('jb-stat-filled', String(list.filter(j => j.status === 'filled').length));
+  setText('jb-stat-draft', String(list.filter(j => j.status === 'draft').length));
   const el = document.getElementById('jb-rows');
   if (el) {
     el.innerHTML = list

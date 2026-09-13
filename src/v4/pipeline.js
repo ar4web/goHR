@@ -3,15 +3,12 @@
 // Moves share candidates.js rules — hired needs an accepted offer.
 
 import { showToast } from './toast.js';
+import { L } from './hr-locale.js';
 import { currentLang, LANG_EVENT, applyI18n } from './i18n.js';
 import { getSeed } from './hr-api.js';
 import { moveCandidate, stageLabel, STAGES } from './candidates.js';
 
 let booted = false;
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 function jobTitle(id) {
   const j = getSeed('jobs').find(x => x.id === id);

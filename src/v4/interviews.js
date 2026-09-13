@@ -2,6 +2,7 @@
 // Passing moves the candidate interview → offer; failing rejects them.
 
 import { showToast } from './toast.js';
+import { L, setText } from './hr-locale.js';
 import { showModal } from './modal.js';
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
 import { getSeed, patchSeedRow, saveImportedRows } from './hr-api.js';
@@ -11,10 +12,6 @@ import { exportData, exportCSV } from './import-export.js';
 let booted = false;
 
 const R_CLS = { scheduled: 'blue', passed: 'green', failed: 'red' };
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 function candName(id) {
   const c = getSeed('candidates').find(x => x.id === id);
@@ -53,19 +50,14 @@ function nextId() {
 }
 
 function renderAll() {
-  const set = (id, v) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.textContent = v;
-    }
-  };
+
   const list = getSeed('interviews');
-  set('iv-stat-sch', String(list.filter(r => r.result === 'scheduled').length));
-  set('iv-stat-pass', String(list.filter(r => r.result === 'passed').length));
-  set('iv-stat-fail', String(list.filter(r => r.result === 'failed').length));
+  setText('iv-stat-sch', String(list.filter(r => r.result === 'scheduled').length));
+  setText('iv-stat-pass', String(list.filter(r => r.result === 'passed').length));
+  setText('iv-stat-fail', String(list.filter(r => r.result === 'failed').length));
   const week = new Date();
   week.setDate(week.getDate() + 7);
-  set(
+  setText(
     'iv-stat-week',
     String(list.filter(r => r.result === 'scheduled' && new Date(r.at) <= week).length)
   );

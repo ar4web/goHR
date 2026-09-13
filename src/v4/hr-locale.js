@@ -3,6 +3,27 @@
 
 import { currentLang } from './i18n.js';
 
+// Bilingual picker — one copy. Was copy-pasted in ~50 page modules.
+export function L(en, ar) {
+  return currentLang() === 'ar' ? ar : en;
+}
+
+// Null-safe text setter — one copy. Was copy-pasted in ~38 page modules.
+export function setText(id, v) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.textContent = v;
+  }
+}
+
+// Null-safe HTML setter — for the few pages that render markup (contracts, reviews, reports).
+export function setHtml(id, v) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.innerHTML = v;
+  }
+}
+
 export function fmtSAR(amount, opts = {}) {
   const lang = opts.lang || currentLang();
   const locale = lang === 'ar' ? 'ar-SA' : 'en-SA';

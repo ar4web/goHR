@@ -135,7 +135,7 @@ describe('sidebar hierarchy', () => {
     const hr = NAV[0];
     const ws = NAV[1];
     expect(hr.items.length).toBe(10);
-    expect(ws.items.map(i => i.text)).toEqual(['Apps', 'Projects']);
+    expect(ws.items.map(i => i.text)).toEqual(['Notifications']);
     const walk = (items, out = []) => {
       for (const it of items || []) {
         if (it.key) {out.push(it);}
@@ -144,37 +144,31 @@ describe('sidebar hierarchy', () => {
       return out;
     };
     const mainLeaves = NAV.flatMap(g => g.items.flatMap(p => walk(p.children)));
-    expect(mainLeaves.length).toBe(48);
+    expect(mainLeaves.length).toBe(37);
     const footLeaves = SETTINGS_NAV.flatMap(s => walk(s.items));
     // Window configures; it never hosts daily-work modules.
-    expect(SETTINGS_NAV.map(s => s.section)).toEqual([
-      'HR Settings',
-      'Customization',
-      'Company Assets',
-      'Dashboard views',
-      'System'
-    ]);
-    expect(new Set([...mainLeaves, ...footLeaves].map(l => l.key)).size).toBe(92);
+    expect(SETTINGS_NAV.map(s => s.section)).toEqual(['HR Settings', 'Dashboard views', 'System']);
+    expect(new Set([...mainLeaves, ...footLeaves].map(l => l.key)).size).toBe(48);
     for (const p of [...hr.items, ...ws.items]) {
       expect(p.icon in ICONS).toBe(true);
     }
     await mountPage('hr_dashboard');
     // Flat sidebar: one link per section, pointing at the section main screen.
     const parents = [...document.querySelectorAll('.sidebar-nav a.nav-parent')];
-    expect(parents.length).toBe(12);
+    expect(parents.length).toBe(10);
     expect(document.querySelectorAll('.sidebar-nav .nav-tree').length).toBe(0);
     expect(document.querySelectorAll('.sidebar-nav .nav-sublink').length).toBe(0);
-    for (const p of [...hr.items, ...ws.items]) {
+    for (const p of [...hr.items, ...ws.items].filter(p => p.children)) {
       expect(
         parents.some(a => a.getAttribute('href') === p.children[0].href)
       ).toBe(true);
     }
     expect(parents.every(a => a.querySelector('.nav-text'))).toBe(true);
-    // Active section lists its pages inline; the current one is marked.
+    // Expand-all: every section lists its pages inline; the current one is marked.
     expect(document.querySelector('.section-tabs')).toBe(null);
     const pages = [...document.querySelectorAll('.sidebar-nav .nav-page')];
-    expect(pages.map(a => a.getAttribute('href'))).toEqual(
-      hr.items[0].children.map(c => c.href)
+    expect(pages.map(a => a.getAttribute('href')).sort()).toEqual(
+      mainLeaves.map(l => l.href).sort()
     );
     expect(
       document.querySelector('.sidebar-nav .nav-page.active')?.getAttribute('href')
@@ -188,11 +182,22 @@ describe('sidebar hierarchy', () => {
     expect(win).toBeTruthy();
     expect(
       [...win.querySelectorAll('.settings-col-title')].map(e => e.textContent.trim())
-    ).toEqual(['HR Settings', 'Customization', 'Company Assets', 'Dashboard views', 'System']);
+    ).toEqual(['Company', 'HR Settings', 'Dashboard views', 'System']);
     const winLinks = [...win.querySelectorAll('a.settings-cell')];
     for (const l of footLeaves) {
       expect(winLinks.some(a => a.getAttribute('href') === l.href)).toBe(true);
     }
+    // First column is Company: active company marked, Manage links out.
+    const companyCol = win.querySelectorAll('.settings-col')[0];
+    expect(companyCol.querySelector('.settings-col-title')?.textContent.trim()).toBe('Company');
+    expect(
+      companyCol.querySelector('button.settings-cell[aria-current="true"]')
+    ).toBeTruthy();
+    expect(
+      companyCol.querySelector('a.settings-cell[href="hr_settings.html"]')
+    ).toBeTruthy();
+    // Footer holds Settings alone now — the company switcher moved into the window.
+    expect(document.querySelector('.sidebar .company-switch')).toBe(null);
     setLang('ar');
     expect(document.querySelector('.sidebar').textContent).toContain('الإعدادات');
     expect(document.querySelector('.sidebar-nav').textContent).toContain('مساحة العمل');
@@ -200,8 +205,9 @@ describe('sidebar hierarchy', () => {
     // A previous window may still animate out — the newest dialog is last.
     const dialogs = [...document.querySelectorAll('.modal-dialog')];
     const latest = dialogs[dialogs.length - 1];
-    expect(latest.textContent).toContain('التخصيص');
+    expect(latest.textContent).toContain('لوحات العرض');
     expect(latest.textContent).toContain('النظام');
+    expect(latest.textContent).toContain('الشركة');
     setLang('en');
   });
 
@@ -211,14 +217,23 @@ describe('sidebar hierarchy', () => {
       e.textContent.trim()
     );
     expect(labels).toEqual(['HR & Operations', 'Workspace']);
-    // Sidebar parents are flat links — no dropdowns anywhere.
+    // Sidebar parents are flat links in workflow order — no dropdowns anywhere.
     const parentTexts = [...document.querySelectorAll('.sidebar-nav .nav-parent .nav-text')].map(
       e => e.textContent
     );
-    for (const there of ['Apps', 'Projects', 'People', 'Compliance']) {
-      expect(parentTexts).toContain(there);
-    }
-    for (const gone of ['General', 'E-commerce']) {
+    expect(parentTexts).toEqual([
+      'Overview',
+      'People',
+      'Time & Leave',
+      'Hiring',
+      'Growth',
+      'Employee',
+      'Compliance',
+      'Accounts',
+      'Operations',
+      'Portals'
+    ]);
+    for (const gone of ['General', 'E-commerce', 'Projects', 'Apps']) {
       expect(parentTexts).not.toContain(gone);
     }
     expect(document.querySelectorAll('.sidebar-nav button').length).toBe(0);
@@ -231,29 +246,29 @@ describe('sidebar hierarchy', () => {
       document.querySelector('.sidebar-nav a.nav-parent.active')?.getAttribute('href')
     ).toBe('hr_employees.html');
     const peoplePages = [...document.querySelectorAll('.sidebar-nav .nav-page')];
-    expect(peoplePages.length).toBe(6);
+    expect(peoplePages.length).toBe(37);
     expect(
       document.querySelector('.sidebar-nav .nav-page.active')?.getAttribute('href')
     ).toBe('hr_employees.html');
-    // Other sections stay single rows — only the active one expands.
-    expect(document.querySelectorAll('.sidebar-nav .nav-pages').length).toBe(1);
-    await mountPage('inbox');
+    // Expand-all: every section lists its pages — 10 lists, no single rows.
+    expect(document.querySelectorAll('.sidebar-nav .nav-pages').length).toBe(10);
+    await mountPage('notifications');
     expect(
-      document.querySelector('.sidebar-nav .nav-page[href="chat.html"] .badge')?.textContent
-    ).toBe('3');
+      document.querySelector('.sidebar-nav a.nav-link[href="notifications.html"]')
+    ).toBeTruthy();
     // Window: HR setup, look & feel, company assets, system access.
     document.querySelector('.sidebar .settings-toggle').click();
     const win = document.querySelector('.modal-dialog .settings-window');
     expect(
       [...win.querySelectorAll('.settings-col-title')].map(e => e.textContent.trim())
-    ).toEqual(['HR Settings', 'Customization', 'Company Assets', 'Dashboard views', 'System']);
+    ).toEqual(['Company', 'HR Settings', 'Dashboard views', 'System']);
     expect(
-      win.querySelector('a.settings-cell[href="orders.html"] .settings-cell-label')?.textContent
-    ).toBe('All orders');
+      win.querySelector('a.settings-cell[href="index.html"] .settings-cell-label')?.textContent
+    ).toBe('Operations');
     expect(win.querySelector('a.settings-cell[href="user_management.html"]')).toBeTruthy();
     expect(
       [...win.querySelectorAll('.settings-sub-title')].map(e => e.textContent.trim())
-    ).toEqual(['UI library', 'Layouts', 'Forms', 'Tables', 'Charts']);
+    ).toEqual([]);
     // Active settings page highlights its cell.
     // Filter narrows cells, hides empty groups, shows an empty state.
     const input = win.querySelector('.settings-search input');
@@ -275,45 +290,46 @@ describe('sidebar hierarchy', () => {
     const parents = [...document.querySelectorAll('.sidebar-nav .nav-parent .nav-text')].map(
       e => e.textContent
     );
-    expect(parents).toContain('المشاريع');
+    expect(parents).toContain('نظرة عامة');
     expect(parents).toContain('الأفراد');
     // Inline pages translate too — active page included.
-    const pageTexts = [...document.querySelectorAll('.sidebar-nav .nav-page .nav-text')].map(
-      e => e.textContent
-    );
-    expect(pageTexts).toContain('الوارد');
+    // Notifications is a flat sidebar link (no parent/children) — translated
+    // via its nav key like any other leaf.
+    expect(
+      document.querySelector('.sidebar-nav a.nav-link[href="notifications.html"] .nav-text')?.textContent
+    ).toBe('التنبيهات');
     document.querySelector('.sidebar .settings-toggle').click();
     const winAr = document.querySelector('.modal-dialog .settings-window');
     const subNames = [...winAr.querySelectorAll('.settings-sub-title')].map(e => e.textContent);
-    expect(subNames).toContain('مكتبة الواجهة');
+    expect(subNames).toEqual([]);
     expect(
       winAr.querySelector('a.settings-cell[href="hr_audit.html"] .settings-cell-label')
         ?.textContent
     ).toBe(t('nav.hr-audit'));
     expect(
-      winAr.querySelector('a.settings-cell[href="contacts.html"] .settings-cell-label')
+      winAr.querySelector('a.settings-cell[href="profile.html"] .settings-cell-label')
         ?.textContent
-    ).toBe(t('nav.users'));
+    ).toBe(t('nav.profile'));
     setLang('en');
-    await mountPage('orders');
-    // Store pages now live in the window: toggle highlights, cell is active.
+    await mountPage('profile');
+    // Company profile lives in the window: toggle highlights, cell is active.
     expect(
       document.querySelector('.sidebar .sidebar-settings').classList.contains('has-active')
     ).toBe(true);
     document.querySelector('.sidebar .settings-toggle').click();
     expect(
       document
-        .querySelector('.modal-dialog a.settings-cell[href="orders.html"]')
+        .querySelector('.modal-dialog a.settings-cell[href="profile.html"]')
         ?.classList.contains('active')
     ).toBe(true);
-    await mountPage('theme');
+    await mountPage('settings');
     expect(
       document.querySelector('.sidebar .sidebar-settings').classList.contains('has-active')
     ).toBe(true);
     document.querySelector('.sidebar .settings-toggle').click();
     expect(
       document
-        .querySelector('.modal-dialog a.settings-cell[href="theme.html"]')
+        .querySelector('.modal-dialog a.settings-cell[href="settings.html"]')
         ?.classList.contains('active')
     ).toBe(true);
   });
@@ -346,6 +362,7 @@ describe('sidebar hierarchy', () => {
     // Active section lists its pages inline beneath it.
     expect(html).toContain('nav-pages');
     expect(html).toContain('hr_reports.html');
+    expect(html).toContain('hr_dashboard.html');
   });
 
   test('hovering a link warms the next document, once', async () => {
@@ -427,21 +444,33 @@ describe('sidebar hierarchy', () => {
     localStorage.clear();
   });
 
-  test('sidebar switcher follows the active company', async () => {
+  test('settings window Company column follows and switches the active company', async () => {
     const st = await import('../src/v4/hr-statutory.js');
-    const { mountShell } = await import('../src/v4/shell.js');
     await mountPage('hr_dashboard');
-    // Seed profile paints first.
-    expect(document.querySelector('.sidebar .company-switch')).toBeTruthy();
-    expect(document.querySelector('.sidebar .company-name')?.textContent).toContain('Manpower');
-    // Adding a company activates it; re-mount repaints (no storage clear).
+    // Seed profile is the active company.
+    const first = st.getActiveCompany();
+    document.querySelector('.sidebar .settings-toggle').click();
+    const win = document.querySelector('.modal-dialog .settings-window');
+    const col = win.querySelectorAll('.settings-col')[0];
+    expect(col.querySelector('.settings-col-title')?.textContent.trim()).toBe('Company');
+    expect(
+      col.querySelector('button.settings-cell[aria-current="true"]')?.textContent
+    ).toContain(first.nameEn);
+    // Adding a company activates it; reopening the window repaints.
     st.addCompany({ nameEn: 'Riyadh Supply', nameAr: 'تموين الرياض', cr: '1010000007', vat: '300000000000003' });
-    mountShell();
-    expect(document.querySelector('.sidebar .company-name')?.textContent).toBe('Riyadh Supply');
-    document.querySelector('.sidebar .company-switch').click();
-    const menu = document.querySelector('.menu-popover')?.textContent || '';
-    expect(menu).toContain('Riyadh Supply');
-    expect(menu).toContain('Manage companies');
+    document.querySelector('.sidebar .settings-toggle').click();
+    const dialogs = [...document.querySelectorAll('.modal-dialog')];
+    const win2 = dialogs[dialogs.length - 1];
+    const col2 = win2.querySelectorAll('.settings-col')[0];
+    expect(
+      col2.querySelector('button.settings-cell[aria-current="true"]')?.textContent
+    ).toContain('Riyadh Supply');
+    // Switching back flips the active profile (reload is a no-op under jsdom).
+    const back = [...col2.querySelectorAll('button.settings-cell')].find(b =>
+      b.textContent.includes(first.nameEn)
+    );
+    back.click();
+    expect(st.getActiveCompany().id).toBe(first.id);
     localStorage.clear();
   });
 
@@ -518,18 +547,20 @@ describe('sidebar hierarchy', () => {
     expect(document.querySelector('.topbar .breadcrumb')).toBe(null);
   });
 
-  test('active section lists its pages inline, others stay single rows', async () => {
+  test('all sections list their pages inline with the active one marked', async () => {
     await mountPage('hr_leave');
-    const list = document.querySelector('.sidebar-nav .nav-pages');
-    expect(list).toBeTruthy();
-    const pages = [...list.querySelectorAll('.nav-page')];
-    expect(pages.length).toBe(5);
-    expect(list.querySelector('.nav-page.active')?.getAttribute('href')).toBe(
+    const lists = [...document.querySelectorAll('.sidebar-nav .nav-pages')];
+    expect(lists.length).toBe(10);
+    const leaveList = lists.find(l =>
+      [...l.querySelectorAll('.nav-page')].some(a => a.getAttribute('href') === 'hr_leave.html')
+    );
+    expect(leaveList).toBeTruthy();
+    expect(leaveList.querySelector('.nav-page.active')?.getAttribute('href')).toBe(
       'hr_leave.html'
     );
-    // Settings-window pages list nothing — the window is their nav.
+    // Settings pages list the same nav — the window is an extra, not a replacement.
     await mountPage('hr_settings');
-    expect(document.querySelector('.sidebar-nav .nav-pages')).toBe(null);
+    expect(document.querySelectorAll('.sidebar-nav .nav-pages').length).toBe(10);
   });
 
   test('shell renders no footer chrome', async () => {
@@ -541,37 +572,11 @@ describe('sidebar hierarchy', () => {
   });
 });
 
-describe('lists', () => {
-  test('prose stacks use the list system (RTL-safe)', async () => {
-    await mountPage('form');
-    expect(document.querySelectorAll('ul.list').length).toBe(1);
-    expect(document.querySelector('ul.list').getAttribute('style')).toBe(null);
-    await mountPage('form_wizards');
-    expect(document.querySelectorAll('ul.list-bullets').length).toBe(1);
-    expect(document.querySelector('ul.list-bullets').getAttribute('style')).toBe(null);
-  });
-});
-
 describe('headers + buttons', () => {
   test('employee file uses the system page header', async () => {
     await mountPage('hr_employee');
     expect(document.querySelector('.page-header .page-title')?.textContent).toBe('Employee file');
     expect(document.querySelector('.crumbs')).toBe(null);
-  });
-
-  test('theme picker renders ringed swatch buttons', async () => {
-    await mountPage('theme');
-    expect(document.querySelectorAll('.theme-swatch').length).toBeGreaterThan(5);
-    expect(document.querySelector('.theme-swatch.active')).not.toBe(null);
-  });
-
-  test('in-card toolbars share one style', async () => {
-    await mountPage('calendar');
-    expect(document.querySelector('.toolbar .toolbar-spacer')).not.toBe(null);
-    expect(document.querySelector('.calendar-toolbar')).toBe(null);
-    await mountPage('file_manager');
-    expect(document.querySelector('.toolbar.toolbar-spread .toolbar-group')).not.toBe(null);
-    expect(document.querySelector('.fm-toolbar')).toBe(null);
   });
 });
 
@@ -703,6 +708,10 @@ describe('command center', () => {
     expect(cards.length).toBe(4);
     expect(cards[0]).toContain('64,600');
     expect(cards[2]).toContain('789');
+    // Index-style chrome: margin card carries a target progress bar,
+    // departing card a 6-month sparkline (both always render).
+    expect(document.querySelector('#money-cards .progress-thin .bar')).toBeTruthy();
+    expect(document.querySelectorAll('#vac-cards .stat-spark .bar').length).toBe(6);
     expect(document.getElementById('zone-money-meta').textContent).toContain('1.22%');
     // Thin-margin insight fires (1.22% < 5%).
     expect(document.getElementById('money-net').textContent).toMatch(/5%|٥٪/);
@@ -714,7 +723,7 @@ describe('command center', () => {
 
   test('charts carry screen-reader summaries (canvas or fallback)', async () => {
     await mountPage('hr_dashboard');
-    for (const id of ['chart-runway', 'chart-headcount', 'chart-tenure', 'chart-separation']) {
+    for (const id of ['chart-headcount', 'chart-tenure', 'chart-separation']) {
       const el = document.getElementById(id);
       expect(el.getAttribute('role')).toBe('img');
       expect(el.getAttribute('aria-label')?.length).toBeGreaterThan(20);
@@ -722,7 +731,7 @@ describe('command center', () => {
     // jsdom has no canvas: helper must degrade gracefully, not throw.
     const deadline = Date.now() + 4000;
     while (Date.now() < deadline) {
-      const states = ['chart-runway', 'chart-headcount', 'chart-tenure', 'chart-separation'].map(
+      const states = ['chart-headcount', 'chart-tenure', 'chart-separation'].map(
         id => document.getElementById(id)
       );
       if (
@@ -732,7 +741,7 @@ describe('command center', () => {
       }
       await new Promise(r => setTimeout(r, 100));
     }
-    for (const id of ['chart-runway', 'chart-headcount', 'chart-tenure', 'chart-separation']) {
+    for (const id of ['chart-headcount', 'chart-tenure', 'chart-separation']) {
       const el = document.getElementById(id);
       expect(el.querySelector('canvas') || el.getAttribute('data-chart-fallback')).toBeTruthy();
     }
@@ -830,10 +839,7 @@ describe('command center', () => {
 
   test('§3 geo renders map data, roster and mixes', async () => {
     await mountPage('hr_dashboard');
-    const map = document.getElementById('site-map');
-    expect(map.getAttribute('data-marker-count')).toBe('6');
-    expect(map.getAttribute('data-client-pins')).toBe('2');
-    expect(map.getAttribute('aria-label')).toContain('6');
+    // Workforce map card archived — roster, chips and mixes still render.
     const roster = document.getElementById('site-roster');
     expect(roster.textContent).toContain('KAFD');
     expect(roster.querySelectorAll('tbody tr').length).toBe(6);

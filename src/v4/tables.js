@@ -2,6 +2,7 @@
 // Dynamic-imports DataTables only when a [data-datatable] table is present.
 
 import { showToast } from './toast.js';
+import { download, csvCell } from './import-export.js';
 
 /**
  * Initialize DataTables on every `<table data-datatable>` on the page.
@@ -128,7 +129,7 @@ function wireCsvExport(table, dt) {
         headers.push(th ? th.textContent.trim() : '');
       }
     });
-    rows.push(headers.filter((h) => h !== null).map(csvEscape).join(','));
+    rows.push(headers.filter((h) => h !== null).map(csvCell).join(','));
 
     // Iterate filtered + sorted rows in display order. `indexes()` gives DT
     // indexes; `.row(i).node()` returns the underlying <tr>.
@@ -139,30 +140,12 @@ function wireCsvExport(table, dt) {
       const cells = [];
       [...rowEl.cells].forEach((td, idx) => {
         if (headers[idx] === null) {return;}
-        cells.push(csvEscape(td.textContent.trim().replace(/\s+/g, ' ')));
+        cells.push(csvCell(td.textContent.trim().replace(/\s+/g, ' ')));
       });
       rows.push(cells.join(','));
     }
 
-    downloadFile(filename, rows.join('\n'), 'text/csv;charset=utf-8;');
+    download(filename, rows.join('\n'), 'text/csv;charset=utf-8;');
     showToast(`Exported ${filename}`, { variant: 'success' });
   });
-}
-
-function csvEscape(v) {
-  const s = String(v ?? '');
-  if (/[",\n]/.test(s)) {return `"${s.replace(/"/g, '""')}"`;}
-  return s;
-}
-
-function downloadFile(filename, content, type) {
-  const blob = new Blob([content], { type });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 0);
 }

@@ -4,7 +4,7 @@
 import { showToast } from './toast.js';
 import { showModal } from './modal.js';
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
-import { fmtSAR, fmtDate } from './hr-locale.js';
+import { fmtSAR, fmtDate, L, setText} from './hr-locale.js';
 import { daysUntil, expiryBand, renewalChecklist } from './hr-statutory.js';
 import { getSeed, patchSeedRow, saveImportedRows } from './hr-api.js';
 import { exportData } from './import-export.js';
@@ -12,10 +12,6 @@ import { openImportModal } from './import-modal.js';
 
 let booted = false;
 let selected = '';
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 function empName(e) {
   return currentLang() === 'ar' ? e.nameAr || e.nameEn : e.nameEn;
@@ -56,17 +52,12 @@ function renderStats() {
   }).length;
   const finesOpen = list.filter(e => (docsOf(e.code).fines || 0) > 0).length;
   const ready = list.filter(e => checksOf(e).every(c => c.ok)).length;
-  const set = (id, v) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.textContent = v;
-    }
-  };
-  set('res-stat-total', list.length);
-  set('res-stat-iqama', iqama30 + missingIq);
-  set('res-stat-ins', insBad);
-  set('res-stat-fines', finesOpen);
-  set('res-stat-ready', `${ready}/${list.length}`);
+
+  setText('res-stat-total', list.length);
+  setText('res-stat-iqama', iqama30 + missingIq);
+  setText('res-stat-ins', insBad);
+  setText('res-stat-fines', finesOpen);
+  setText('res-stat-ready', `${ready}/${list.length}`);
 }
 
 function renderBoard() {

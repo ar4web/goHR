@@ -1,14 +1,13 @@
 // HR + Operations — employee directory (hr_employees.html).
 // Bilingual table + filters + CSV/XLSX export + validated import. Idempotent.
 
-import { showToast } from './toast.js';
-import { showModal } from './modal.js';
 import { openMenu } from './menus.js';
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
-import { fmtDate, initialsOf } from './hr-locale.js';
+import { fmtDate, initialsOf, L, setText} from './hr-locale.js';
 import { daysUntil, nitaqatEstimate } from './hr-statutory.js';
 import { getSeed, saveImportedRows } from './hr-api.js';
-import { exportData, templateCSV, templateXLSX, importFile } from './import-export.js';
+import { exportData } from './import-export.js';
+import { openImportModal } from './import-modal.js';
 import { DEPARTMENTS, PROFESSIONS, CLIENTS, SITES } from './hr-seed.js';
 import { escapeHtml as esc } from './markup.js';
 
@@ -130,18 +129,13 @@ function renderStats(list) {
   const n = nitaqatEstimate(list);
   const deployed = list.filter(e => e.client && e.st === 'active').length;
   const bench = list.filter(e => !e.client && !e.saudi && e.st === 'active').length;
-  const set = (id, v) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.textContent = v;
-    }
-  };
-  set('emp-stat-total', list.length);
-  set('emp-stat-saudi', n.saudis);
-  set('emp-stat-expat', n.expats);
-  set('emp-stat-deployed', deployed);
-  set('emp-stat-bench', bench);
-  set('emp-stat-saud', `${n.pct}%`);
+
+  setText('emp-stat-total', list.length);
+  setText('emp-stat-saudi', n.saudis);
+  setText('emp-stat-expat', n.expats);
+  setText('emp-stat-deployed', deployed);
+  setText('emp-stat-bench', bench);
+  setText('emp-stat-saud', `${n.pct}%`);
 }
 
 function renderRows() {
@@ -150,7 +144,7 @@ function renderRows() {
     return;
   }
   const items = visible(getSeed('employees'));
-  const L = (en, ar) => (currentLang() === 'ar' ? ar : en);
+
   tbody.innerHTML =
     items
       .map(e => {
@@ -190,146 +184,6 @@ function exportRows(format, onlyChecked) {
   const codes = onlyChecked ? new Set(checkedCodes()) : null;
   const rows = visible(list).filter(e => !codes || codes.has(e.code));
   exportData(format, 'employees', EXPORT_COLS, rows, 'Employees');
-}
-
-function openImportModal() {
-  const lang = currentLang();
-  const schemaHint = IMPORT_SCHEMA.map(
-    f => `${lang === 'ar' ? f.ar : f.en}${f.required ? ' *' : ''}`
-  ).join(', ');
-  showModal({
-    title: lang === 'ar' ? 'استيراد موظفين (Excel / CSV)' : 'Import employees (Excel / CSV)',
-    size: 'lg',
-    body: `
-      <p style="color:var(--text-muted);font-size:12.5px;margin-bottom:12px">${schemaHint}</p>
-      <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
-        <button type="button" class="btn btn-outline btn-sm" data-tpl="csv">${t('common.template')} CSV</button>
-        <button type="button" class="btn btn-outline btn-sm" data-tpl="xlsx">${t('common.template')} Excel</button>
-      </div>
-      <label class="btn btn-outline" style="cursor:pointer">${t('common.chooseFile')} (.xlsx, .csv)
-        <input type="file" data-imp-file accept=".xlsx,.xls,.csv" hidden>
-      </label>
-      <div data-imp-result style="margin-top:12px;font-size:12.5px"></div>
-    `,
-    actions: [
-      { label: t('common.cancel'), variant: 'ghost' },
-      {
-        label: t('common.import'),
-        variant: 'primary',
-        action: ({ body, close }) => {
-          const pending = body._pending;
-          if (!pending || !pending.rows.length) {
-            showToast(lang === 'ar' ? 'اختر ملفًا صالحًا أولًا' : 'Choose a valid file first', {
-              variant: 'warning'
-            });
-            return false;
-          }
-          if (pending.errors.length) {
-            showToast(lang === 'ar' ? 'أصلح الأخطاء أولًا' : 'Fix validation errors first', {
-              variant: 'warning'
-            });
-            return false;
-          }
-          const rows = pending.rows.map(r => ({
-            code: r.code,
-            nameEn: r.nameEn,
-            nameAr: r.nameAr || r.nameEn,
-            nat: r.nat,
-            saudi: /^saudi/i.test(r.nat || ''),
-            prof: r.prof || 'construction',
-            dept: r.dept || 'OPS',
-            titleEn: '',
-            titleAr: '',
-            join: r.join || new Date().toISOString().slice(0, 10),
-            basic: Number(r.basic || 0),
-            housing: Number(r.housing || 0),
-            transport: Number(r.transport || 0),
-            iqama: r.iqama || '',
-            iqamaExp: r.iqamaExp || '',
-            iban: '',
-            bank: '',
-            q: 'draft',
-            st: 'active',
-            phone: r.phone || '',
-            av: 'primary',
-            annualUsed: 0
-          }));
-          saveImportedRows('employees', rows);
-          renderStats(getSeed('employees'));
-          renderRows();
-          showToast(
-            lang === 'ar'
-              ? `تم استيراد ${rows.length} موظفًا`
-              : `Imported ${rows.length} employees`,
-            { variant: 'success' }
-          );
-          close();
-          return true;
-        }
-      }
-    ]
-  });
-  const dlg = document.querySelector('.modal-backdrop:last-child') || document;
-  dlg.addEventListener('click', ev => {
-    const tpl = ev.target.closest('[data-tpl]');
-    if (!tpl) {
-      return;
-    }
-    const cols = IMPORT_SCHEMA.map(f => ({ key: f.key, label: lang === 'ar' ? f.ar : f.en }));
-    const ex = {
-      code: 'EMP-0101',
-      nameEn: 'Sample Name',
-      nameAr: 'اسم تجريبي',
-      nat: 'India',
-      prof: 'driver',
-      dept: 'OPS',
-      join: '2026-01-05',
-      basic: 1800,
-      housing: 500,
-      transport: 300,
-      iqama: '2000000101',
-      iqamaExp: '2027-01-05',
-      phone: '+966 555 010 101'
-    };
-    if (tpl.dataset.tpl === 'xlsx') {
-      templateXLSX('employees', cols, ex);
-    } else {
-      templateCSV('employees', cols, ex);
-    }
-  });
-  dlg.addEventListener('change', async ev => {
-    const input = ev.target.closest('[data-imp-file]');
-    if (!input || !input.files[0]) {
-      return;
-    }
-    const box = dlg.querySelector('[data-imp-result]');
-    box.textContent = '…';
-    try {
-      const res = await importFile(input.files[0], IMPORT_SCHEMA);
-      const modalBody = dlg.querySelector('.modal-body');
-      if (modalBody) {
-        modalBody._pending = res;
-      }
-      // showModal passes .modal-body as `body` — stash there too via closest dialog lookup at confirm time.
-      dlg._pending = res;
-      if (!res.rows.length) {
-        box.innerHTML = '<span class="status status-red">0 rows</span>';
-        return;
-      }
-      const errHtml = res.errors
-        .slice(0, 10)
-        .map(e => `<div>row ${esc(e.row)} · ${esc(e.field)} · ${esc(e.message)}</div>`)
-        .join('');
-      box.innerHTML = `<span class="status status-${res.errors.length ? 'red' : 'green'}">${res.rows.length} rows · ${res.errors.length} errors</span><div style="margin-top:8px;color:var(--text-muted)">${errHtml}</div>`;
-      // stash pending where the confirm action can reach it
-      const bodyEl = dlg.querySelector('.modal-body');
-      if (bodyEl) {
-        bodyEl._pending = res;
-      }
-    } catch (_err) {
-      box.innerHTML = '<span class="status status-red">parse-error</span>';
-    }
-  });
 }
 
 export function initEmployees() {
@@ -378,7 +232,59 @@ export function initEmployees() {
       }
     ]);
   });
-  document.getElementById('emp-import')?.addEventListener('click', openImportModal);
+  document.getElementById('emp-import')?.addEventListener('click', () => {
+    openImportModal({
+      titleEn: 'Import employees (Excel / CSV)',
+      titleAr: 'استيراد موظفين (Excel / CSV)',
+      filename: 'employees',
+      schema: IMPORT_SCHEMA,
+      example: {
+        code: 'EMP-0101',
+        nameEn: 'Sample Name',
+        nameAr: 'اسم تجريبي',
+        nat: 'India',
+        prof: 'driver',
+        dept: 'OPS',
+        join: '2026-01-05',
+        basic: 1800,
+        housing: 500,
+        transport: 300,
+        iqama: '2000000101',
+        iqamaExp: '2027-01-05',
+        phone: '+966 555 010 101'
+      },
+      onImport: (rows) => {
+        const mapped = rows.map(r => ({
+          code: r.code,
+          nameEn: r.nameEn,
+          nameAr: r.nameAr || r.nameEn,
+          nat: r.nat,
+          saudi: /^saudi/i.test(r.nat || ''),
+          prof: r.prof || 'construction',
+          dept: r.dept || 'OPS',
+          titleEn: '',
+          titleAr: '',
+          join: r.join || new Date().toISOString().slice(0, 10),
+          basic: Number(r.basic || 0),
+          housing: Number(r.housing || 0),
+          transport: Number(r.transport || 0),
+          iqama: r.iqama || '',
+          iqamaExp: r.iqamaExp || '',
+          iban: '',
+          bank: '',
+          q: 'draft',
+          st: 'active',
+          phone: r.phone || '',
+          av: 'primary',
+          annualUsed: 0
+        }));
+        saveImportedRows('employees', mapped);
+        renderStats(getSeed('employees'));
+        renderRows();
+        return mapped.length;
+      }
+    });
+  });
   document.getElementById('emp-rows')?.addEventListener('click', e => {
     const btn = e.target.closest('[data-row-menu]');
     if (!btn) {

@@ -6,10 +6,10 @@
 // always wires up runtime behavior (mobile drawer, theme toggle).
 
 import { renderShell, NAV, SETTINGS_NAV } from './shell-render.js';
-import { getActiveCompany, getCompanies, setActiveCompany } from './hr-statutory.js';
+import { getActiveCompany, getCompanies, setActiveCompany, SETTINGS_KEY } from './hr-statutory.js';
 import { roleScopes, viewedRole } from './roles.js';
 import { hrAlerts } from './hr-alerts.js';
-import { t, currentLang, isSafeMediaUrl, LANG_EVENT } from './i18n.js';
+import { t, currentLang, LANG_KEY, applyBranding, setLang } from './i18n.js';
 import { openPanel, openMenu } from './menus.js';
 import { showToast } from './toast.js';
 import { showModal } from './modal.js';
@@ -34,9 +34,17 @@ function injectShellIfMissing() {
 }
 
 // One-time migration of pre-rebrand storage keys (gentelella:* -> dash:*).
+// Storage access itself can throw (sandboxed iframe, blocked cookies) —
+// resolve the store handle inside try so mountShell never dies.
 function migrateStorageKeys() {
+  let store;
+  try {
+    store = localStorage;
+  } catch (_e) {
+    return;
+  }
   const moves = [
-    [localStorage, 'gentelella:sidebar-rail', RAIL_KEY]
+    [store, 'gentelella:sidebar-rail', RAIL_KEY]
   ];
   for (const [store, oldK, newK] of moves) {
     try {
@@ -57,6 +65,37 @@ function migrateStorageKeys() {
   } catch (_e) {
     /* private mode */
   }
+}
+
+// One system: theme / language / brand / role preview follow across every
+// open page. Each page applies its own change directly; the `storage` event
+// fires only in the OTHER tabs, where this replays it. Guards compare current
+// state first so replaying never writes back (no ping-pong loops). Charts
+// pick the change up via the existing data-theme MutationObservers.
+function bindCrossTabSync() {
+  if (document.body.dataset.syncBound) {return;}
+  document.body.dataset.syncBound = '1';
+  window.addEventListener('storage', (e) => {
+    try {
+      if (!e.key) {return;}
+      if (e.key === 'theme' && (e.newValue === 'dark' || e.newValue === 'light')) {
+        if (document.documentElement.getAttribute('data-theme') !== e.newValue) {
+          document.documentElement.setAttribute('data-theme', e.newValue);
+          const tgl = document.querySelector('.theme-toggle');
+          if (tgl) {tgl.setAttribute('aria-pressed', e.newValue === 'dark' ? 'true' : 'false');}
+        }
+      } else if (e.key === LANG_KEY && (e.newValue === 'ar' || e.newValue === 'en')) {
+        if (currentLang() !== e.newValue) {setLang(e.newValue);}
+      } else if (e.key === SETTINGS_KEY) {
+        applyBranding();
+        document.documentElement.dispatchEvent(new CustomEvent('themechange'));
+      } else if (e.key === 'hr:actor-role') {
+        applyRolePreview();
+      }
+    } catch (_err) {
+      /* private mode */
+    }
+  });
 }
 
 // Link prefetch — sidebar clicks load separate documents (multi-page app),
@@ -123,65 +162,47 @@ function applyRailLabels() {
   });
 }
 
-// Footer company switcher: shows the ACTIVE company (logo or initial +
-// name); opens a menu with all companies + Manage. Switching reloads so
-// every module recomputes against the right profile.
-function bindCompanySwitcher() {
-  const btn = document.querySelector('.sidebar .company-switch');
-  if (!btn) {return;}
-  // Paint on every mount (storage may have changed); wire once.
-  const paint = () => {
-    const co = getActiveCompany();
-    const name = currentLang() === 'ar' ? co.nameAr || co.nameEn : co.nameEn;
-    const mark = btn.querySelector('.company-mark');
-    const label = btn.querySelector('.company-name');
-    if (label) {label.textContent = name || '—';}
-    if (mark) {
-      if (co.logo && isSafeMediaUrl(co.logo)) {
-        mark.innerHTML = '';
-        const img = document.createElement('img');
-        img.src = co.logo;
-        img.alt = name || '';
-        mark.appendChild(img);
-      } else {
-        mark.textContent = (name || 'C').trim().charAt(0);
-      }
-    }
-  };
-  paint();
-  if (btn.dataset.bound) {return;}
-  btn.dataset.bound = '1';
-  window.addEventListener(LANG_EVENT, paint);
-  btn.addEventListener('click', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const active = getActiveCompany();
-    const items = getCompanies().map(co => ({
-      label: `${currentLang() === 'ar' ? co.nameAr || co.nameEn : co.nameEn}${co.id === active.id ? ' ✓' : ''}`,
-      action: () => {
-        if (co.id === active.id) {return;}
-        setActiveCompany(co.id);
-        window.location.reload();
-      }
-    }));
-    items.push('-', {
-      label: t('hr.company.manage'),
-      action: () => { window.location.href = 'hr_settings.html'; }
-    });
-    openMenu(btn, items);
-  });
-}
-
-// Footer Settings opens as a centered window (modal): three columns —
-// HR Settings, Customization, System — with a filter box. Content is built
-// in the current language at open time. Backdrop click / Escape / close
-// button dismiss (handled by the modal primitive); picking a link navigates.
+// Footer Settings opens as a centered window (modal): Company + the three
+// settings columns — with a filter box. Content is built in the current
+// language at open time. Backdrop click / Escape / close button dismiss
+// (handled by the modal primitive); picking a link navigates.
 function settingsLinkLabel(it) {
   if (it.key) {
     const k = `nav.${it.key}`;
     if (t(k) !== k) {return t(k);}
   }
   return it.text;
+}
+
+function buildCompanyCells() {
+  const frag = document.createDocumentFragment();
+  const active = getActiveCompany();
+  for (const co of getCompanies()) {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'settings-cell' + (co.id === active.id ? ' active' : '');
+    if (co.id === active.id) {b.setAttribute('aria-current', 'true');}
+    const label = document.createElement('span');
+    label.className = 'settings-cell-label';
+    label.textContent = currentLang() === 'ar' ? co.nameAr || co.nameEn : co.nameEn;
+    b.appendChild(label);
+    if (co.id !== active.id) {
+      b.addEventListener('click', () => {
+        setActiveCompany(co.id);
+        window.location.reload();
+      });
+    }
+    frag.appendChild(b);
+  }
+  const manage = document.createElement('a');
+  manage.className = 'settings-cell';
+  manage.href = 'hr_settings.html';
+  const mlabel = document.createElement('span');
+  mlabel.className = 'settings-cell-label';
+  mlabel.textContent = t('hr.company.manage');
+  manage.appendChild(mlabel);
+  frag.appendChild(manage);
+  return frag;
 }
 
 function buildSettingsWindow(activeKey) {
@@ -223,7 +244,7 @@ function buildSettingsWindow(activeKey) {
     return a;
   };
 
-  for (const sec of SETTINGS_NAV) {
+  for (const sec of [{ section: 'Company', i18n: 'hr.navgroup.company', company: true }, ...SETTINGS_NAV]) {
     const col = document.createElement('section');
     col.className = 'settings-col';
     const h = document.createElement('h3');
@@ -231,6 +252,11 @@ function buildSettingsWindow(activeKey) {
     // Static section name in EN (e.g. "HR Settings"); translated when AR.
     h.textContent = currentLang() === 'ar' ? t(sec.i18n) : sec.section;
     col.appendChild(h);
+    if (sec.company) {
+      col.appendChild(buildCompanyCells());
+      cols.appendChild(col);
+      continue;
+    }
     for (const it of sec.items) {
       if (!it.children) {
         col.appendChild(cellFor(it));
@@ -387,23 +413,14 @@ function bindThemeToggle() {
     btn.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
   };
 
-  // Sync aria-pressed with the theme set by the pre-paint script.
-  const current = document.documentElement.getAttribute('data-theme') || 'light';
+  // Sync aria-pressed with the theme set by the pre-paint script (dark when unset).
+  const current = document.documentElement.getAttribute('data-theme') || 'dark';
   btn.setAttribute('aria-pressed', current === 'dark' ? 'true' : 'false');
 
   btn.addEventListener('click', () => {
     const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
     try { localStorage.setItem('theme', next); } catch (_e) { /* private mode */ }
     apply(next);
-  });
-
-  // Follow OS theme changes when the user hasn't explicitly chosen.
-  const mq = window.matchMedia('(prefers-color-scheme: dark)');
-  mq.addEventListener('change', (e) => {
-    let stored;
-    try { stored = localStorage.getItem('theme'); } catch (_e) { /* ignore */ }
-    if (stored) {return;}
-    apply(e.matches ? 'dark' : 'light');
   });
 }
 
@@ -484,10 +501,8 @@ function openSignOutModal() {
 const USER_MENU = [
   { label: 'Profile',            action: () => { window.location.href = 'profile.html'; } },
   { label: 'Account settings',   action: () => { window.location.href = 'settings.html'; } },
-  { label: 'Theme generator',    action: () => { window.location.href = 'theme.html'; } },
   { label: 'Keyboard shortcuts', action: openShortcutsModal },
   '-',
-  { label: 'Help & support',     action: () => { window.location.href = 'faq.html'; } },
   { label: 'Lock screen',        action: () => { window.location.href = 'lock_screen.html'; } },
   { label: 'Sign out',           action: openSignOutModal }
 ];
@@ -536,7 +551,6 @@ function buildMessagesPanel() {
     <div class="panel-header">
       <span class="panel-title">Messages</span>
       ${unreadCount ? `<span class="panel-badge">${unreadCount} new</span>` : ''}
-      <a href="inbox.html" class="panel-action">Open inbox</a>
     </div>
     <div class="panel-list">
       ${MESSAGES.map((m, i) => `
@@ -549,9 +563,6 @@ function buildMessagesPanel() {
           <span class="panel-time">${m.time}</span>
         </button>
       `).join('')}
-    </div>
-    <div class="panel-footer">
-      <a href="inbox.html" class="panel-link">View all messages</a>
     </div>
   `;
   return wrap;
@@ -598,7 +609,6 @@ function openMessageDetail(m) {
     `,
     actions: [
       { label: 'Cancel', variant: 'ghost' },
-      { label: 'Open in inbox', variant: 'outline', action: () => { window.location.href = 'inbox.html'; } },
       { label: 'Send reply', variant: 'primary', action: () => showToast('Reply sent', { variant: 'success' }) }
     ]
   });
@@ -697,7 +707,7 @@ export function mountShell() {
   injectShellIfMissing();
   migrateStorageKeys();
   bindLinkPrefetch();
-  bindCompanySwitcher();
+  bindCrossTabSync();
   bindSidebarSettings();
   bindSidebarToggle();
   bindThemeToggle();

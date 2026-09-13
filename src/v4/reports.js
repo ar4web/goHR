@@ -5,6 +5,7 @@
 // factories, so nothing here depends on it.
 
 import { currentLang, LANG_EVENT, applyI18n } from './i18n.js';
+import { L, setText, setHtml } from './hr-locale.js';
 import { getSeed } from './hr-api.js';
 import { getSettings } from './hr-statutory.js';
 import {
@@ -18,10 +19,6 @@ import { STAGES, stageLabel } from './candidates.js';
 import { exportData, exportCSV } from './import-export.js';
 
 let booted = false;
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 function fmt(n) {
   return (Number(n) || 0).toLocaleString(currentLang() === 'ar' ? 'ar-SA' : 'en-US');
@@ -75,24 +72,12 @@ function invoiceRow(inv) {
 }
 
 function renderAll() {
-  const set = (id, v) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.textContent = v;
-    }
-  };
-  const K = (id, v) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.innerHTML = v;
-    }
-  };
 
   // ── 1. Workforce ──────────────────────────────────────────────────
   const emps = getSeed('employees');
   const active = emps.filter(e => e.st === 'active');
   const nit = nitaqatEstimate(active, getSettings().nitaqat?.target ?? 0);
-  K(
+  setHtml(
     'rp-workforce',
     [
       [L('Active headcount', 'العاملون'), fmt(nit.total)],
@@ -111,7 +96,7 @@ function renderAll() {
   // ── 2. Hiring funnel ──────────────────────────────────────────────
   const cands = getSeed('candidates');
   const max = Math.max(1, ...STAGES.map(s => cands.filter(c => c.stage === s).length));
-  K(
+  setHtml(
     'rp-funnel',
     STAGES.map(s => {
       const n = cands.filter(c => c.stage === s).length;
@@ -134,7 +119,7 @@ function renderAll() {
     .filter(x => !['paid', 'rejected'].includes(x.status))
     .reduce((s, x) => s + (Number(x.amount) || 0), 0);
   const outInv = getSeed('invoices').reduce((s, inv) => s + invoiceRow(inv).outstanding, 0);
-  K(
+  setHtml(
     'rp-finance',
     [
       [
@@ -172,8 +157,8 @@ function renderAll() {
       )
       .join('');
   }
-  set('rp-bill-total', fmt(invs.reduce((s, i) => s + i.total, 0)));
-  set('rp-bill-out', fmt(invs.reduce((s, i) => s + i.outstanding, 0)));
+  setText('rp-bill-total', fmt(invs.reduce((s, i) => s + i.total, 0)));
+  setText('rp-bill-out', fmt(invs.reduce((s, i) => s + i.outstanding, 0)));
 
   // ── 5. Compliance expiries ────────────────────────────────────────
   const rows = [];
@@ -211,7 +196,7 @@ function renderAll() {
           .join('')
       : `<tr><td colspan="4" class="hr-empty">${L('Nothing expiring soon', 'لا شيء ينتهي قريبًا')}</td></tr>`;
   }
-  set('rp-comp-count', String(rows.length));
+  setText('rp-comp-count', String(rows.length));
   applyI18n(document.querySelector('[data-hr-reports]') || document);
 }
 

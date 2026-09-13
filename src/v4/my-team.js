@@ -2,15 +2,11 @@
 // Manager view: members today + leave + pending approvals. Idempotent.
 
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
-import { initialsOf } from './hr-locale.js';
+import { initialsOf, L, setText} from './hr-locale.js';
 import { getSeed } from './hr-api.js';
 
 let booted = false;
 let mgr = '';
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 function empName(e) {
   return currentLang() === 'ar' ? e.nameAr || e.nameEn : e.nameEn;
@@ -97,20 +93,15 @@ function renderAll() {
     sel.value = mgr;
   }
   const team = reportsOf(mgr);
-  const set = (id, v) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.textContent = v;
-    }
-  };
-  set('tm-stat-head', team.length);
-  set(
+
+  setText('tm-stat-head', team.length);
+  setText(
     'tm-stat-present',
     team.filter(e => ['present', 'late'].includes(todayRow(e.code)?.status)).length
   );
-  set('tm-stat-leave', team.filter(e => e.st === 'on-leave' || leaveCovering(e.code)).length);
+  setText('tm-stat-leave', team.filter(e => e.st === 'on-leave' || leaveCovering(e.code)).length);
   const pend = team.flatMap(e => pendingOf(e.code));
-  set('tm-stat-pend', pend.length);
+  setText('tm-stat-pend', pend.length);
 
   const grid = document.getElementById('tm-grid');
   if (grid) {

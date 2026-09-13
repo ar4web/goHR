@@ -4,7 +4,7 @@
 import { showToast } from './toast.js';
 import { showModal } from './modal.js';
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
-import { fmtDate } from './hr-locale.js';
+import { fmtDate, L, setText} from './hr-locale.js';
 import { daysUntil, expiryBand } from './hr-statutory.js';
 import { getSeed, saveImportedRows } from './hr-api.js';
 import { exportData } from './import-export.js';
@@ -15,10 +15,6 @@ let booted = false;
 let filter = { q: '', type: '', expiring: false };
 
 const REQUIRED = ['contract', 'iqama', 'passport', 'insurance'];
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 function typeName(code) {
   const d = DOC_TYPES.find(x => x.code === code);
@@ -81,16 +77,11 @@ function renderStats() {
   const dead = docs.filter(d => d.expires && daysUntil(d.expires) < 0).length;
   const list = expats();
   const full = list.length - gaps().length;
-  const set = (id, v) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.textContent = v;
-    }
-  };
-  set('doc-stat-total', docs.length);
-  set('doc-stat-exp', exp);
-  set('doc-stat-dead', dead);
-  set('doc-stat-cover', `${full}/${list.length}`);
+
+  setText('doc-stat-total', docs.length);
+  setText('doc-stat-exp', exp);
+  setText('doc-stat-dead', dead);
+  setText('doc-stat-cover', `${full}/${list.length}`);
 }
 
 function visible() {

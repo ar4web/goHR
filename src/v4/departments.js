@@ -3,6 +3,7 @@
 // truth for codes/names, extended here with head + cost center.
 
 import { showToast } from './toast.js';
+import { L, setText } from './hr-locale.js';
 import { showModal } from './modal.js';
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
 import { getSeed, saveImportedRows } from './hr-api.js';
@@ -11,10 +12,6 @@ import { logAudit } from './hr-audit.js';
 
 let booted = false;
 const KEY = 'hr:custom-lists';
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 function readLists() {
   try {
@@ -60,16 +57,11 @@ function headcount(code) {
 }
 
 function renderAll() {
-  const set = (id, v) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.textContent = v;
-    }
-  };
+
   const list = deptStore();
-  set('dp-stat-total', String(list.length));
-  set('dp-stat-heads', String(list.filter(d => d.head).length));
-  set('dp-stat-staff', String(getSeed('employees').filter(e => e.st === 'active').length));
+  setText('dp-stat-total', String(list.length));
+  setText('dp-stat-heads', String(list.filter(d => d.head).length));
+  setText('dp-stat-staff', String(getSeed('employees').filter(e => e.st === 'active').length));
   const el = document.getElementById('dp-rows');
   if (el) {
     el.innerHTML = list

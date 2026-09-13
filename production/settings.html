@@ -71,6 +71,9 @@
           <div class="settings-row">
             <label for="timezone">Timezone</label>
             <select class="form-control" id="timezone">
+              <option selected>(UTC+03:00) Riyadh</option>
+              <option>(UTC+03:00) Jeddah</option>
+              <option>(UTC+03:00) Dammam</option>
               <option>(UTC+02:00) Riga</option>
               <option>(UTC+00:00) London</option>
               <option>(UTC-05:00) New York</option>
@@ -244,19 +247,19 @@
         </div>
         <div class="session-list">
           <div class="session-row">
-            <div style="display:flex;align-items:center;gap:10px"><div class="cell-avatar" style="background:linear-gradient(135deg,var(--primary),var(--primary-dk))">A</div><div><div class="device">Adam Saleh</div><div class="meta">adam@example.com · Owner</div></div></div>
+            <div class="inline-center"><div class="cell-avatar" style="background:linear-gradient(135deg,var(--primary),var(--primary-dk))">A</div><div><div class="device">Adam Saleh</div><div class="meta">adam@example.com · Owner</div></div></div>
             <span class="status status-green">Owner</span>
           </div>
           <div class="session-row">
-            <div style="display:flex;align-items:center;gap:10px"><div class="cell-avatar" style="background:var(--azure)">SK</div><div><div class="device">Sarah Kowalski</div><div class="meta">sarah@example.com · Designer</div></div></div>
+            <div class="inline-center"><div class="cell-avatar" style="background:var(--azure)">SK</div><div><div class="device">Sarah Kowalski</div><div class="meta">sarah@example.com · Designer</div></div></div>
             <button class="btn btn-outline btn-sm">Manage</button>
           </div>
           <div class="session-row">
-            <div style="display:flex;align-items:center;gap:10px"><div class="cell-avatar" style="background:var(--purple)">MR</div><div><div class="device">Michael Reyes</div><div class="meta">michael@example.com · Engineer</div></div></div>
+            <div class="inline-center"><div class="cell-avatar" style="background:var(--purple)">MR</div><div><div class="device">Michael Reyes</div><div class="meta">michael@example.com · Engineer</div></div></div>
             <button class="btn btn-outline btn-sm">Manage</button>
           </div>
           <div class="session-row">
-            <div style="display:flex;align-items:center;gap:10px"><div class="cell-avatar" style="background:var(--yellow)">EW</div><div><div class="device">Emily Wang</div><div class="meta">emily@example.com · PM</div></div></div>
+            <div class="inline-center"><div class="cell-avatar" style="background:var(--yellow)">EW</div><div><div class="device">Emily Wang</div><div class="meta">emily@example.com · PM</div></div></div>
             <button class="btn btn-outline btn-sm">Manage</button>
           </div>
         </div>
@@ -276,7 +279,7 @@
         </div>
         <div class="danger-row danger-critical">
           <div><div class="label">Delete account</div><div class="desc">Permanently delete this account and all associated data</div></div>
-          <button class="btn btn-outline" style="color:var(--red);border-color:var(--red)">Delete</button>
+          <button class="btn btn-outline btn-danger">Delete</button>
         </div>
       </section>
     </div>

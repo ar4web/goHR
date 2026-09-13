@@ -314,6 +314,7 @@ body.page-leave { opacity: 0; }
   max-height: min(62vh, 520px);
   overflow-y: auto;
   padding-inline-end: 4px;
+  text-align: start;
 }
 .settings-col-title {
   margin: 0 0 4px;
@@ -346,6 +347,17 @@ body.page-leave { opacity: 0; }
 .settings-cell:hover {
   background: var(--bg-surface-secondary);
   text-decoration: none;
+}
+// Company rows render as buttons — reset native button chrome so they match
+// the anchor cells exactly.
+button.settings-cell {
+  width: 100%;
+  font: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: start;
+  padding: 8px 10px;
 }
 .settings-cell.active {
   background: var(--primary-lt);

@@ -86,11 +86,6 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .shift-grid,
-  .leave-grid {
-    grid-template-columns: 1fr;
-  }
-
   .lc-day {
     min-height: 52px;
     padding: 4px;

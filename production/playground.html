@@ -22,9 +22,8 @@
         <h1 class="page-title">Component playground</h1>
       </div>
       <div class="page-actions">
-        <a class="btn btn-outline" href="general_elements.html">All UI</a>
-        <a class="btn btn-outline" href="form.html">Forms</a>
-        <a class="btn btn-outline" href="theme.html">Theme generator</a>
+        <a class="btn btn-outline" href="#cards">Cards</a>
+        <a class="btn btn-outline" href="#banners">Banners</a>
       </div>
     </div>
   </div>
@@ -59,12 +58,12 @@
       <a class="pg-nav-link" href="#banners">Banners</a>
       <div class="pg-nav-label" style="margin-top:14px">Markup helpers</div>
       <a class="pg-nav-link" href="#helpers-intro">Overview</a>
-      <a class="pg-nav-link" href="#helpers-stat">statTile()</a>
-      <a class="pg-nav-link" href="#helpers-status">statusBadge()</a>
-      <a class="pg-nav-link" href="#helpers-customer">customerCell()</a>
-      <a class="pg-nav-link" href="#helpers-activity">activityItem()</a>
-      <a class="pg-nav-link" href="#helpers-visitor">visitorRow()</a>
-      <a class="pg-nav-link" href="#helpers-empty">emptyState()</a>
+      <a class="pg-nav-link" href="#helpers-stat">Stat card</a>
+      <a class="pg-nav-link" href="#helpers-status">Status badge</a>
+      <a class="pg-nav-link" href="#helpers-customer">Customer cell</a>
+      <a class="pg-nav-link" href="#helpers-activity">Activity item</a>
+      <a class="pg-nav-link" href="#helpers-visitor">Visitor row</a>
+      <a class="pg-nav-link" href="#helpers-empty">Empty state</a>
     </aside>
 
     <div class="pg-content" id="pg-content">
@@ -179,18 +178,16 @@
       <section class="pg-block" id="forms-advanced">
         <h2>Advanced form controls</h2>
 
-        <div class="pg-card" data-source data-source-label="Date-range picker">
+        <div class="pg-card" data-source data-source-label="Date inputs">
           <div class="pg-preview" data-preview style="max-width:340px">
-            <div class="date-range" data-date-range>
-              <input class="form-control" placeholder="Pick a date range" aria-label="Date range">
-            </div>
+            <input type="date" class="form-control" aria-label="Start date">
+            <input type="date" class="form-control" aria-label="End date" style="margin-top:8px">
           </div>
         </div>
 
         <div class="pg-card" data-source data-source-label="Multi-select">
           <div class="pg-preview" data-preview style="max-width:480px">
-            <div class="multi-select" data-multi-select data-options="Design,Engineering,Product,Marketing,Support,Sales,Operations,Legal,Finance,HR">
-              <select multiple hidden>
+            <select multiple size="6" class="form-control">
                 <option value="Design" selected>Design</option>
                 <option value="Engineering" selected>Engineering</option>
                 <option value="Product">Product</option>
@@ -202,15 +199,12 @@
                 <option value="Finance">Finance</option>
                 <option value="HR">HR</option>
               </select>
-            </div>
           </div>
         </div>
 
-        <div class="pg-card" data-source data-source-label="Rich text editor">
+        <div class="pg-card" data-source data-source-label="Textarea">
           <div class="pg-preview" data-preview>
-            <div class="rich-text" data-rich-text>
-              <textarea hidden>&lt;p&gt;Click any button in the toolbar — &lt;strong&gt;bold&lt;/strong&gt;, &lt;em&gt;italic&lt;/em&gt;, lists, links, code blocks. Try &lt;kbd&gt;⌘B&lt;/kbd&gt; / &lt;kbd&gt;⌘I&lt;/kbd&gt; / &lt;kbd&gt;⌘K&lt;/kbd&gt;.&lt;/p&gt;</textarea>
-            </div>
+            <textarea rows="6" class="form-control"></textarea>
           </div>
         </div>
       </section>
@@ -411,7 +405,7 @@
 
       <section class="pg-block" id="async-list">
         <h2>List lifecycle — interactive</h2>
-        <p style="font-size:13px;color:var(--text-secondary);margin:0 0 12px;line-height:1.55">Click a button below to simulate each state. This is exactly what <a href="orders.html?api=1">orders.html</a> and the inbox use under the hood.</p>
+        <p style="font-size:13px;color:var(--text-secondary);margin:0 0 12px;line-height:1.55">Click a button below to simulate each state. This is exactly what data grids use under the hood.</p>
         <div class="pg-card">
           <div class="pg-preview" data-preview style="flex-direction:column;align-items:stretch;gap:0;padding:0">
             <div style="display:flex;gap:6px;padding:14px 16px;border-bottom:1px solid var(--border-color-light);flex-wrap:wrap">
@@ -444,7 +438,7 @@
 
       <section class="pg-block" id="banners">
         <h2>Banners — feedback at the page level</h2>
-        <p style="font-size:13px;color:var(--text-secondary);margin:0 0 12px;line-height:1.55">For things the user needs to see and may want to act on (failed payment, quota near limit). For ephemeral feedback (saved, copied, deleted) use a toast instead — see <a href="general_elements.html#toasts">general elements</a>.</p>
+        <p style="font-size:13px;color:var(--text-secondary);margin:0 0 12px;line-height:1.55">For things the user needs to see and may want to act on (failed payment, quota near limit). For ephemeral feedback (saved, copied, deleted) use a toast instead.</p>
         <div class="pg-card" data-source>
           <div class="pg-preview" data-preview style="flex-direction:column;align-items:stretch;gap:10px">
             <div class="banner">
@@ -470,68 +464,41 @@
       </section>
 
       <section class="pg-block" id="helpers-intro">
-        <h2>Markup helpers — stop hand-writing scaffolds</h2>
-        <p style="font-size:13px;color:var(--text-secondary);margin:0 0 8px;line-height:1.55">For pages that build content from data (orders, inbox threads, kanban cards…) the boilerplate adds up. <code>src/v4/markup.js</code> exposes pure functions that return HTML strings — no framework, no virtual DOM. Auto-escapes user content. Drop the result into <code>innerHTML</code> or interpolate into a template literal.</p>
-        <p style="font-size:13px;color:var(--text-secondary);margin:0 0 12px;line-height:1.55">Each helper below shows the call site (top) and the rendered output (bottom).</p>
+        <h2>Markup patterns — copy the HTML</h2>
+        <p style="font-size:13px;color:var(--text-secondary);margin:0 0 8px;line-height:1.55">Static markup for the components pages build most often (stat cards, badges, table cells, feed rows…). Escape user content with <code>escapeHtml</code> from <code>src/v4/markup.js</code>, then drop the result into <code>innerHTML</code>. Each pattern below shows live output — view source or copy it straight into your page.</p>
       </section>
 
       <section class="pg-block" id="helpers-stat">
-        <h3 style="margin:0 0 10px;font-size:15px">statTile()</h3>
-        <pre class="pg-code" style="margin-bottom:12px"><code>import { statTile } from '/src/v4/markup.js';
-
-document.querySelector('#stats').innerHTML = [
-  statTile({ label: 'Revenue', value: '$84,520', color: 'green',
-             change: { pct: '+18%', direction: 'up' }, subtext: '$3,218 today' }),
-  statTile({ label: 'Pending', value: '42', color: 'yellow',
-             change: { pct: '-3%', direction: 'down' }, subtext: '5 awaiting payment' })
-].join('');</code></pre>
-        <div id="helpers-stat-host" class="row col-2" style="gap:12px"></div>
+        <h3 style="margin:0 0 10px;font-size:15px">Stat card</h3>
+        <div id="helpers-stat-host" class="row col-2" style="gap:12px">
+          <div class="card"><div class="stat"><div class="stat-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div><div class="stat-content"><div class="stat-label">Revenue</div><div class="stat-value-row"><span class="stat-value">$84,520</span><span class="stat-change up">+18%</span></div><div class="stat-subtext">$3,218 today</div></div></div></div>
+          <div class="card"><div class="stat"><div class="stat-icon yellow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="stat-content"><div class="stat-label">Pending</div><div class="stat-value-row"><span class="stat-value">42</span><span class="stat-change down">-3%</span></div><div class="stat-subtext">5 awaiting payment</div></div></div></div>
+        </div>
       </section>
 
       <section class="pg-block" id="helpers-status">
-        <h3 style="margin:0 0 10px;font-size:15px">statusBadge()</h3>
-        <pre class="pg-code" style="margin-bottom:12px"><code>statusBadge('Paid', 'green')
-statusBadge('Pending', 'yellow')
-statusBadge('Failed', 'red')</code></pre>
-        <div id="helpers-status-host" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+        <h3 style="margin:0 0 10px;font-size:15px">Status badge</h3>
+        <div id="helpers-status-host" style="display:flex;gap:8px;flex-wrap:wrap"><span class="status status-green">Paid</span> <span class="status status-blue">Processing</span> <span class="status status-yellow">Pending</span> <span class="status status-red">Failed</span> <span class="status status-gray">Archived</span></div>
       </section>
 
       <section class="pg-block" id="helpers-customer">
-        <h3 style="margin:0 0 10px;font-size:15px">customerCell() — table cell with avatar + name</h3>
-        <pre class="pg-code" style="margin-bottom:12px"><code>tbody.innerHTML = orders.map((o) =&gt;
-  `&lt;tr&gt;&lt;td&gt;${customerCell({ name: o.name, avatarColor: o.color })}&lt;/td&gt;&lt;/tr&gt;`
-).join('');</code></pre>
-        <table class="table" style="max-width:340px"><tbody id="helpers-customer-host"></tbody></table>
+        <h3 style="margin:0 0 10px;font-size:15px">Customer cell — table cell with avatar + name</h3>
+        <table class="table" style="max-width:340px"><tbody id="helpers-customer-host"><tr><td><div class="cell-customer"><div class="cell-avatar" style="background:var(--primary)">SK</div><span class="cell-strong">Sarah Klein</span></div></td></tr><tr><td><div class="cell-customer"><div class="cell-avatar" style="background:var(--blue)">MR</div><span class="cell-strong">Michael Reese</span></div></td></tr><tr><td><div class="cell-customer"><div class="cell-avatar" style="background:var(--yellow)">EW</div><span class="cell-strong">Emily Wang</span></div></td></tr></tbody></table>
       </section>
 
       <section class="pg-block" id="helpers-activity">
-        <h3 style="margin:0 0 10px;font-size:15px">activityItem() — feeds, audit logs</h3>
-        <pre class="pg-code" style="margin-bottom:12px"><code>const html = items.map((i) =&gt; activityItem({
-  initials: i.initials, avatarBg: i.bg,
-  bodyHtml: `&lt;strong&gt;${escapeHtml(i.user)}&lt;/strong&gt; ${escapeHtml(i.text)}`,
-  time: i.time
-})).join('');
-container.innerHTML = `&lt;ul class="activity-list"&gt;${html}&lt;/ul&gt;`;</code></pre>
-        <ul class="activity-list" id="helpers-activity-host" style="max-width:420px"></ul>
+        <h3 style="margin:0 0 10px;font-size:15px">Activity item — feeds, audit logs</h3>
+        <ul class="activity-list" id="helpers-activity-host" style="max-width:420px"><li class="activity-item"><div class="activity-avatar" style="background:linear-gradient(135deg,var(--primary),var(--primary-dk))">SK</div><div><div class="activity-body"><strong>Sarah K.</strong> placed a new order for $245.00</div><div class="activity-time">2 min ago</div></div></li><li class="activity-item"><div class="activity-avatar" style="background:linear-gradient(135deg,var(--blue),#0550a0)">MR</div><div><div class="activity-body"><strong>Michael R.</strong> registered a new account</div><div class="activity-time">18 min ago</div></div></li><li class="activity-item"><div class="activity-avatar" style="background:linear-gradient(135deg,var(--green),#1a8a32)">PA</div><div><div class="activity-body"><strong>Payment</strong> processed — Invoice #4521</div><div class="activity-time">45 min ago</div></div></li></ul>
       </section>
 
       <section class="pg-block" id="helpers-visitor">
-        <h3 style="margin:0 0 10px;font-size:15px">visitorRow() — distribution bars</h3>
-        <pre class="pg-code" style="margin-bottom:12px"><code>const html = data.map((d) =&gt;
-  visitorRow({ name: d.country, pct: d.pct, flag: d.flag })
-).join('');</code></pre>
-        <div id="helpers-visitor-host" style="max-width:420px"></div>
+        <h3 style="margin:0 0 10px;font-size:15px">Visitor row — distribution bars</h3>
+        <div id="helpers-visitor-host" style="max-width:420px"><div class="visitor-row"><span class="visitor-flag">🇺🇸</span><span class="visitor-name">United States</span><span class="visitor-pct">33%</span><div class="visitor-bar"><div class="fill" style="width:33%"></div></div></div><div class="visitor-row"><span class="visitor-flag">🇫🇷</span><span class="visitor-name">France</span><span class="visitor-pct">27%</span><div class="visitor-bar"><div class="fill" style="width:27%"></div></div></div><div class="visitor-row"><span class="visitor-flag">🇩🇪</span><span class="visitor-name">Germany</span><span class="visitor-pct">16%</span><div class="visitor-bar"><div class="fill" style="width:16%"></div></div></div><div class="visitor-row"><span class="visitor-flag">🇪🇸</span><span class="visitor-name">Spain</span><span class="visitor-pct">11%</span><div class="visitor-bar"><div class="fill" style="width:11%"></div></div></div></div>
       </section>
 
       <section class="pg-block" id="helpers-empty">
-        <h3 style="margin:0 0 10px;font-size:15px">emptyState() — fallback for no results</h3>
-        <pre class="pg-code" style="margin-bottom:12px"><code>container.innerHTML = emptyState({
-  title: 'No orders yet',
-  desc: "Orders will appear here once your first customer checks out.",
-  iconHtml: '&lt;svg ...&gt;&lt;/svg&gt;',
-  actionHtml: '&lt;button class="btn btn-primary"&gt;Create test order&lt;/button&gt;'
-});</code></pre>
-        <div class="card"><div class="card-body" id="helpers-empty-host"></div></div>
+        <h3 style="margin:0 0 10px;font-size:15px">Empty state — fallback for no results</h3>
+        <div class="card"><div class="card-body" id="helpers-empty-host"><div class="empty-state"><div class="empty-state-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></div><div class="empty-state-title">No orders yet</div><div class="empty-state-desc">Orders will appear here once your first customer checks out.</div><div class="empty-state-action"><button class="btn btn-primary btn-sm">Create test order</button></div></div></div></div>
       </section>
 
     </div>
@@ -542,7 +509,6 @@ container.innerHTML = `&lt;ul class="activity-list"&gt;${html}&lt;/ul&gt;`;</cod
 
 <script type="module">
 import { showToast } from '/src/v4/toast.js';
-import { statTile, statusBadge, customerCell, activityItem, visitorRow, emptyState, escapeHtml } from '/src/v4/markup.js';
 
 // Syntax highlighting is playground-only: dynamically imported so it lands in
 // its own chunk and adds nothing to the bundle every other page loads.
@@ -755,79 +721,6 @@ if (submitForm) {
   });
 }
 
-// ── Markup helpers — populate the live previews ──────────────────────
-const ICON_REVENUE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>';
-const ICON_CLOCK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
-
-const statHost = document.getElementById('helpers-stat-host');
-if (statHost) {
-  statHost.innerHTML = [
-    statTile({ label: 'Revenue', value: '$84,520', color: 'green', iconHtml: ICON_REVENUE,
-               change: { pct: '+18%', direction: 'up' }, subtext: '$3,218 today' }),
-    statTile({ label: 'Pending', value: '42', color: 'yellow', iconHtml: ICON_CLOCK,
-               change: { pct: '-3%', direction: 'down' }, subtext: '5 awaiting payment' })
-  ].join('');
-}
-
-const statusHost = document.getElementById('helpers-status-host');
-if (statusHost) {
-  statusHost.innerHTML = [
-    statusBadge('Paid', 'green'),
-    statusBadge('Processing', 'blue'),
-    statusBadge('Pending', 'yellow'),
-    statusBadge('Failed', 'red'),
-    statusBadge('Archived', 'gray')
-  ].join('');
-}
-
-const customerHost = document.getElementById('helpers-customer-host');
-if (customerHost) {
-  const orders = [
-    { name: 'Sarah Klein',   color: 'var(--primary)' },
-    { name: 'Michael Reese', color: 'var(--blue)' },
-    { name: 'Emily Wang',    color: 'var(--yellow)' }
-  ];
-  customerHost.innerHTML = orders.map((o) =>
-    `<tr><td>${customerCell({ name: o.name, avatarColor: o.color })}</td></tr>`
-  ).join('');
-}
-
-const activityHost = document.getElementById('helpers-activity-host');
-if (activityHost) {
-  const items = [
-    { user: 'Sarah K.',  text: 'placed a new order for $245.00', initials: 'SK', bg: 'linear-gradient(135deg,var(--primary),var(--primary-dk))', time: '2 min ago' },
-    { user: 'Michael R.', text: 'registered a new account',       initials: 'MR', bg: 'linear-gradient(135deg,var(--blue),#0550a0)',           time: '18 min ago' },
-    { user: 'Payment',    text: 'processed — Invoice #4521',      initials: 'PA', bg: 'linear-gradient(135deg,var(--green),#1a8a32)',          time: '45 min ago' }
-  ];
-  activityHost.innerHTML = items.map((i) => activityItem({
-    initials: i.initials, avatarBg: i.bg,
-    bodyHtml: `<strong>${escapeHtml(i.user)}</strong> ${escapeHtml(i.text)}`,
-    time: i.time
-  })).join('');
-}
-
-const visitorHost = document.getElementById('helpers-visitor-host');
-if (visitorHost) {
-  const data = [
-    { flag: '🇺🇸', country: 'United States', pct: 33 },
-    { flag: '🇫🇷', country: 'France',        pct: 27 },
-    { flag: '🇩🇪', country: 'Germany',       pct: 16 },
-    { flag: '🇪🇸', country: 'Spain',         pct: 11 }
-  ];
-  visitorHost.innerHTML = data.map((d) =>
-    visitorRow({ name: d.country, pct: d.pct, flag: d.flag })
-  ).join('');
-}
-
-const emptyHost = document.getElementById('helpers-empty-host');
-if (emptyHost) {
-  emptyHost.innerHTML = emptyState({
-    title: 'No orders yet',
-    desc: "Orders will appear here once your first customer checks out.",
-    iconHtml: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>',
-    actionHtml: '<button class="btn btn-primary btn-sm">Create test order</button>'
-  });
-}
 </script>
 
 <style>

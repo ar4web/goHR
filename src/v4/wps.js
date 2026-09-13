@@ -6,7 +6,7 @@
 
 import { showToast } from './toast.js';
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
-import { fmtSAR } from './hr-locale.js';
+import { fmtSAR, L, setText} from './hr-locale.js';
 import { calcPayLine, sifBuild, wpsDeadline, daysUntil } from './hr-statutory.js';
 import { getSeed, patchSeedRow } from './hr-api.js';
 import { exportCSV, download } from './import-export.js';
@@ -16,10 +16,6 @@ let runId = null;
 
 const WPS_CLS = { draft: 'blue', submitted: 'yellow', accepted: 'purple', paid: 'green' };
 const WPS_NEXT = { draft: 'submitted', submitted: 'accepted', accepted: 'paid' };
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 function empName(e) {
   return currentLang() === 'ar' ? e.nameAr || e.nameEn : e.nameEn;
@@ -112,14 +108,9 @@ function renderAll() {
         `<option value="${r.id}"${r.id === runId ? ' selected' : ''}>${r.id} · ${r.month}</option>`
     );
   }
-  const set = (id, v) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.textContent = v;
-    }
-  };
+
   const deadline = wpsDeadline(run.month);
-  set('w-deadline', deadline);
+  setText('w-deadline', deadline);
   const band = delayBand(run, deadline);
   const alert = document.getElementById('w-alert');
   if (alert) {
@@ -131,10 +122,10 @@ function renderAll() {
   }
   const rows = wpsRows(run);
   const noIban = rows.filter(r => !r.iban);
-  set('w-stat-pay', fmtSAR(rows.reduce((s, r) => s + r.line.net, 0)));
-  set('w-stat-n', String(rows.length));
-  set('w-stat-iban', String(noIban.length));
-  set('w-stat-diff', fmtSAR(rows.reduce((s, r) => s + r.diff, 0)));
+  setText('w-stat-pay', fmtSAR(rows.reduce((s, r) => s + r.line.net, 0)));
+  setText('w-stat-n', String(rows.length));
+  setText('w-stat-iban', String(noIban.length));
+  setText('w-stat-diff', fmtSAR(rows.reduce((s, r) => s + r.diff, 0)));
   const el = document.getElementById('w-rows');
   if (el) {
     el.innerHTML = rows

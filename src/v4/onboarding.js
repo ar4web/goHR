@@ -4,7 +4,7 @@
 import { showToast } from './toast.js';
 import { showModal } from './modal.js';
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
-import { fmtSAR } from './hr-locale.js';
+import { fmtSAR, L, setText} from './hr-locale.js';
 import { getSeed, patchSeedRow, saveImportedRows } from './hr-api.js';
 import { exportData } from './import-export.js';
 import { openImportModal } from './import-modal.js';
@@ -12,10 +12,6 @@ import { AGENTS, PROFESSIONS } from './hr-seed.js';
 
 let booted = false;
 let selected = '';
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 // kind: text | date | bool | select. only: restrict to a case type.
 const STAGES = [
@@ -192,16 +188,11 @@ function renderStats() {
     (s, c) => s + (c.costs || []).reduce((a, l) => a + (l.amount || 0), 0),
     0
   );
-  const set = (id, v) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.textContent = v;
-    }
-  };
-  set('ob-stat-active', active);
-  set('ob-stat-transfer', transfers);
-  set('ob-stat-deployed', list.filter(c => c.stage >= 10).length);
-  set('ob-stat-spend', fmtSAR(spend));
+
+  setText('ob-stat-active', active);
+  setText('ob-stat-transfer', transfers);
+  setText('ob-stat-deployed', list.filter(c => c.stage >= 10).length);
+  setText('ob-stat-spend', fmtSAR(spend));
 }
 
 function progress(c) {

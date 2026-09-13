@@ -3,6 +3,7 @@
 // current/target.
 
 import { showToast } from './toast.js';
+import { L, setText } from './hr-locale.js';
 import { showModal } from './modal.js';
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
 import { getSeed, patchSeedRow, saveImportedRows } from './hr-api.js';
@@ -12,10 +13,6 @@ import { logAudit } from './hr-audit.js';
 let booted = false;
 
 const ST_CLS = { draft: 'blue', active: 'green', 'at-risk': 'yellow', done: 'purple' };
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 function empName(code) {
   const e = getSeed('employees').find(x => x.code === code);
@@ -57,17 +54,12 @@ function nextId() {
 }
 
 function renderAll() {
-  const set = (id, v) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.textContent = v;
-    }
-  };
+
   const list = getSeed('goals');
-  set('gl-stat-active', String(list.filter(g => g.status === 'active').length));
-  set('gl-stat-risk', String(list.filter(g => g.status === 'at-risk').length));
-  set('gl-stat-done', String(list.filter(g => g.status === 'done').length));
-  set(
+  setText('gl-stat-active', String(list.filter(g => g.status === 'active').length));
+  setText('gl-stat-risk', String(list.filter(g => g.status === 'at-risk').length));
+  setText('gl-stat-done', String(list.filter(g => g.status === 'done').length));
+  setText(
     'gl-stat-prog',
     list.length ? `${Math.round(list.reduce((s, g) => s + progress(g), 0) / list.length)}%` : '—'
   );

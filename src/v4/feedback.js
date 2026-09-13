@@ -3,6 +3,7 @@
 // currently-selected demo user (hr:my-code).
 
 import { showToast } from './toast.js';
+import { L, setText } from './hr-locale.js';
 import { showModal } from './modal.js';
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
 import { getSeed, saveImportedRows } from './hr-api.js';
@@ -11,10 +12,6 @@ import { logAudit } from './hr-audit.js';
 
 let booted = false;
 let kindFilter = '';
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 function empName(code) {
   const e = getSeed('employees').find(x => x.code === code);
@@ -58,17 +55,12 @@ function nextId() {
 }
 
 function renderAll() {
-  const set = (id, v) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.textContent = v;
-    }
-  };
+
   const list = getSeed('feedback');
-  set('fb-stat-total', String(list.length));
-  set('fb-stat-praise', String(list.filter(f => f.kind === 'praise').length));
-  set('fb-stat-coach', String(list.filter(f => f.kind === 'coaching').length));
-  set('fb-stat-shout', String(list.filter(f => f.kind === 'shoutout').length));
+  setText('fb-stat-total', String(list.length));
+  setText('fb-stat-praise', String(list.filter(f => f.kind === 'praise').length));
+  setText('fb-stat-coach', String(list.filter(f => f.kind === 'coaching').length));
+  setText('fb-stat-shout', String(list.filter(f => f.kind === 'shoutout').length));
   const el = document.getElementById('fb-wall');
   if (el) {
     const rows = (kindFilter ? list.filter(f => f.kind === kindFilter) : list).slice().reverse();

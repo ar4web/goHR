@@ -4,16 +4,12 @@
 import { showToast } from './toast.js';
 import { showModal } from './modal.js';
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
-import { fmtSAR } from './hr-locale.js';
+import { fmtSAR, L, setText} from './hr-locale.js';
 import { getSeed, patchSeedRow, saveImportedRows } from './hr-api.js';
 import { exportData } from './import-export.js';
 import { openImportModal } from './import-modal.js';
 
 let booted = false;
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 const NITAQAT = ['High Green', 'Mid Green', 'Low Green', 'Yellow', 'Red'];
 
@@ -47,22 +43,17 @@ function nitaqatCls(v) {
 
 function renderStats() {
   const clients = getSeed('clients');
-  const set = (id, v) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.textContent = v;
-    }
-  };
-  set('cl-stat-count', clients.length);
-  set('cl-stat-deployed', getSeed('assignments').filter(a => a.status === 'active').length);
-  set(
+
+  setText('cl-stat-count', clients.length);
+  setText('cl-stat-deployed', getSeed('assignments').filter(a => a.status === 'active').length);
+  setText(
     'cl-stat-open',
     getSeed('requests').filter(r => !['fulfilled', 'cancelled'].includes(r.status)).length
   );
   const run = getSeed('assignments')
     .filter(a => a.status === 'active')
     .reduce((s, a) => s + (a.rate || 0), 0);
-  set('cl-stat-runrate', fmtSAR(run));
+  setText('cl-stat-runrate', fmtSAR(run));
 }
 
 function renderRows() {

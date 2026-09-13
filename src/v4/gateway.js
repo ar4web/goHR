@@ -107,6 +107,8 @@ export function initGateway() {
   if (!root) {
     return;
   }
+  // Gateway always lands dark — product call, this document only.
+  document.documentElement.setAttribute('data-theme', 'dark');
   renderAll();
   if (booted) {
     return;

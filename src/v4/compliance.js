@@ -3,7 +3,7 @@
 
 import { openMenu } from './menus.js';
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
-import { fmtDate } from './hr-locale.js';
+import { fmtDate, L, setText} from './hr-locale.js';
 import { daysUntil, nitaqatEstimate, ajeerCheck, getSettings } from './hr-statutory.js';
 import { getSeed } from './hr-api.js';
 import { exportData } from './import-export.js';
@@ -11,10 +11,6 @@ import { CLIENTS } from './hr-seed.js';
 
 let booted = false;
 let activeTab = 'ajeer';
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 function empName(e) {
   return currentLang() === 'ar' ? e.nameAr || e.nameEn : e.nameEn;
@@ -92,16 +88,11 @@ function renderStats() {
   const urgent = res.filter(r => r.d !== null && r.d <= 30).length;
   const qiwa = qiwaRows().length;
   const n = nitaqatEstimate(getSeed('employees'));
-  const set = (id, v) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.textContent = v;
-    }
-  };
-  set('cmp-stat-blocked', blocked);
-  set('cmp-stat-iqama', urgent);
-  set('cmp-stat-qiwa', qiwa);
-  set('cmp-stat-saud', `${n.pct}%`);
+
+  setText('cmp-stat-blocked', blocked);
+  setText('cmp-stat-iqama', urgent);
+  setText('cmp-stat-qiwa', qiwa);
+  setText('cmp-stat-saud', `${n.pct}%`);
 }
 
 function tabButtons() {

@@ -8,7 +8,7 @@
 import { showToast } from './toast.js';
 import { showModal } from './modal.js';
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
-import { fmtSAR } from './hr-locale.js';
+import { fmtSAR, L, setText} from './hr-locale.js';
 import { calcEOSB, annualEntitlement, yearsBetween, getEosbConfig, sellerProfile } from './hr-statutory.js';
 import { getSeed } from './hr-api.js';
 import { exportData, exportCSV } from './import-export.js';
@@ -27,9 +27,7 @@ const REASONS = [
   { code: 'art81', en: 'Art. 81 exit for cause — full', ar: 'ترك للسبب بالمادة 81 — كامل' }
 ];
 
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
+
 
 function emp(code) {
   return getSeed('employees').find(e => e.code === code);
@@ -134,15 +132,10 @@ function accrualRows() {
 }
 
 function renderAccrual() {
-  const set = (id, v) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.textContent = v;
-    }
-  };
+
   const rs = accrualRows();
-  set('eo-stat-prov', fmtSAR(rs.reduce((s, r) => s + r.accrued, 0)));
-  set('eo-stat-month', fmtSAR(rs.reduce((s, r) => s + r.monthly, 0)));
+  setText('eo-stat-prov', fmtSAR(rs.reduce((s, r) => s + r.accrued, 0)));
+  setText('eo-stat-month', fmtSAR(rs.reduce((s, r) => s + r.monthly, 0)));
   const el = document.getElementById('eo-rows');
   if (el) {
     el.innerHTML = rs

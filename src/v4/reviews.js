@@ -3,6 +3,7 @@
 // Ratings live on the detail page; published reviews are immutable.
 
 import { showToast } from './toast.js';
+import { L, setText } from './hr-locale.js';
 import { showModal } from './modal.js';
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
 import { getSeed, saveImportedRows } from './hr-api.js';
@@ -34,10 +35,6 @@ const ST_CLS = {
   acked: 'green'
 };
 
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
-
 function empName(code) {
   const e = getSeed('employees').find(x => x.code === code);
   if (!e) {
@@ -59,24 +56,19 @@ function nextId() {
 }
 
 function renderAll() {
-  const set = (id, v) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.textContent = v;
-    }
-  };
+
   const list = getSeed('reviews');
-  set(
+  setText(
     'rv-stat-cycle',
     String(list.filter(r => ['draft', 'self', 'manager', 'calibrated'].includes(r.status)).length)
   );
-  set('rv-stat-pub', String(list.filter(r => ['published', 'acked'].includes(r.status)).length));
+  setText('rv-stat-pub', String(list.filter(r => ['published', 'acked'].includes(r.status)).length));
   const finals = list.filter(r => r.finalRating > 0);
-  set(
+  setText(
     'rv-stat-avg',
     finals.length ? (finals.reduce((s, r) => s + r.finalRating, 0) / finals.length).toFixed(1) : '—'
   );
-  set('rv-stat-ack', String(list.filter(r => r.status === 'acked').length));
+  setText('rv-stat-ack', String(list.filter(r => r.status === 'acked').length));
   const el = document.getElementById('rv-rows');
   if (el) {
     el.innerHTML = list

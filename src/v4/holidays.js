@@ -4,7 +4,7 @@
 import { showToast } from './toast.js';
 import { showModal } from './modal.js';
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
-import { fmtDate, fmtHijri } from './hr-locale.js';
+import { fmtDate, fmtHijri, L, setText} from './hr-locale.js';
 import { observedHoliday } from './hr-statutory.js';
 import { getSeed, saveImportedRows } from './hr-api.js';
 import { exportData } from './import-export.js';
@@ -12,10 +12,6 @@ import { openImportModal } from './import-modal.js';
 
 let booted = false;
 let yearFilter = '';
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 function weekday(iso) {
   const days =
@@ -32,18 +28,13 @@ function rows() {
 
 function renderStats() {
   const list = rows();
-  const set = (id, v) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.textContent = v;
-    }
-  };
-  set(
+
+  setText(
     'hol-stat-days',
     list.reduce((s, h) => s + (h.days || 1), 0)
   );
-  set('hol-stat-events', list.length);
-  set('hol-stat-shifted', list.filter(h => observedHoliday(h.start).shifted).length);
+  setText('hol-stat-events', list.length);
+  setText('hol-stat-shifted', list.filter(h => observedHoliday(h.start).shifted).length);
 }
 
 function renderRows() {

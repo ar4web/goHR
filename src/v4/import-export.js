@@ -3,11 +3,7 @@
 // Settings → JSON. Imports validate against a schema before anything is saved.
 
 import { showToast } from './toast.js';
-import { currentLang } from './i18n.js';
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
+import { L } from './hr-locale.js';
 
 function stamp() {
   return new Date().toISOString().slice(0, 10);
@@ -25,7 +21,7 @@ export function download(filename, content, mime) {
   setTimeout(() => URL.revokeObjectURL(url), 0);
 }
 
-function csvCell(v) {
+export function csvCell(v) {
   const s = v === null || v === undefined ? '' : String(v);
   return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 }

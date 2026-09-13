@@ -6,7 +6,7 @@
 import { showToast } from './toast.js';
 import { showModal } from './modal.js';
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
-import { fmtSAR } from './hr-locale.js';
+import { fmtSAR, L, setText} from './hr-locale.js';
 import { renderTemplate, nitaqatWageOk, nitaqatWageFloor } from './hr-statutory.js';
 import { getSeed, patchSeedRow, saveImportedRows } from './hr-api.js';
 import { buildValues } from './contract-values.js';
@@ -22,10 +22,6 @@ const ST_CLS = {
   accepted: 'green',
   declined: 'red'
 };
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 function stLabel(st) {
   return (
@@ -93,17 +89,12 @@ function letterHTML(o) {
 }
 
 function renderAll() {
-  const set = (id, v) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.textContent = v;
-    }
-  };
+
   const list = getSeed('offers');
-  set('of-stat-draft', String(list.filter(o => o.status === 'draft').length));
-  set('of-stat-sent', String(list.filter(o => ['approved', 'sent'].includes(o.status)).length));
-  set('of-stat-acc', String(list.filter(o => o.status === 'accepted').length));
-  set(
+  setText('of-stat-draft', String(list.filter(o => o.status === 'draft').length));
+  setText('of-stat-sent', String(list.filter(o => ['approved', 'sent'].includes(o.status)).length));
+  setText('of-stat-acc', String(list.filter(o => o.status === 'accepted').length));
+  setText(
     'of-stat-total',
     fmtSAR(list.filter(o => o.status === 'accepted').reduce((s, o) => s + totalOf(o), 0))
   );

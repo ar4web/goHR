@@ -71,7 +71,7 @@
   "homepage": "https://github.com/ar4web/Dash#readme",
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@playwright/test": "^1.62.1",
+    "esbuild": "^0.28.2",
     "eslint": "^10.8.0",
     "eslint-config-prettier": "^10.1.8",
     "jsdom": "^30.0.1",
@@ -79,7 +79,6 @@
     "prettier": "^3.9.6",
     "rollup-plugin-visualizer": "^7.0.1",
     "sass": "^1.102.0",
-    "terser": "^5.49.2",
     "vite": "^8.2.0",
     "vitest": "^5.0.0"
   },

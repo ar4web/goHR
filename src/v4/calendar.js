@@ -8,6 +8,7 @@
 // them by adding/editing.
 
 import { showToast } from './toast.js';
+import { escapeHtml } from './markup.js';
 import { showModal, closeModal } from './modal.js';
 
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June',
@@ -74,12 +75,6 @@ function eventsForDay(year, month, day) {
 
 function colorOf(value) {
   return COLOR_OPTIONS.find((c) => c.value === value)?.var ?? 'var(--primary)';
-}
-
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, (c) => (
-    { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
-  ));
 }
 
 // ────────────────────────

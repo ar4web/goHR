@@ -4,7 +4,7 @@
 import { showToast } from './toast.js';
 import { showModal } from './modal.js';
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
-import { fmtDate } from './hr-locale.js';
+import { fmtDate, L} from './hr-locale.js';
 import { inRamadan } from './hr-statutory.js';
 import { getSeed, patchSeedRow, saveImportedRows } from './hr-api.js';
 import { exportData } from './import-export.js';
@@ -12,10 +12,6 @@ import { openImportModal } from './import-modal.js';
 import { SITES, RAMADAN_PERIODS } from './hr-seed.js';
 
 let booted = false;
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 const DAY_LBL = {
   sun: ['Sun', 'أحد'],

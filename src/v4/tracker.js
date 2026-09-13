@@ -2,7 +2,7 @@
 // Board with 100% derived statuses (no manual status field). Idempotent.
 
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
-import { fmtDate, initialsOf } from './hr-locale.js';
+import { fmtDate, initialsOf, L} from './hr-locale.js';
 import { daysUntil, ajeerCheck } from './hr-statutory.js';
 import { getSeed } from './hr-api.js';
 import { exportData } from './import-export.js';
@@ -10,10 +10,6 @@ import { CLIENTS, SITES, PROFESSIONS } from './hr-seed.js';
 
 let booted = false;
 let query = '';
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 const COLS = [
   'deployed',

@@ -4,16 +4,14 @@
 import { showToast } from './toast.js';
 import { showModal } from './modal.js';
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
-import { fmtSAR } from './hr-locale.js';
+import { fmtSAR, L, setText} from './hr-locale.js';
 import { invoiceLine, invoiceTotals, invoiceDue, VAT_RATE, sellerProfile } from './hr-statutory.js';
 import { getSeed, patchSeedRow, saveImportedRows } from './hr-api.js';
 import { exportData } from './import-export.js';
 
 let booted = false;
 
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
+
 
 function clientName(id) {
   const c = getSeed('clients').find(x => x.id === id);
@@ -77,17 +75,12 @@ function statusChip(inv) {
 }
 
 function renderStats() {
-  const set = (id, v) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.textContent = v;
-    }
-  };
+
   const list = getSeed('invoices');
   const month = new Date().toISOString().slice(0, 7);
   const tot = inv => invoiceTotals(inv.lines).total;
-  set('in-stat-draft', list.filter(i => i.status === 'draft').length);
-  set(
+  setText('in-stat-draft', list.filter(i => i.status === 'draft').length);
+  setText(
     'in-stat-out',
     fmtSAR(
       list
@@ -95,11 +88,11 @@ function renderStats() {
         .reduce((s, i) => s + tot(i), 0)
     )
   );
-  set(
+  setText(
     'in-stat-over',
     fmtSAR(list.filter(i => dispStatus(i) === 'overdue').reduce((s, i) => s + tot(i), 0))
   );
-  set(
+  setText(
     'in-stat-paidm',
     fmtSAR(
       list

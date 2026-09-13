@@ -4,15 +4,13 @@
 
 import { showModal } from './modal.js';
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
-import { fmtSAR } from './hr-locale.js';
+import { fmtSAR, L} from './hr-locale.js';
 import { calcPayLine, sellerProfile } from './hr-statutory.js';
 import { getSeed } from './hr-api.js';
 
 let booted = false;
 
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
+
 
 function emp(code) {
   return getSeed('employees').find(e => e.code === code);

@@ -1,9 +1,10 @@
-// Detail modals for project cards and contact cards. Imported by inline
-// scripts in production/projects.html and production/contacts.html so each
-// page stays self-contained while the modal markup lives here.
+// Detail modals for project cards and contact cards. Was imported by inline
+// scripts in production/projects.html and production/contacts.html (both
+// since archived to removed/); kept for reuse if those return.
 
 import { showModal } from './modal.js';
 import { showToast } from './toast.js';
+import { escapeHtml } from './markup.js';
 
 const MEMBER_NAMES = {
   SK: { name: 'Sarah Kowalski', role: 'Designer',  color: 'azure' },
@@ -28,12 +29,6 @@ const COLOR_VAR = {
 };
 
 const STATUS_CLS = { green: 'status-green', yellow: 'status-yellow', red: 'status-red' };
-
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, (c) => (
-    { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
-  ));
-}
 
 function emailFor(name) {
   return name.toLowerCase().replace(/\s+/g, '.') + '@example.com';

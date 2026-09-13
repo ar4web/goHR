@@ -39,14 +39,6 @@
     </summary>
     <div class="card-body">
       <div class="row col-4" id="money-cards"></div>
-      <div class="card stack-gap">
-        <div class="card-header">
-          <div class="card-title" data-i18n="hr.dashboard.runwayTitle">Contracted revenue vs current cost · 6 mo</div>
-        </div>
-        <div class="card-body">
-          <div class="chart-box" id="chart-runway"></div>
-        </div>
-      </div>
       <div class="row col-2 stack-gap">
         <div class="card">
           <div class="card-header">
@@ -150,22 +142,12 @@
     </summary>
     <div class="card-body">
       <div class="chip-row" id="city-chips"></div>
-      <div class="row col-8-4 stack-gap">
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title" data-i18n="hr.dashboard.workforceMap">Workforce map</div>
-          </div>
-          <div class="card-body">
-            <div class="map-box" id="site-map"></div>
-          </div>
+      <div class="card stack-gap">
+        <div class="card-header">
+          <div class="card-title" data-i18n="hr.dashboard.rosterTitle">Site roster</div>
         </div>
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title" data-i18n="hr.dashboard.rosterTitle">Site roster</div>
-          </div>
-          <div class="card-body">
-            <div class="table-scroll" id="site-roster"></div>
-          </div>
+        <div class="card-body">
+          <div class="table-scroll" id="site-roster"></div>
         </div>
       </div>
       <div class="row col-3 stack-gap">
@@ -381,7 +363,7 @@
             <div class="card-title" data-i18n="hr.dashboard.tasksTitle">Tasks</div>
             <span id="tasks-formula"></span>
           </div>
-          <div class="card-body">
+          <div class="card-body p-0">
             <div class="table-responsive">
               <table class="table" id="tasks-table">
                 <thead><tr><th scope="col" data-i18n="hr.dashboard.tasksTitle">Tasks</th><th scope="col" data-i18n="hr.dashboard.taskOwner">Owner</th><th scope="col" data-i18n="hr.dashboard.taskDue">Due</th></tr></thead>

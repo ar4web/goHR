@@ -5,7 +5,7 @@ import { showToast } from './toast.js';
 import { ICONS } from './shell-render.js';
 import { showModal } from './modal.js';
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
-import { fmtSAR, fmtDate, initialsOf } from './hr-locale.js';
+import { fmtSAR, fmtDate, initialsOf, L} from './hr-locale.js';
 import { ajeerCheck } from './hr-statutory.js';
 import { getSeed } from './hr-api.js';
 import { exportData } from './import-export.js';
@@ -13,10 +13,6 @@ import { SITES } from './hr-seed.js';
 
 let booted = false;
 let clientId = null;
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 function cur() {
   const list = getSeed('clients');

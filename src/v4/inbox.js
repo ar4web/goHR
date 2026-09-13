@@ -13,6 +13,7 @@
 // - Keyboard: J/K to navigate, Enter to open, R to reply, # to delete
 
 import { showToast } from './toast.js';
+import { escapeHtml } from './markup.js';
 import { showModal } from './modal.js';
 import { useApiMode, httpAdapter } from './data-adapter.js';
 
@@ -170,10 +171,6 @@ function totalCountInFolder(folder) {
 // ────────────────────────
 //  RENDER
 // ────────────────────────
-
-function escapeHtml(s) {
-  return String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-}
 
 function renderShell(root) {
   root.innerHTML = `

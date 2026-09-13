@@ -33,6 +33,7 @@
   --body-bg: #f5f7fb;
   --bg-surface: #ffffff;
   --bg-surface-secondary: #f9fafb;
+  color-scheme: light;
 
   --border-color: #e6e7eb;
   --border-color-light: #eff0f3;
@@ -93,24 +94,41 @@
   --font-weight-bold: 600;
 }
 
-// Dark theme — applied via `<html data-theme="dark">`. The pre-paint script
-// in vite.config.js reads localStorage('theme') / prefers-color-scheme and
+// Dark theme — monochrome charcoal + brass (Coolors:
+// 111111 · 515151 · 848484 · bbbbbb · 656565 · a48853 · d5d5d5 · 8d732d).
+// Applied via `<html data-theme="dark">`. The pre-paint script in
+// vite.config.js reads localStorage('theme') / prefers-color-scheme and
 // sets this attribute before <body> renders so dark mode never flashes.
 [data-theme="dark"] {
-  --body-bg: #0f1623;
-  --bg-surface: #1a2332;
-  --bg-surface-secondary: #141d2b;
+  color-scheme: dark;
+  --body-bg: #111111;
+  --bg-surface: #515151;
+  // Secondary surfaces (table headers, row hovers, disabled inputs) sit one
+  // step DARKER than the card surface — never lighter, or headers glow
+  // brighter than their own cards.
+  --bg-surface-secondary: #454545;
 
-  --border-color: rgba(255,255,255,0.08);
-  --border-color-light: rgba(255,255,255,0.05);
-  --border-translucent: rgba(255,255,255,0.08);
+  --sidebar-bg: #111111;
+  --sidebar-hover: rgba(213,213,213,0.08);
+  --sidebar-active: rgba(164,136,83,0.18);
+  --sidebar-text: #bbbbbb;
+  --sidebar-text-hover: #d5d5d5;
+  --sidebar-text-active: #ffffff;
+  --sidebar-border: rgba(213,213,213,0.08);
 
-  --text: #e6ebf2;
-  --text-secondary: #b3bccb;
-  --text-muted: #8a93a3;
-  --text-disabled: #5a6473;
+  --border-color: rgba(213,213,213,0.16);
+  --border-color-light: rgba(213,213,213,0.08);
+  --border-translucent: rgba(213,213,213,0.12);
 
-  --primary-lt: rgba(26,187,156,0.14);
+  --text: #d5d5d5;
+  --text-secondary: #bbbbbb;
+  --text-muted: #848484;
+  --text-disabled: #656565;
+
+  --primary: #a48853;
+  --primary-dk: #8d732d;
+  --on-primary: #111111;
+  --primary-lt: rgba(164,136,83,0.16);
   --green-lt: rgba(47,179,68,0.16);
   --red-lt: rgba(214,57,57,0.16);
   --yellow-lt: rgba(245,159,0,0.16);
@@ -119,11 +137,11 @@
   --purple-lt: rgba(174,62,201,0.16);
   --cyan-lt: rgba(23,162,184,0.16);
 
-  --shadow: rgba(0,0,0,0.4) 0 2px 4px 0;
-  --shadow-card: 0 0 0 1px var(--border-translucent), rgba(0,0,0,0.3) 0 2px 4px 0;
+  --shadow: rgba(0,0,0,0.5) 0 2px 4px 0;
+  --shadow-card: 0 0 0 1px rgba(213,213,213,0.12), rgba(0,0,0,0.35) 0 2px 4px 0;
 }
-[data-theme="dark"] ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); }
-[data-theme="dark"] .topbar { background: rgba(20,29,43,0.85); }
+[data-theme="dark"] ::-webkit-scrollbar-thumb { background: rgba(213,213,213,0.16); }
+[data-theme="dark"] .topbar { background: rgba(17,17,17,0.85); }
 [data-theme="dark"] .tb-btn .dot { border-color: var(--bg-surface); }
 // Theme toggle: show only the icon for the *next* state
 .theme-toggle .theme-icon-light { display: none; }

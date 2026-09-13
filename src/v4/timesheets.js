@@ -2,6 +2,7 @@
 // Week grid per site + submit + lock. Approval happens in hr_approvals.
 
 import { showToast } from './toast.js';
+import { L, setText } from './hr-locale.js';
 import { showModal } from './modal.js';
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
 import { MAX_DAY_HOURS, RAMADAN_DAY_HOURS } from './hr-statutory.js';
@@ -12,10 +13,6 @@ import { SITES } from './hr-seed.js';
 
 let booted = false;
 let selected = '';
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 function empName(code) {
   const e = getSeed('employees').find(x => x.code === code);
@@ -69,17 +66,12 @@ const TS_CLS = { draft: 'blue', submitted: 'yellow', approved: 'green', rejected
 
 function renderStats() {
   const list = getSeed('timesheets');
-  const set = (id, v) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.textContent = v;
-    }
-  };
-  set('ts-stat-draft', list.filter(x => x.status === 'draft').length);
-  set('ts-stat-sub', list.filter(x => x.status === 'submitted').length);
-  set('ts-stat-appr', list.filter(x => x.status === 'approved').length);
+
+  setText('ts-stat-draft', list.filter(x => x.status === 'draft').length);
+  setText('ts-stat-sub', list.filter(x => x.status === 'submitted').length);
+  setText('ts-stat-appr', list.filter(x => x.status === 'approved').length);
   const ot = list.reduce((s, x) => s + totals(x).ot, 0);
-  set('ts-stat-ot', `${ot}h`);
+  setText('ts-stat-ot', `${ot}h`);
 }
 
 function renderList() {

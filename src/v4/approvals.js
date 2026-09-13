@@ -4,17 +4,13 @@
 import { showToast } from './toast.js';
 import { showModal } from './modal.js';
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
-import { fmtDate, initialsOf } from './hr-locale.js';
+import { fmtDate, initialsOf, L} from './hr-locale.js';
 import { patchSeedRow, getSeed } from './hr-api.js';
 import { exportData } from './import-export.js';
 import { APPROVAL_CHAINS, ACTOR_ROLES, LEAVE_TYPES, SITES } from './hr-seed.js';
 
 let booted = false;
 let tab = 'queue';
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 function actor() {
   try {

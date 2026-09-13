@@ -3,6 +3,7 @@
 // modal. No persistence — state lives in memory.
 
 import { showToast } from './toast.js';
+import { escapeHtml } from './markup.js';
 import { showModal } from './modal.js';
 
 const COLUMNS = [
@@ -57,8 +58,6 @@ const CARDS = [
   { id: nextId++, col: 'done',   title: 'Migrate to Vite 8',                  desc: '',                                                                labels: ['eng'],         assignees: ['MR'],       due: 'Apr 25', priority: 'medium' },
   { id: nextId++, col: 'done',   title: 'Add dark mode',                      desc: 'Pre-paint script, token overrides, ECharts theme observer',      labels: ['eng', 'design'], assignees: ['MR', 'SK'], due: 'Apr 25', priority: 'high' }
 ];
-
-function escapeHtml(s) { return String(s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
 function getLabel(id) { return LABELS.find((l) => l.id === id); }
 

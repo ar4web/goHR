@@ -25,7 +25,7 @@ const fontFamily = "'Inter', -apple-system, BlinkMacSystemFont, sans-serif";
 function baseOption(t) {
   return {
     textStyle: { fontFamily, fontSize: 11, color: t.textMuted },
-    grid: { left: 36, right: 12, top: 16, bottom: 28, containLabel: false },
+    grid: { left: 48, right: 12, top: 12, bottom: 28 },
     tooltip: {
       backgroundColor: t.bgSurface,
       borderColor: t.borderLight,
@@ -118,6 +118,8 @@ function revenueLine(echarts, el, t) {
     series: [{
       type: 'line',
       smooth: true,
+      symbol: 'circle',
+      symbolSize: 4,
       showSymbol: false,
       data: rev,
       lineStyle: { color: t.primary, width: 2 },
@@ -158,6 +160,9 @@ function salesBar(echarts, el, t) {
     },
     series: [{
       type: 'bar',
+      smooth: true,
+      symbol: 'circle',
+      symbolSize: 4,
       data: values.map((v, i) => ({ value: v, itemStyle: { color: colors[i], borderRadius: [4, 4, 0, 0] } })),
       barWidth: '52%'
     }]
@@ -556,7 +561,7 @@ function heatmap(echarts, el, t) {
       ...baseOption(t).tooltip,
       formatter: (p) => `${days[p.value[1]]} ${hours[p.value[0]]}:00<br><strong>${p.value[2]}</strong> events`
     },
-    grid: { left: 50, right: 18, top: 12, bottom: 30, containLabel: false },
+    grid: { left: 50, right: 18, top: 12, bottom: 30 },
     xAxis: {
       type: 'category', data: hours,
       splitArea: { show: true },
@@ -832,7 +837,7 @@ function gantt(echarts, el, t) {
         return `<strong>${name}</strong><br>${f(start)} → ${f(end)}`;
       }
     },
-    grid: { left: 132, right: 24, top: 12, bottom: 28, containLabel: false },
+    grid: { left: 132, right: 24, top: 12, bottom: 28 },
     xAxis: {
       type: 'time',
       splitLine: { lineStyle: { color: t.borderLight, type: [4, 3] } },

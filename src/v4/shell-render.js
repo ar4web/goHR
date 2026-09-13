@@ -9,9 +9,9 @@
 // NAV items are either flat — { key, href, text, icon, badge? } —
 // or a section parent with `children: [{ key, href, text, badge? }]`. The
 // sidebar renders one flat link per parent (to its first child — the
-// section's main screen) plus, for the active section only, its pages as
-// plain inline links. No dropdowns anywhere. The parent reads active when
-// any child matches.
+// section's main screen) plus every section's pages as plain inline links
+// (expand-all by default). No dropdowns anywhere. The parent reads active
+// when any child matches.
 // HR parents carry `i18n: 'hr.navgroup.x'` so applyShellI18n translates them.
 export const NAV = [
   {
@@ -34,20 +34,8 @@ export const NAV = [
           { key: 'hr-employees', href: 'hr_employees.html', text: 'Employees' },
           { key: 'hr-onboarding', href: 'hr_onboarding.html', text: 'Onboarding' },
           { key: 'hr-org', href: 'hr_org_chart.html', text: 'Org chart' },
-          { key: 'hr-tracker', href: 'hr_tracker.html', text: 'Workforce tracker' },
           { key: 'hr-documents', href: 'hr_documents.html', text: 'Vault' },
           { key: 'hr-my-team', href: 'hr_my_team.html', text: 'My team' }
-        ]
-      },
-      {
-        text: 'Compliance',
-        icon: 'shield',
-        i18n: 'hr.navgroup.compliance',
-        children: [
-          { key: 'hr-sa-compliance', href: 'hr_sa_compliance.html', text: 'SA Compliance' },
-          { key: 'hr-visas', href: 'hr_visas.html', text: 'Visas' },
-          { key: 'hr-residency', href: 'hr_residency.html', text: 'Residency & renewals' },
-          { key: 'hr-contracts', href: 'hr_contracts.html', text: 'Contract maker' }
         ]
       },
       {
@@ -60,37 +48,6 @@ export const NAV = [
           { key: 'hr-leave', href: 'hr_leave.html', text: 'Leave' },
           { key: 'hr-leave-calendar', href: 'hr_leave_calendar.html', text: 'Leave calendar' },
           { key: 'hr-approvals', href: 'hr_approvals.html', text: 'Approvals' }
-        ]
-      },
-      {
-        text: 'Operations',
-        icon: 'shop',
-        i18n: 'hr.navgroup.operations',
-        children: [
-          { key: 'hr-clients', href: 'hr_clients.html', text: 'Clients' },
-          { key: 'hr-requests', href: 'hr_requests.html', text: 'Manpower requests' },
-          { key: 'hr-assignments', href: 'hr_assignments.html', text: 'Assignments' },
-          { key: 'hr-ajeer', href: 'hr_ajeer.html', text: 'Ajeer permits' }
-        ]
-      },
-      {
-        text: 'Employee',
-        icon: 'id',
-        i18n: 'hr.navgroup.employee',
-        children: [
-          { key: 'hr-payroll', href: 'hr_payroll.html', text: 'Pay runs' },
-          { key: 'hr-gosi', href: 'hr_gosi.html', text: 'GOSI' },
-          { key: 'hr-wps', href: 'hr_wps.html', text: 'WPS & Mudad' },
-          { key: 'hr-eosb', href: 'hr_eosb.html', text: 'EOSB & settlement' }
-        ]
-      },
-      {
-        text: 'Accounts',
-        icon: 'wallet',
-        i18n: 'hr.navgroup.accounts',
-        children: [
-          { key: 'hr-invoices', href: 'hr_invoices.html', text: 'Invoices' },
-          { key: 'hr-expenses', href: 'hr_expenses.html', text: 'Expenses' }
         ]
       },
       {
@@ -118,6 +75,47 @@ export const NAV = [
         ]
       },
       {
+        text: 'Employee',
+        icon: 'id',
+        i18n: 'hr.navgroup.employee',
+        children: [
+          { key: 'hr-payroll', href: 'hr_payroll.html', text: 'Pay runs' },
+          { key: 'hr-gosi', href: 'hr_gosi.html', text: 'GOSI' },
+          { key: 'hr-wps', href: 'hr_wps.html', text: 'WPS & Mudad' },
+          { key: 'hr-eosb', href: 'hr_eosb.html', text: 'EOSB & settlement' }
+        ]
+      },
+      {
+        text: 'Compliance',
+        icon: 'shield',
+        i18n: 'hr.navgroup.compliance',
+        children: [
+          { key: 'hr-sa-compliance', href: 'hr_sa_compliance.html', text: 'SA Compliance' },
+          { key: 'hr-residency', href: 'hr_residency.html', text: 'Residency & renewals' },
+          { key: 'hr-contracts', href: 'hr_contracts.html', text: 'Contract maker' }
+        ]
+      },
+      {
+        text: 'Accounts',
+        icon: 'wallet',
+        i18n: 'hr.navgroup.accounts',
+        children: [
+          { key: 'hr-invoices', href: 'hr_invoices.html', text: 'Invoices' },
+          { key: 'hr-expenses', href: 'hr_expenses.html', text: 'Expenses' }
+        ]
+      },
+      {
+        text: 'Operations',
+        icon: 'shop',
+        i18n: 'hr.navgroup.operations',
+        children: [
+          { key: 'hr-clients', href: 'hr_clients.html', text: 'Clients' },
+          { key: 'hr-requests', href: 'hr_requests.html', text: 'Manpower requests' },
+          { key: 'hr-assignments', href: 'hr_assignments.html', text: 'Assignments' },
+          { key: 'hr-ajeer', href: 'hr_ajeer.html', text: 'Ajeer permits' }
+        ]
+      },
+      {
         text: 'Portals',
         icon: 'profile',
         i18n: 'hr.navgroup.portals',
@@ -129,41 +127,13 @@ export const NAV = [
     ]
   },
   {
-    // Daily-work modules: communication, planning, and business tools.
-    // Collapsible parents — one row each — so the sidebar stays scannable.
-    // (The old General group is dissolved: its galleries live in Settings →
-    // Customization, its demo dashboards in Settings → Dashboard views, and
-    // its two working tools — Calendar, Map — joined Apps.)
+    // Daily-work modules outside HR. Down to a single flat link now that the
+    // demo apps (Chat, Inbox, Kanban, Calendar, Files) are archived.
     label: 'Workspace',
     items: [
-      {
-        text: 'Apps',
-        icon: 'pages',
-        i18n: 'navgroup.apps',
-        children: [
-          {
-            key: 'chat',
-            href: 'chat.html',
-            text: 'Chat',
-            badge: { text: '3', cls: 'badge-teal' }
-          },
-          { key: 'inbox', href: 'inbox.html', text: 'Inbox' },
-          { key: 'kanban', href: 'kanban.html', text: 'Kanban' },
-          { key: 'calendar', href: 'calendar.html', text: 'Calendar' },
-          { key: 'map', href: 'map.html', text: 'Map' },
-          { key: 'files', href: 'file_manager.html', text: 'Files' },
-          { key: 'notifications', href: 'notifications.html', text: 'Notifications' }
-        ]
-      },
-      {
-        text: 'Projects',
-        icon: 'projects',
-        i18n: 'navgroup.projects',
-        children: [
-          { key: 'projects', href: 'projects.html', text: 'All projects' },
-          { key: 'project-detail', href: 'project_detail.html', text: 'Project detail' }
-        ]
-      }
+      // Single flat link (no parent/children): with the demo apps archived,
+      // Notifications is the only daily-work module outside HR.
+      { key: 'notifications', href: 'notifications.html', text: 'Notifications', icon: 'bell' }
     ]
   }
 ];
@@ -191,113 +161,19 @@ export const SETTINGS_NAV = [
     ]
   },
   {
-    section: 'Customization',
-    i18n: 'hr.navgroup.customization',
-    items: [
-      {
-        key: 'theme',
-        href: 'theme.html',
-        text: 'Theme builder',
-        badge: { text: 'New', cls: 'badge-teal' }
-      },
-      {
-        text: 'UI library',
-        i18n: 'navgroup.ui-library',
-        children: [
-          { key: 'ui', href: 'general_elements.html', text: 'Elements' },
-          {
-            key: 'widgets',
-            href: 'widgets.html',
-            text: 'Widgets',
-            badge: { text: '5', cls: 'badge-blue' }
-          },
-          {
-            key: 'playground',
-            href: 'playground.html',
-            text: 'Playground',
-            badge: { text: 'New', cls: 'badge-teal' }
-          },
-          { key: 'typography', href: 'typography.html', text: 'Typography' },
-          { key: 'icons', href: 'icons.html', text: 'Icons' },
-          { key: 'media', href: 'media_gallery.html', text: 'Media' }
-        ]
-      },
-      {
-        text: 'Layouts',
-        i18n: 'navgroup.layouts',
-        children: [
-          { key: 'fixed-sidebar', href: 'fixed_sidebar.html', text: 'Fixed sidebar' },
-          { key: 'fixed-footer', href: 'fixed_footer.html', text: 'Fixed footer' },
-          { key: 'level2', href: 'level2.html', text: 'Nested page' },
-          { key: 'plain', href: 'plain_page.html', text: 'Blank' }
-        ]
-      },
-      {
-        text: 'Forms',
-        i18n: 'navgroup.forms',
-        children: [
-          { key: 'forms', href: 'form.html', text: 'General' },
-          { key: 'form-advanced', href: 'form_advanced.html', text: 'Advanced controls' },
-          { key: 'form-buttons', href: 'form_buttons.html', text: 'Buttons' },
-          { key: 'form-upload', href: 'form_upload.html', text: 'Upload' },
-          { key: 'form-validation', href: 'form_validation.html', text: 'Validation' },
-          { key: 'form-wizards', href: 'form_wizards.html', text: 'Wizard' }
-        ]
-      },
-      {
-        text: 'Tables',
-        i18n: 'navgroup.tables',
-        children: [
-          { key: 'tables', href: 'tables.html', text: 'Static' },
-          { key: 'tables-dynamic', href: 'tables_dynamic.html', text: 'Dynamic' }
-        ]
-      },
-      {
-        text: 'Charts',
-        i18n: 'navgroup.charts',
-        children: [
-          { key: 'charts', href: 'chartjs.html', text: 'Chart cards' },
-          { key: 'echarts', href: 'echarts.html', text: 'ECharts gallery' },
-          { key: 'other-charts', href: 'other_charts.html', text: 'SVG charts' }
-        ]
-      }
-    ]
-  },
-  {
-    // Former store-demo pages, rehomed as the company asset library
-    // (brand colors, paper/stationery designs, logo, uniforms). Kept on
-    // disk and linked here until the asset content rebuild lands.
-    section: 'Company Assets',
-    i18n: 'hr.navgroup.assets',
-    items: [
-      { key: 'storefront', href: 'e_commerce.html', text: 'Storefront' },
-      { key: 'product', href: 'product_detail.html', text: 'Product' },
-      { key: 'orders', href: 'orders.html', text: 'All orders' },
-      { key: 'order-detail', href: 'order_detail.html', text: 'Order detail' },
-      { key: 'invoice', href: 'invoice.html', text: 'Invoice' },
-      { key: 'pricing', href: 'pricing_tables.html', text: 'Pricing' }
-    ]
-  },
-  {
-    // Template demo dashboards — kept on disk, linked here, out of the way.
     section: 'Dashboard views',
     i18n: 'hr.navgroup.views',
     items: [
-      { key: 'dashboard', href: 'index.html', text: 'Operations' },
-      { key: 'dashboard-2', href: 'index2.html', text: 'Analytics' },
-      { key: 'dashboard-3', href: 'index3.html', text: 'Sales' },
-      { key: 'dashboard-4', href: 'index4.html', text: 'System health' }
+      { key: 'dashboard', href: 'index.html', text: 'Operations' }
     ]
   },
   {
     section: 'System',
     i18n: 'hr.navgroup.system',
     items: [
-      { key: 'users', href: 'contacts.html', text: 'Contacts' },
       { key: 'user_management', href: 'user_management.html', text: 'User management' },
       { key: 'profile', href: 'profile.html', text: 'Your profile' },
-      { key: 'settings', href: 'settings.html', text: 'Settings' },
-      { key: 'faq', href: 'faq.html', text: 'Help center' }
+      { key: 'settings', href: 'settings.html', text: 'Settings' }
     ]
   }
 ];
@@ -375,9 +251,9 @@ export const ICONS = {
 };
 
 // Flat sidebar, zero dropdowns: every parent links to its section's main
-// screen (its first child). The active section additionally lists its pages
-// inline beneath it — plain links, always visible, no toggles. A parent reads
-// active whenever any of its pages is current.
+// screen (its first child). Every section lists its pages inline beneath
+// it — plain links, always visible, no toggles. A parent reads active
+// whenever any of its pages is current.
 function sectionKeys(item) {
   return (item.children || []).map(c => c.key).filter(Boolean);
 }
@@ -386,14 +262,15 @@ function renderNavItem(item, activeKey) {
   if (item.children) {
     const first = item.children[0];
     const active = item.key === activeKey || sectionKeys(item).includes(activeKey);
-    const pages = active
-      ? `<div class="nav-pages">${item.children
-        .map(c => {
-          const a = c.key === activeKey;
-          return `<a class="nav-page${a ? ' active' : ''}" href="${c.href}"${c.key ? ` data-navkey="${c.key}"` : ''}${a ? ' aria-current="page"' : ''}><span class="nav-text">${c.text}</span>${c.badge ? `<span class="badge ${c.badge.cls}">${c.badge.text}</span>` : ''}</a>`;
-        })
-        .join('')}</div>`
-      : '';
+    // Expand-all: every section lists its pages inline by default. The
+    // rail toggle still collapses the whole sidebar; active highlighting
+    // marks the current section + page.
+    const pages = `<div class="nav-pages">${item.children
+      .map(c => {
+        const a = c.key === activeKey;
+        return `<a class="nav-page${a ? ' active' : ''}" href="${c.href}"${c.key ? ` data-navkey="${c.key}"` : ''}${a ? ' aria-current="page"' : ''}><span class="nav-text">${c.text}</span>${c.badge ? `<span class="badge ${c.badge.cls}">${c.badge.text}</span>` : ''}</a>`;
+      })
+      .join('')}</div>`;
     return `
     <a class="nav-link nav-parent${active ? ' active' : ''}" href="${first.href}"${active ? ' aria-current="page"' : ''}>
       ${ICONS[item.icon] || ''}
@@ -442,11 +319,6 @@ export function renderSidebar(activeKey) {
       </div>
       <nav class="sidebar-nav" aria-label="HR sections">${groups}</nav>
       <div class="sidebar-footer">
-        <button type="button" class="company-switch" aria-haspopup="menu" aria-label="Switch company">
-          <span class="company-mark">D</span>
-          <span class="company-name">Dash</span>
-          <svg class="company-chev" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 6l4-4 4 4M4 10l4 4 4-4"/></svg>
-        </button>
         <div class="sidebar-settings${settingsActive ? ' has-active' : ''}">
           <button type="button" class="settings-toggle nav-link${settingsActive ? ' active' : ''}" aria-haspopup="dialog" aria-label="Open settings">
             ${ICONS.settings || ''}
@@ -468,7 +340,7 @@ export function renderTopbar() {
       </div>
       <div class="search-box">
         <svg class="s-icon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="7" cy="7" r="5"/><path d="M11 11l3.5 3.5"/></svg>
-        <input type="text" placeholder="Search pages or run a command…" aria-label="Open command palette">
+        <input id="topbar-search" name="topbar-search" type="text" placeholder="Search pages or run a command…" aria-label="Open command palette" autocomplete="off">
         <kbd>⌘K</kbd>
       </div>
       <div class="topbar-right">

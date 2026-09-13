@@ -4,7 +4,7 @@
 import { showToast } from './toast.js';
 import { showModal } from './modal.js';
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
-import { fmtDate } from './hr-locale.js';
+import { fmtDate, L, setText} from './hr-locale.js';
 import { inRamadan, RAMADAN_DAY_HOURS, NORMAL_DAY_HOURS } from './hr-statutory.js';
 import { getSeed, patchSeedRow, saveImportedRows } from './hr-api.js';
 import { exportData } from './import-export.js';
@@ -14,10 +14,6 @@ import { SITES, RAMADAN_PERIODS } from './hr-seed.js';
 let booted = false;
 let day = '';
 let siteFilter = '';
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 function todayIso() {
   return new Date().toISOString().slice(0, 10);
@@ -55,17 +51,12 @@ const ST_CLS = { present: 'green', late: 'yellow', absent: 'red' };
 
 function renderStats() {
   const rows = dayRows();
-  const set = (id, v) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.textContent = v;
-    }
-  };
-  set('att-stat-present', rows.filter(r => r.status === 'present').length);
-  set('att-stat-late', rows.filter(r => r.status === 'late').length);
-  set('att-stat-absent', rows.filter(r => r.status === 'absent').length);
+
+  setText('att-stat-present', rows.filter(r => r.status === 'present').length);
+  setText('att-stat-late', rows.filter(r => r.status === 'late').length);
+  setText('att-stat-absent', rows.filter(r => r.status === 'absent').length);
   const ot = rows.reduce((s, r) => s + (r.otMin || 0), 0);
-  set('att-stat-ot', fmtDur(ot));
+  setText('att-stat-ot', fmtDur(ot));
   const cap = document.getElementById('att-cap');
   if (cap) {
     const ram = inRamadan(day, RAMADAN_PERIODS);

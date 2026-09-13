@@ -3,6 +3,7 @@
 // pipeline board shares the same stage rules (hired needs an accepted offer).
 
 import { showToast } from './toast.js';
+import { L, setText } from './hr-locale.js';
 import { showModal } from './modal.js';
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
 import { getSeed, patchSeedRow, saveImportedRows } from './hr-api.js';
@@ -15,10 +16,6 @@ let jobFilter = 'all';
 let stageFilter = 'all';
 
 export const STAGES = ['new', 'screening', 'interview', 'offer', 'hired'];
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 export function stageLabel(st) {
   const map = {
@@ -113,20 +110,15 @@ function nextId() {
 }
 
 function renderAll() {
-  const set = (id, v) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.textContent = v;
-    }
-  };
+
   const list = getSeed('candidates');
-  set('cd-stat-all', String(list.length));
-  set(
+  setText('cd-stat-all', String(list.length));
+  setText(
     'cd-stat-proc',
     String(list.filter(c => ['new', 'screening', 'interview', 'offer'].includes(c.stage)).length)
   );
-  set('cd-stat-hired', String(list.filter(c => c.stage === 'hired').length));
-  set('cd-stat-rej', String(list.filter(c => c.stage === 'rejected').length));
+  setText('cd-stat-hired', String(list.filter(c => c.stage === 'hired').length));
+  setText('cd-stat-rej', String(list.filter(c => c.stage === 'rejected').length));
   const jf = document.getElementById('cd-job');
   if (jf && !jf.options.length) {
     jf.innerHTML = `<option value="all">—</option>${getSeed('jobs')

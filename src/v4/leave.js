@@ -2,6 +2,7 @@
 // Balances + request modal with KSA guards + my-requests. Idempotent.
 
 import { showToast } from './toast.js';
+import { L } from './hr-locale.js';
 import { showModal } from './modal.js';
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
 import { leaveDays, annualBalance, sickTier, hajjEligible, yearsBetween } from './hr-statutory.js';
@@ -12,10 +13,6 @@ import { LEAVE_TYPES, HOLIDAYS } from './hr-seed.js';
 
 let booted = false;
 let who = '';
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 function current() {
   const list = getSeed('employees');

@@ -4,6 +4,7 @@
 // their pinned version.
 
 import { showToast } from './toast.js';
+import { L, setText } from './hr-locale.js';
 import { showModal } from './modal.js';
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
 import { lintTemplate, KNOWN_PLACEHOLDERS } from './hr-statutory.js';
@@ -11,10 +12,6 @@ import { getSeed, patchSeedRow } from './hr-api.js';
 
 let booted = false;
 let catFilter = 'all';
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 const CATS = () => ({
   E: L('Employee contracts', 'عقود العمل'),
@@ -29,17 +26,12 @@ function rows() {
 }
 
 function renderAll() {
-  const set = (id, v) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.textContent = v;
-    }
-  };
+
   const list = getSeed('templates');
-  set('tp-stat-n', String(list.length));
-  set('tp-stat-e', String(list.filter(x => x.cat === 'E').length));
-  set('tp-stat-c', String(list.filter(x => x.cat === 'C').length));
-  set('tp-stat-l', String(list.filter(x => x.cat === 'L').length));
+  setText('tp-stat-n', String(list.length));
+  setText('tp-stat-e', String(list.filter(x => x.cat === 'E').length));
+  setText('tp-stat-c', String(list.filter(x => x.cat === 'C').length));
+  setText('tp-stat-l', String(list.filter(x => x.cat === 'L').length));
   const el = document.getElementById('tp-rows');
   if (el) {
     el.innerHTML = rows()

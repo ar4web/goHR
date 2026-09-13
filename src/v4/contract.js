@@ -3,6 +3,7 @@
 // filing actions mirror the registers.
 
 import { showToast } from './toast.js';
+import { L, setHtml } from './hr-locale.js';
 import { showModal } from './modal.js';
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
 import { renderTemplate } from './hr-statutory.js';
@@ -10,10 +11,6 @@ import { getSeed, patchSeedRow } from './hr-api.js';
 import { buildValues, partyLabel } from './contract-values.js';
 
 let booted = false;
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 function cur() {
   const id = new URLSearchParams(location.search).get('id');
@@ -47,25 +44,20 @@ function render() {
     return;
   }
   const x = getSeed('templates').find(t => t.code === c.type);
-  const set = (id, v) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.innerHTML = v;
-    }
-  };
-  set('cd-title', `${c.id} · ${x ? (currentLang() === 'ar' ? x.ar : x.en) : c.type}`);
-  set('cd-party', x ? partyLabel(x, c.party) : c.party);
-  set('cd-period', `<span dir="ltr">${c.start || '—'} → ${c.end || '∞'}</span>`);
-  set('cd-status', c.status);
-  set(
+
+  setHtml('cd-title', `${c.id} · ${x ? (currentLang() === 'ar' ? x.ar : x.en) : c.type}`);
+  setHtml('cd-party', x ? partyLabel(x, c.party) : c.party);
+  setHtml('cd-period', `<span dir="ltr">${c.start || '—'} → ${c.end || '∞'}</span>`);
+  setHtml('cd-status', c.status);
+  setHtml(
     'cd-sign',
     `${c.sign}${c.signedAt ? ` · <span dir="ltr">${c.signedAt}</span>` : ''}${c.filed ? ` · 🗄️ ${L('Filed', 'مؤرشف')}` : ''}`
   );
-  set(
+  setHtml(
     'cd-ver',
     `v${c.templateVer}${x && x.version !== c.templateVer ? ` (${L('latest', 'الأحدث')} v${x.version})` : ''}`
   );
-  set('cd-qiwa', c.qiwa || '—');
+  setHtml('cd-qiwa', c.qiwa || '—');
   const box = document.getElementById('cd-doc');
   if (box) {
     box.innerHTML = docHTML(c);

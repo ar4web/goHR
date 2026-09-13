@@ -7,7 +7,7 @@
 import { showToast } from './toast.js';
 import { showModal } from './modal.js';
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
-import { fmtSAR } from './hr-locale.js';
+import { fmtSAR, L, setText} from './hr-locale.js';
 import { VAT_RATE } from './hr-statutory.js';
 import { getSeed, patchSeedRow, saveImportedRows } from './hr-api.js';
 import { exportData, exportCSV } from './import-export.js';
@@ -27,10 +27,6 @@ const ST_CLS = {
 // Demo convention: the HR manager approves, the accountant pays.
 const APPROVER = 'EMP-0001';
 const PAYER = 'EMP-0002';
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 function empName(code) {
   const e = getSeed('employees').find(x => x.code === code);
@@ -111,12 +107,7 @@ function pushHistory(x, action, by, note) {
 }
 
 function renderStats() {
-  const set = (id, v) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.textContent = v;
-    }
-  };
+
   const list = getSeed('expenses');
   const open = list.filter(x => !['paid', 'rejected'].includes(x.status));
   const vat = list
@@ -125,13 +116,13 @@ function renderStats() {
   const bill = open
     .filter(x => x.billable)
     .reduce((s, x) => s + Number(x.amount || 0) + (Number(x.vat) || 0), 0);
-  set('ex-stat-open', String(open.length));
-  set(
+  setText('ex-stat-open', String(open.length));
+  setText(
     'ex-stat-amt',
     fmtSAR(open.reduce((s, x) => s + Number(x.amount || 0) + (Number(x.vat) || 0), 0))
   );
-  set('ex-stat-vat', fmtSAR(vat));
-  set('ex-stat-bill', fmtSAR(bill));
+  setText('ex-stat-vat', fmtSAR(vat));
+  setText('ex-stat-bill', fmtSAR(bill));
 }
 
 function renderRows() {

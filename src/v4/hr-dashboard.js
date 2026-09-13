@@ -4,7 +4,7 @@
 
 import { ICONS } from './shell-render.js';
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
-import { fmtSAR, fmtDate, fmtHijri } from './hr-locale.js';
+import { fmtSAR, fmtDate, fmtHijri, L} from './hr-locale.js';
 import {
   daysUntil,
   nitaqatEstimate,
@@ -29,14 +29,11 @@ import {
 import { getSeed } from './hr-api.js';
 import { CLIENTS, LEAVE_DELAY_REASONS, SITES, SKILLS, SPONSORS, PROFESSIONS } from './hr-seed.js';
 import { renderEchart } from './chart-helper.js';
-import { renderSiteMap } from './map-helper.js';
 import { escapeHtml as esc } from './markup.js';
 
 let booted = false;
 
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
+
 
 function alerts() {
   const out = [];
@@ -211,17 +208,45 @@ function marginTone(pct) {
   return 'red';
 }
 
-function moneyCard({ icon, color, label, value, sub, href }) {
+function sparkBars(values, color) {
+  const max = Math.max(...values, 0);
+  return values
+    .map(
+      v =>
+        `<div class="bar" style="height:${max > 0 ? Math.max(8, Math.round((v / max) * 100)) : 8}%;${color ? `background:${esc(color)};` : ''}"></div>`
+    )
+    .join('');
+}
+
+// Trailing `n` calendar months ending with the month of `endIso`
+// (YYYY-MM-DD), oldest first: ['2026-04', …, '2026-09'].
+function trailingMonths(n, endIso) {
+  const [y, m] = endIso.slice(0, 7).split('-').map(Number);
+  const out = [];
+  for (let i = n - 1; i >= 0; i--) {
+    const d = new Date(y, m - 1 - i, 1);
+    out.push(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`);
+  }
+  return out;
+}
+
+function moneyCard({ icon, color, label, value, sub, href, change, spark, sparkColor, bar }) {
+  const arrow =
+    change && change.dir === 'down'
+      ? '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3v6M3 6l3 3 3-3"/></svg>'
+      : '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V3M3 6l3-3 3 3"/></svg>';
   return `
     <a class="card hr-card-link" href="${esc(href)}">
       <div class="stat">
         <div class="stat-icon ${esc(color)}">${ICONS[icon] || ''}</div>
         <div class="stat-content">
           <div class="stat-label">${esc(label)}</div>
-          <div class="stat-value-row"><span class="stat-value">${esc(value)}</span></div>
+          <div class="stat-value-row"><span class="stat-value">${esc(value)}</span>${change ? `<span class="stat-change ${change.dir}">${arrow}${esc(change.text)}</span>` : ''}</div>
           <div class="stat-subtext">${esc(sub)}</div>
         </div>
+        ${spark && spark.length ? `<div class="stat-spark">${sparkBars(spark, sparkColor)}</div>` : ''}
       </div>
+      ${bar ? `<div style="padding:0 16px 12px"><div class="progress-thin"><div class="bar" style="width:${bar.pct}%;background:${esc(bar.color)}"></div></div></div>` : ''}
     </a>`;
 }
 
@@ -246,6 +271,32 @@ function renderZoneA() {
     todayIso: todayIso()
   });
   const tone = marginTone(money.crewMarginPct);
+  // Monthly billed revenue, oldest first — sparkline + MoM badge render only
+  // when the seed actually spans months (no fake history).
+  const revByMonth = new Map();
+  for (const r of getSeed('invoices')) {
+    const m = String(r.month || '').slice(0, 7);
+    if (!m) {continue;}
+    revByMonth.set(m, (revByMonth.get(m) || 0) + invoiceTotals(r.lines || []).total);
+  }
+  const revMonths = [...revByMonth.keys()].sort();
+  const revSpark = revMonths.length >= 3 ? revMonths.map(m => revByMonth.get(m)) : null;
+  let revChange = null;
+  if (revMonths.length >= 2) {
+    const cur = revByMonth.get(revMonths[revMonths.length - 1]);
+    const prev = revByMonth.get(revMonths[revMonths.length - 2]);
+    if (prev > 0) {
+      const pct = Math.round(((cur - prev) / prev) * 100);
+      revChange = { dir: pct >= 0 ? 'up' : 'down', text: `${pct >= 0 ? '+' : ''}${pct}%` };
+    }
+  }
+  // Margin vs the 15% healthy threshold: badge + progress bar.
+  const marginPts = Math.round((money.crewMarginPct - 15) * 10) / 10;
+  const marginChange = {
+    dir: marginPts >= 0 ? 'up' : 'down',
+    text: `${marginPts >= 0 ? '+' : ''}${marginPts} ${t('hr.dashboard.vsTarget')}`
+  };
+  const toneVar = tone === 'green' ? 'var(--green)' : tone === 'yellow' ? 'var(--yellow)' : 'var(--red)';
   document.getElementById('money-cards').innerHTML =
     moneyCard({
       icon: 'wallet',
@@ -253,7 +304,10 @@ function renderZoneA() {
       label: t('hr.dashboard.revenue'),
       value: fmtSAR(money.revenue),
       sub: `${money.crewHeads} ${t('hr.dashboard.heads')}`,
-      href: 'hr_client_dashboard.html'
+      href: 'hr_client_dashboard.html',
+      change: revChange,
+      spark: revSpark,
+      sparkColor: 'var(--green)'
     }) +
     moneyCard({
       icon: 'briefcase',
@@ -269,7 +323,9 @@ function renderZoneA() {
       label: t('hr.dashboard.crewMargin'),
       value: fmtSAR(money.crewMargin),
       sub: `${money.crewMarginPct}%`,
-      href: 'hr_client_dashboard.html'
+      href: 'hr_client_dashboard.html',
+      change: marginChange,
+      bar: { pct: Math.max(0, Math.min(100, Math.round((money.crewMarginPct / 15) * 100))), color: toneVar }
     }) +
     moneyCard({
       icon: 'doc',
@@ -285,40 +341,7 @@ function renderZoneA() {
     meta.innerHTML = `<span class="status status-${tone}">${money.crewMarginPct}%</span>`;
   }
 
-  // Runway chart: contracted revenue bars + flat current-cost line.
-  const months = money.runway.map(r => r.month.slice(2).split('-').reverse().join('/'));
-  renderEchart(
-    document.getElementById('chart-runway'),
-    tk => ({
-      tooltip: { trigger: 'axis' },
-      legend: { bottom: 0, textStyle: { color: tk.textMuted, fontSize: 11 } },
-      grid: { left: 8, right: 8, top: 12, bottom: 52, containLabel: true },
-      xAxis: { type: 'category', data: months, axisLabel: { color: tk.textMuted, fontSize: 10 } },
-      yAxis: { type: 'value', splitLine: { lineStyle: { color: tk.borderLight, type: [4, 3] } } },
-      series: [
-        {
-          name: L('Revenue', 'الإيراد'),
-          type: 'bar',
-          data: money.runway.map(r => r.revenue),
-          itemStyle: { color: tk.primary, borderRadius: [4, 4, 0, 0] }
-        },
-        {
-          name: L('Cost', 'التكلفة'),
-          type: 'line',
-          data: money.runway.map(r => r.cost),
-          lineStyle: { color: tk.red, type: 'dashed', width: 2 },
-          itemStyle: { color: tk.red },
-          symbol: 'circle',
-          symbolSize: 6
-        }
-      ]
-    }),
-    L(
-      `Contracted revenue ${fmtSAR(money.runway[0].revenue)} now, ${fmtSAR(money.runway[5].revenue)} in ${money.runway[5].month}; current cost ${fmtSAR(money.cost)} per month.`,
-      `الإيراد المتعاقد عليه ${fmtSAR(money.runway[0].revenue)} حاليًا و${fmtSAR(money.runway[5].revenue)} في ${money.runway[5].month}؛ التكلفة الحالية ${fmtSAR(money.cost)} شهريًا.`
-    ),
-    { rtl: 'time' }
-  );
+  // (Runway chart archived to removed/runway-chart.js — card deleted.)
 
   const tc = document.getElementById('top-clients');
   if (tc) {
@@ -431,7 +454,7 @@ function renderS1() {
     document.getElementById('chart-tenure'),
     tk => ({
       tooltip: { trigger: 'axis' },
-      grid: { left: 8, right: 8, top: 8, bottom: 8, containLabel: true },
+      grid: { left: 8, right: 8, top: 8, bottom: 8 },
       xAxis: { type: 'value', splitLine: { lineStyle: { color: tk.borderLight, type: [4, 3] } } },
       yAxis: {
         type: 'category',
@@ -462,7 +485,7 @@ function renderS1() {
     tk => ({
       tooltip: { trigger: 'axis' },
       legend: { bottom: 0, textStyle: { color: tk.textMuted, fontSize: 11 } },
-      grid: { left: 8, right: 8, top: 12, bottom: 52, containLabel: true },
+      grid: { left: 8, right: 8, top: 12, bottom: 52 },
       xAxis: {
         type: 'category',
         data: labels,
@@ -522,6 +545,26 @@ function renderS2() {
   const byId = id => reqs.find(r => r.id === id);
   const w = leaveWindows(reqs, todayIso());
 
+  // Departures per trailing month (by start date) — sparkline + MoM badge.
+  // Returns per trailing month (by end date, approved only) — MoM badge.
+  const months6 = trailingMonths(6, todayIso());
+  const [prevMo, curMo] = trailingMonths(2, todayIso());
+  const depByMonth = new Map(months6.map(m => [m, 0]));
+  const retByMonth = new Map(months6.map(m => [m, 0]));
+  for (const r of reqs) {
+    const fromMo = String(r.from || '').slice(0, 7);
+    if (depByMonth.has(fromMo)) {depByMonth.set(fromMo, depByMonth.get(fromMo) + 1);}
+    if (r.status === 'approved') {
+      const toMo = String(r.to || '').slice(0, 7);
+      if (retByMonth.has(toMo)) {retByMonth.set(toMo, retByMonth.get(toMo) + 1);}
+    }
+  }
+  const momBadge = (cur, prev) => {
+    const d = cur - prev;
+    if (d === 0) {return null;}
+    return { dir: d > 0 ? 'up' : 'down', text: `${d > 0 ? '+' : ''}${d} ${t('hr.dashboard.vsLastMo')}` };
+  };
+
   document.getElementById('vac-cards').innerHTML =
     moneyCard({
       icon: 'calendar',
@@ -537,7 +580,10 @@ function renderS2() {
       label: t('hr.dashboard.vacDeparting'),
       value: String(w.departing.length),
       sub: t('hr.dashboard.heads'),
-      href: 'hr_leave.html'
+      href: 'hr_leave.html',
+      change: momBadge(depByMonth.get(curMo), depByMonth.get(prevMo)),
+      spark: months6.map(m => depByMonth.get(m)),
+      sparkColor: 'var(--yellow)'
     }) +
     moneyCard({
       icon: 'inbox',
@@ -545,7 +591,8 @@ function renderS2() {
       label: t('hr.dashboard.vacReturning'),
       value: String(w.returning.length),
       sub: t('hr.dashboard.heads'),
-      href: 'hr_leave.html'
+      href: 'hr_leave.html',
+      change: momBadge(retByMonth.get(curMo), retByMonth.get(prevMo))
     });
 
   const meta = document.getElementById('zone-leave-meta');
@@ -636,7 +683,7 @@ function renderS2() {
     document.getElementById('chart-delayreasons'),
     tk => ({
       tooltip: { trigger: 'axis' },
-      grid: { left: 8, right: 8, top: 8, bottom: 8, containLabel: true },
+      grid: { left: 8, right: 8, top: 8, bottom: 8 },
       xAxis: { type: 'value', splitLine: { lineStyle: { color: tk.borderLight, type: [4, 3] } } },
       yAxis: {
         type: 'category',
@@ -755,9 +802,6 @@ function donutOption(tk, slices) {
 }
 
 function renderS3() {
-  if (!document.getElementById('site-map')) {
-    return;
-  }
   const emps = payableEmps();
   const assigns = activeAssigns();
   const hcOf = id => assigns.filter(a => a.site === id).length;
@@ -766,27 +810,36 @@ function renderS3() {
   SITES.forEach(s2 => {
     cities[s2.city] = (cities[s2.city] || 0) + hcOf(s2.id);
   });
-  document.getElementById('city-chips').innerHTML = Object.entries(cities)
-    .sort((a, b) => b[1] - a[1])
-    .map(([c, n]) => `<span class="status status-blue">${esc(c)} · ${n}</span>`)
-    .join('');
+  const chipsBox = document.getElementById('city-chips');
+  if (chipsBox) {
+    chipsBox.innerHTML = Object.entries(cities)
+      .sort((a, b) => b[1] - a[1])
+      .map(([c, n]) => `<span class="status status-blue">${esc(c)} · ${n}</span>`)
+      .join('');
+  }
 
   const meta = document.getElementById('zone-geo-meta');
   if (meta) {
     meta.innerHTML = `<span class="status status-blue">${SITES.length} ${esc(t('hr.dashboard.mapSites'))} · ${Object.keys(cities).length} ${esc(L('cities', 'مدن'))}</span>`;
   }
 
-  renderSiteMap(document.getElementById('site-map'), {
-    sites: SITES,
-    clients: CLIENTS,
-    headcountOf: hcOf,
-    labels: {
-      sites: t('hr.dashboard.mapSites'),
-      clients: t('hr.dashboard.mapClients'),
-      workers: t('hr.dashboard.mapWorkers')
-    },
-    onSelect: renderRoster
-  });
+  // Workforce map card archived — mount only if a #site-map host exists
+  // (none on the dashboard anymore); roster/chips/meta below still fill.
+  // This also keeps the 1.1MB dev / 148KB prod vendor-maps chunk off the page.
+  const mapEl = document.getElementById('site-map');
+  if (mapEl) {
+    import('./map-helper.js').then(({ renderSiteMap }) => renderSiteMap(mapEl, {
+      sites: SITES,
+      clients: CLIENTS,
+      headcountOf: hcOf,
+      labels: {
+        sites: t('hr.dashboard.mapSites'),
+        clients: t('hr.dashboard.mapClients'),
+        workers: t('hr.dashboard.mapWorkers')
+      },
+      onSelect: renderRoster
+    }));
+  }
   const roster = document.getElementById('site-roster');
   const current = roster && roster.dataset.site;
   const fallback = [...SITES].sort((a, b) => hcOf(b.id) - hcOf(a.id))[0];
@@ -846,7 +899,7 @@ function renderS3() {
     document.getElementById('chart-profession'),
     tk => ({
       tooltip: { trigger: 'axis' },
-      grid: { left: 8, right: 8, top: 8, bottom: 8, containLabel: true },
+      grid: { left: 8, right: 8, top: 8, bottom: 8 },
       xAxis: { type: 'value', splitLine: { lineStyle: { color: tk.borderLight, type: [4, 3] } } },
       yAxis: {
         type: 'category',
@@ -1195,7 +1248,7 @@ function renderS5() {
     tk => ({
       tooltip: { trigger: 'axis' },
       legend: { bottom: 0, textStyle: { color: tk.textMuted, fontSize: 11 } },
-      grid: { left: 8, right: 8, top: 12, bottom: 52, containLabel: true },
+      grid: { left: 8, right: 8, top: 12, bottom: 52 },
       xAxis: { type: 'category', data: dates, axisLabel: { color: tk.textMuted, fontSize: 10 } },
       yAxis: {
         type: 'value',

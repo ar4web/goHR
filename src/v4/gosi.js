@@ -4,17 +4,13 @@
 // pension ladder; expats are hazards-only 2% employer (§0.6).
 
 import { currentLang, LANG_EVENT, applyI18n } from './i18n.js';
-import { fmtSAR } from './hr-locale.js';
+import { fmtSAR, L, setText} from './hr-locale.js';
 import { calcGosi } from './hr-statutory.js';
 import { GOSI_CAP } from './hr-seed.js';
 import { getSeed } from './hr-api.js';
 import { exportData, exportCSV } from './import-export.js';
 
 let booted = false;
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 function empName(e) {
   return currentLang() === 'ar' ? e.nameAr || e.nameEn : e.nameEn;
@@ -56,19 +52,14 @@ function sysChip(sys) {
 }
 
 function renderAll() {
-  const set = (id, v) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.textContent = v;
-    }
-  };
+
   const rs = rows();
   const sum = k => rs.reduce((s, r) => s + r.g[k], 0);
-  set('gs-stat-base', fmtSAR(sum('base')));
-  set('gs-stat-emp', fmtSAR(sum('employee')));
-  set('gs-stat-er', fmtSAR(sum('employer')));
+  setText('gs-stat-base', fmtSAR(sum('base')));
+  setText('gs-stat-emp', fmtSAR(sum('employee')));
+  setText('gs-stat-er', fmtSAR(sum('employer')));
   const saudis = rs.filter(r => r.g.system !== 'expat').length;
-  set('gs-stat-hc', `${rs.length} · ${L('Saudis', 'سعوديون')}: ${saudis}`);
+  setText('gs-stat-hc', `${rs.length} · ${L('Saudis', 'سعوديون')}: ${saudis}`);
   const el = document.getElementById('gs-rows');
   if (el) {
     el.innerHTML = rs

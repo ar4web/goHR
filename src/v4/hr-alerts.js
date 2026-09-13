@@ -5,12 +5,9 @@
 // "mark all read" is pressed.
 
 import { currentLang } from './i18n.js';
+import { L } from './hr-locale.js';
 import { getSeed } from './hr-api.js';
 import { daysUntil } from './hr-statutory.js';
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 function empName(e) {
   return currentLang() === 'ar' ? e.nameAr || e.nameEn : e.nameEn;

@@ -2,7 +2,8 @@
 // Seed history plus live entries appended by P6 mutations; newest first,
 // read-only feed. Exportable for auditors.
 
-import { currentLang, LANG_EVENT, applyI18n } from './i18n.js';
+import { LANG_EVENT, applyI18n } from './i18n.js';
+import { L, setText } from './hr-locale.js';
 import { getAudit } from './hr-audit.js';
 import { exportData, exportCSV } from './import-export.js';
 
@@ -10,22 +11,13 @@ let booted = false;
 let q = '';
 let from = '';
 
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
-
 function renderAll() {
-  const set = (id, v) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.textContent = v;
-    }
-  };
+
   const list = getAudit();
   const today = new Date().toISOString().slice(0, 10);
-  set('au-stat-total', String(list.length));
-  set('au-stat-today', String(list.filter(a => String(a.at).slice(0, 10) === today).length));
-  set('au-stat-actors', String(new Set(list.map(a => a.actor)).size));
+  setText('au-stat-total', String(list.length));
+  setText('au-stat-today', String(list.filter(a => String(a.at).slice(0, 10) === today).length));
+  setText('au-stat-actors', String(new Set(list.map(a => a.actor)).size));
   const el = document.getElementById('au-rows');
   if (el) {
     const needle = q.trim().toLowerCase();

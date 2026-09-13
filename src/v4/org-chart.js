@@ -2,16 +2,12 @@
 // Reporting tree from ORG_LINKS + departments summary. Idempotent.
 
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
-import { initialsOf } from './hr-locale.js';
+import { initialsOf, L} from './hr-locale.js';
 import { getSeed, saveImportedRows } from './hr-api.js';
 import { openImportModal } from './import-modal.js';
 import { DEPARTMENTS } from './hr-seed.js';
 
 let booted = false;
-
-function L(en, ar) {
-  return currentLang() === 'ar' ? ar : en;
-}
 
 function empName(e) {
   return currentLang() === 'ar' ? e.nameAr || e.nameEn : e.nameEn;

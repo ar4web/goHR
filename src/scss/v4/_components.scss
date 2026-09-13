@@ -102,9 +102,9 @@
   // wider title blocks could end up flush against the controls when
   // space-between has nothing left to distribute.
   gap: var(--space-4);
-  padding: 12px 16px;
+  padding: var(--space-2) var(--space-4);
   border-bottom: 1px solid var(--border-color-light);
-  min-height: 44px;
+  min-height: 38px;
 }
 .card-title {
   font-size: 13px;
@@ -150,7 +150,7 @@ table.hr-table {
 table.table th,
 table.hr-table th {
   text-align: start;
-  padding: 10px 16px;
+  padding: 6px var(--space-4);
   font-size: 11px;
   font-weight: var(--font-weight-bold);
   text-transform: uppercase;
@@ -159,10 +159,11 @@ table.hr-table th {
   color: var(--text-muted);
   background: var(--bg-surface-secondary);
   border-bottom: 1px solid var(--border-color);
+  vertical-align: middle;
 }
 table.table td,
 table.hr-table td {
-  padding: 10px 16px;
+  padding: 6px var(--space-4);
   border-bottom: 1px solid var(--border-color-light);
   color: var(--text-secondary);
   vertical-align: middle;
@@ -288,27 +289,11 @@ table.hr-table td:last-child .card-opt-btn {
   transition: width 200ms ease;
 }
 
-// Pulsing dot — for "LIVE" / "online" / "active" indicators. Used inline:
-//   <span class="live-pulse"></span>
-// or with a custom color via a wrapping span style background. The animation
-// is a soft expanding-ring shadow.
-.live-pulse {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--green);
-  animation: pulse-dot 2s infinite;
-}
 @keyframes pulse-dot {
   0%   { box-shadow: 0 0 0 0 rgba(47, 179, 68, 0.5); }
   70%  { box-shadow: 0 0 0 6px rgba(47, 179, 68, 0); }
   100% { box-shadow: 0 0 0 0 rgba(47, 179, 68, 0); }
 }
-@media (prefers-reduced-motion: reduce) {
-  .live-pulse { animation: none; }
-}
-
 // Toggle switch
 .toggle-row {
   display: flex;
@@ -688,7 +673,7 @@ body.modal-open { overflow: hidden; }
 .modal-form-row select {
   width: 100%;
   height: 34px;
-  padding: 0 10px;
+  padding: 0 var(--space-2);
   background: var(--bg-surface);
   border: 1px solid var(--border-color);
   border-radius: var(--radius);
@@ -698,7 +683,7 @@ body.modal-open { overflow: hidden; }
   outline: none;
   transition: border-color 120ms, box-shadow 120ms;
 }
-.modal-form-row textarea { height: auto; min-height: 80px; padding: 8px 10px; resize: vertical; }
+.modal-form-row textarea { height: auto; min-height: 80px; padding: var(--space-2); resize: vertical; }
 .modal-form-row input:focus,
 .modal-form-row textarea:focus,
 .modal-form-row select:focus {
@@ -907,8 +892,6 @@ body.modal-open { overflow: hidden; }
   width: 32px; height: 32px;
   overflow: hidden;
 }
-.avatar.avatar-image { background: var(--bg-surface-secondary); overflow: hidden; }
-.avatar.avatar-image img, .avatar.avatar-image svg { width: 100%; height: 100%; object-fit: cover; }
 .avatar-xs { width: 20px; height: 20px; font-size: 8.5px; }
 .avatar-sm { width: 26px; height: 26px; font-size: 10px; }
 .avatar-md { width: 32px; height: 32px; font-size: 11px; }
@@ -1080,6 +1063,7 @@ body.modal-open { overflow: hidden; }
 // ────────────────────────
 .tabs-pill {
   display: inline-flex;
+  align-items: center;
   background: var(--bg-surface-secondary);
   padding: 3px;
   border-radius: var(--radius);
@@ -1106,6 +1090,7 @@ body.modal-open { overflow: hidden; }
 
 .tabs-underline {
   display: flex;
+  align-items: center;
   border-bottom: 1px solid var(--border-color-light);
   gap: var(--space-1);
 }
@@ -1119,7 +1104,7 @@ body.modal-open { overflow: hidden; }
   font-weight: var(--font-weight-medium);
   color: var(--text-muted);
   cursor: pointer;
-  transition: color 100ms, border-color 100ms;
+  transition: color 150ms ease, border-color 150ms ease;
   margin-bottom: -1px;
 }
 .tabs-underline .tab:hover { color: var(--text); }
@@ -1529,6 +1514,7 @@ blockquote footer cite {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  text-align: start;
   animation: cmdk-pop-in 140ms cubic-bezier(0.2, 0, 0, 1);
 }
 @keyframes cmdk-pop-in {
@@ -1607,10 +1593,11 @@ blockquote footer cite {
   flex-shrink: 0;
 }
 .cmdk-item.active .cmdk-item-icon { background: rgba(26, 187, 156, 0.14); color: var(--primary); }
-.cmdk-item-label { flex: 1; }
+.cmdk-item-label { flex: 1; text-align: start; }
 .cmdk-item-kbd {
   font-size: 11px;
   color: var(--text-muted);
+  text-align: start;
   opacity: 0;
 }
 .cmdk-item.active .cmdk-item-kbd { opacity: 1; }
@@ -1881,5 +1868,87 @@ body.cmdk-open { overflow: hidden; }
   margin-top: 12px;
   display: flex;
   gap: var(--space-2);
+}
+
+// Global visual cleanup (ERP density pass — no HTML changes).
+// Left-align overlay text, list labels, and shortcut hints.
+.cmdk-dialog .cmdk-section,
+.cmdk-dialog .cmdk-item,
+.cmdk-dialog .cmdk-item-label,
+.cmdk-dialog .cmdk-item-kbd,
+.settings-cols,
+.settings-cols .settings-cell,
+.settings-cols .settings-col-title,
+.settings-cols .settings-sub-title,
+.modal-dialog,
+.modal-dialog .modal-title,
+.modal-dialog .cmdk-item-label,
+.modal-dialog .cmdk-item-kbd {
+  text-align: start;
+}
+
+// ────────────────────────
+//  LAYOUT UTILITIES — one system, every page
+//  Replaces the recurring inline `display:flex` / caption / padding styles
+//  that drifted across pages. Prefer these over style="…" for static layout;
+//  keep inline styles for genuinely dynamic values (bar heights, widths).
+// ────────────────────────
+// Vertical stack of cards/widgets.
+.stack-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+.stack-col-sm {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+// Inline icon + label rows (avatars, team rows).
+.inline-center {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+// Bordered account/row cards (profile social links).
+.social-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px;
+  border: 1px solid var(--border-color-light);
+  border-radius: var(--radius);
+}
+// Muted 11.5px caption text.
+.caption-muted {
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+// Compact card bodies (dashboard widgets).
+.card-body-sm {
+  padding: 8px 16px;
+}
+.card-body-flush {
+  padding: 0 16px 12px;
+}
+// Circular icon badge (profile stats, empty states). Pair with an inline
+// background/color for the per-instance tone.
+.icon-badge {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 8px;
+}
+// Small bordered tile (profile badges, achievements).
+.tile {
+  text-align: center;
+  padding: 14px 8px;
+  border: 1px solid var(--border-color-light);
+  border-radius: var(--radius);
+  background: var(--bg-surface);
+}
+.tile-active {
+  background: var(--primary-lt);
+}
+.tile-dim {
+  opacity: 0.5;
 }
 
