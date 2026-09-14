@@ -1,8 +1,10 @@
 // P4 static audit: NAV/pages/i18n/seed-xref for payroll + payslip + GOSI +
 // WPS + EOSB + expenses.
 import { readFileSync, existsSync } from 'node:fs';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
-const R = new URL('..', import.meta.url).pathname.replace(/\/$/, '');
+const R = fileURLToPath(new URL('..', import.meta.url));
+const RU = pathToFileURL(R).href.replace(/\/$/, '');
 const fail = [];
 const ok = (name, cond, extra = '') => {
   console.log(`${cond ? 'PASS' : 'FAIL'} ${name}${extra && !cond ? ` — ${extra}` : ''}`);
@@ -12,7 +14,7 @@ const ok = (name, cond, extra = '') => {
 };
 
 // 1. NAV leaves -> files (HR leaves live in collapsible parents; icons resolve from the parent).
-const { NAV, ICONS } = await import(`${R}/src/v4/shell-render.js`);
+const { NAV, ICONS } = await import(`${RU}/src/v4/shell-render.js`);
 const leaves = [];
 for (const g of NAV) {
   for (const it of g.items || []) {
@@ -25,7 +27,7 @@ for (const g of NAV) {
     }
   }
 }
-const need = ['hr-payroll', 'hr-gosi', 'hr-wps', 'hr-eosb', 'hr-expenses'];
+const need = ['payroll', 'gosi', 'wps', 'eosb', 'expenses'];
 ok(
   'nav-5-leaves',
   need.every(k => leaves.some(l => l.key === k))
@@ -34,13 +36,13 @@ for (const l of leaves.filter(x => need.includes(x.key))) {
   ok(`nav-file-${l.key}`, existsSync(`${R}/production/${l.href}`), l.href);
   ok(`nav-icon-${l.key}`, !!l.parentIcon && l.parentIcon in ICONS, l.parentIcon);
 }
-ok('payslip-page-exists', existsSync(`${R}/production/hr_payslip.html`));
+ok('payslip-page-exists', existsSync(`${R}/production/payslip.html`));
 // 2. i18n coverage + DOM id xref
 const i18nSrc = readFileSync(`${R}/src/v4/i18n.js`, 'utf8');
 const dictKeys = new Set(
   [...i18nSrc.matchAll(/'((?:nav|common|status|role|hr)\.[^']+)'\s*:/g)].map(m => m[1])
 );
-const pages = ['hr_payroll', 'hr_payslip', 'hr_gosi', 'hr_wps', 'hr_eosb', 'hr_expenses'];
+const pages = ['payroll', 'payslip', 'gosi', 'wps', 'eosb', 'expenses'];
 const mods = ['payroll', 'payslip', 'gosi', 'wps', 'eosb', 'expenses'];
 const roots = {
   payroll: 'data-hr-payroll',
@@ -71,7 +73,7 @@ ok('i18n-coverage', missing.length === 0, missing.join(', '));
 console.log(`  (used=${used.size} dict=${dictKeys.size})`);
 
 // 3. seed xref
-const seed = await import(`${R}/src/v4/hr-seed.js`);
+const seed = await import(`${RU}/src/v4/hr-seed.js`);
 const emps = new Set(seed.EMPLOYEES.map(e => e.code));
 const clients = new Set(seed.CLIENTS.map(c => c.id));
 const cats = new Set(seed.EXPENSE_CATEGORIES.map(c => c.code));

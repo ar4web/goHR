@@ -1,8 +1,10 @@
 // P1 static audit: NAV/pages/i18n/seed-xref for visas + residency + onboarding +
 // tracker + vault + org. Rebuilt from the P1 contract (post-/tmp-wipe).
 import { readFileSync, existsSync } from 'node:fs';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
-const R = new URL('..', import.meta.url).pathname.replace(/\/$/, '');
+const R = fileURLToPath(new URL('..', import.meta.url));
+const RU = pathToFileURL(R).href.replace(/\/$/, '');
 const fail = [];
 const ok = (name, cond, extra = '') => {
   console.log(`${cond ? 'PASS' : 'FAIL'} ${name}${extra && !cond ? ` — ${extra}` : ''}`);
@@ -12,7 +14,7 @@ const ok = (name, cond, extra = '') => {
 };
 
 // 1. NAV leaves -> files (HR leaves live in collapsible parents; icons resolve from the parent).
-const { NAV, ICONS } = await import(`${R}/src/v4/shell-render.js`);
+const { NAV, ICONS } = await import(`${RU}/src/v4/shell-render.js`);
 const leaves = [];
 for (const g of NAV) {
   for (const it of g.items || []) {
@@ -25,7 +27,7 @@ for (const g of NAV) {
     }
   }
 }
-const need = ['hr-visas', 'hr-residency', 'hr-onboarding', 'hr-tracker', 'hr-documents', 'hr-org'];
+const need = ['visas', 'residency', 'onboarding', 'tracker', 'documents', 'org'];
 ok(
   'nav-6-leaves',
   need.every(k => leaves.some(l => l.key === k))
@@ -40,12 +42,12 @@ const dictKeys = new Set(
   [...i18nSrc.matchAll(/'((?:nav|common|status|role|hr)\.[^']+)'\s*:/g)].map(m => m[1])
 );
 const pages = [
-  'hr_visas',
-  'hr_residency',
-  'hr_onboarding',
-  'hr_tracker',
-  'hr_documents',
-  'hr_org_chart'
+  'visas',
+  'residency',
+  'onboarding',
+  'tracker',
+  'documents',
+  'org_chart'
 ];
 const mods = ['visas', 'residency', 'onboarding', 'tracker', 'documents', 'org-chart'];
 const roots = {
@@ -88,7 +90,7 @@ ok('i18n-coverage', missing.length === 0, missing.join(', '));
 console.log(`  (used=${used.size} dict=${dictKeys.size})`);
 
 // 3. seed xref (documented P1 counts)
-const seed = await import(`${R}/src/v4/hr-seed.js`);
+const seed = await import(`${RU}/src/v4/hr-seed.js`);
 const emps = new Set(seed.EMPLOYEES.map(e => e.code));
 ok('seed-visas-24', seed.VISAS.length === 24);
 ok('seed-onboarding-4', seed.ONBOARDING.length === 4);

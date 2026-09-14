@@ -152,7 +152,7 @@ function rootRedirectPlugin() {
     configureServer(server) {
       server.middlewares.use((req, res, next) => {
         if (req.url === '/' || req.url === '/index.html') {
-          res.writeHead(302, { location: '/production/hr_dashboard.html' });
+          res.writeHead(302, { location: '/production/index.html' });
           res.end();
           return;
         }
@@ -199,7 +199,7 @@ function shellInjectionPlugin() {
         // paints unstyled (white flash, giant default SVGs) while the module
         // graph evaluates. The JS entry imports the same file — Vite dedupes
         // it into one bundle/link, so this is never loaded twice.
-        const metaPwa = `<link rel="stylesheet" href="/src/scss/v4/main.scss">
+        const metaPwa = `<link rel="stylesheet" href="${base}src/scss/v4/main.scss">
 <link rel="manifest" href="${base}site.webmanifest">
 <meta name="theme-color" content="#1ABB9C" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#111111" media="(prefers-color-scheme: dark)">

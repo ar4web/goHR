@@ -2,8 +2,9 @@
 import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { importFile, validateRows } from '../src/v4/import-export.js';
+import { fileURLToPath } from 'node:url';
 
-const R = new URL('..', import.meta.url).pathname.replace(/\/$/, '');
+const R = fileURLToPath(new URL('..', import.meta.url));
 let n = 0;
 const eq = (name, got, want) => {
   n += 1;
@@ -15,12 +16,12 @@ const eq = (name, got, want) => {
 
 // --- static wiring: 9 new + 2 pre-existing import buttons ---
 const pairs = [
-  ['residency', 'hr_residency', 'res-import'], ['onboarding', 'hr_onboarding', 'ob-import'],
-  ['documents', 'hr_documents', 'doc-import'], ['org-chart', 'hr_org_chart', 'org-import'],
-  ['attendance', 'hr_attendance', 'att-import'], ['shifts', 'hr_shifts', 'shift-import'],
-  ['timesheets', 'hr_timesheets', 'ts-import'], ['leave', 'hr_leave', 'lv-import'],
-  ['holidays', 'hr_holidays', 'hol-import'],
-  ['employees', 'hr_employees', 'emp-import'], ['visas', 'hr_visas', 'visa-import']
+  ['residency', 'residency', 'res-import'], ['onboarding', 'onboarding', 'ob-import'],
+  ['documents', 'documents', 'doc-import'], ['org-chart', 'org_chart', 'org-import'],
+  ['attendance', 'attendance', 'att-import'], ['shifts', 'shifts', 'shift-import'],
+  ['timesheets', 'timesheets', 'ts-import'], ['leave', 'leave', 'lv-import'],
+  ['holidays', 'holidays', 'hol-import'],
+  ['employees', 'employees', 'emp-import'], ['visas', 'visas', 'visa-import']
 ];
 for (const [mod, page, btn] of pairs) {
   const src = readFileSync(`${R}/src/v4/${mod}.js`, 'utf8');

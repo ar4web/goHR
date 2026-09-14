@@ -67,6 +67,7 @@ export const NAV = [
         children: [
           { key: 'sa-compliance', href: 'sa_compliance.html', text: 'SA Compliance' },
           { key: 'residency', href: 'residency.html', text: 'Residency' },
+          { key: 'visas', href: 'visas.html', text: 'Visas' },
           { key: 'contracts', href: 'contracts.html', text: 'Contracts' }
         ]
       },
@@ -86,7 +87,8 @@ export const NAV = [
         children: [
           { key: 'clients', href: 'clients.html', text: 'Clients' },
           { key: 'assignments', href: 'assignments.html', text: 'Assignments' },
-          { key: 'ajeer', href: 'ajeer.html', text: 'Ajeer' }
+          { key: 'ajeer', href: 'ajeer.html', text: 'Ajeer' },
+          { key: 'tracker', href: 'tracker.html', text: 'Tracker' }
         ]
       }
     ]
@@ -185,8 +187,7 @@ export const SETTINGS_NAV = [
     i18n: 'hr.navgroup.system',
     items: [
       { key: 'user_management', href: 'user_management.html', text: 'User management' },
-      { key: 'profile', href: 'profile.html', text: 'Your profile' },
-      { key: 'settings', href: 'settings.html', text: 'Settings' }
+      { key: 'profile', href: 'profile.html', text: 'Your profile' }
     ]
   }
 ];
@@ -322,17 +323,27 @@ function settingsKeys(items) {
 
 const SETTINGS_KEYS = new Set(SETTINGS_NAV.flatMap(s => settingsKeys(s.items)));
 
+// Detail pages carry their own data-page key but highlight their section
+// parent in the sidebar (they share the parent's screen, not its key).
+const DETAIL_PARENT = {
+  'contract-detail': 'contracts',
+  'payslip': 'payroll',
+  'employee-file': 'employees',
+  'review-detail': 'reviews'
+};
+
 export function renderSidebar(activeKey) {
+  const key = DETAIL_PARENT[activeKey] || activeKey;
   const groups = NAV.map(
     group => `
     <div class="nav-group">
       ${group.label ? `<div class="nav-label">${group.label}</div>` : ''}
-      ${group.items.map(item => renderNavItem(item, activeKey)).join('')}
+      ${group.items.map(item => renderNavItem(item, key)).join('')}
     </div>
   `
   ).join('');
 
-  const settingsActive = SETTINGS_KEYS.has(activeKey);
+  const settingsActive = SETTINGS_KEYS.has(key);
 
   return `
     <aside class="sidebar" aria-label="Primary navigation">

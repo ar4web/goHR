@@ -42,8 +42,9 @@ import {
   tickerAlerts
 } from '../src/v4/hr-statutory.js';
 import { applyRtl } from '../src/v4/chart-helper.js';
+import { fileURLToPath } from 'node:url';
 
-const R = new URL('..', import.meta.url).pathname.replace(/\/$/, '');
+const R = fileURLToPath(new URL('..', import.meta.url));
 const fail = [];
 const ok = (name, cond, extra = '') => {
   console.log(`${cond ? 'PASS' : 'FAIL'} ${name}${extra && !cond ? ` — ${extra}` : ''}`);

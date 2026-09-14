@@ -62,6 +62,29 @@ if (document.querySelector('[data-hr-bank-accounts], [data-hr-dependents], [data
   });
 }
 
+// P0 page registry: data-page key -> lazy importer. Pilot covers the renamed
+// detail keys + missing visas/tracker; remaining pages migrate here per cluster.
+// Legacy `hr_foo_bar` data-page values normalize to `foo-bar` via normalizePage.
+const PAGES = {
+  'jobs': () => import('./v4/jobs.js').then((m) => m.initJobs()),
+  'goals': () => import('./v4/goals.js').then((m) => m.initGoals()),
+  'contracts': () => import('./v4/contracts.js').then((m) => m.initContracts()),
+  'contract-detail': () => import('./v4/contract.js').then((m) => m.initContract()),
+  'payroll': () => import('./v4/payroll.js').then((m) => m.initPayroll()),
+  'payslip': () => import('./v4/payslip.js').then((m) => m.initPayslip()),
+  'employees': () => import('./v4/employees.js').then((m) => m.initEmployees()),
+  'employee-file': () => import('./v4/employee-detail.js').then((m) => m.initEmployeeDetail()),
+  'reviews': () => import('./v4/reviews.js').then((m) => m.initReviews()),
+  'review-detail': () => import('./v4/review.js').then((m) => m.initReview()),
+  'visas': () => import('./v4/visas.js').then((m) => m.initVisas()),
+  'tracker': () => import('./v4/tracker.js').then((m) => m.initTracker())
+};
+const normalizePage = (key) => (key || '').replace(/^hr_/, '').replace(/_/g, '-');
+const pageKey = normalizePage(document.body?.dataset.page);
+if (pageKey && PAGES[pageKey]) {
+  PAGES[pageKey]();
+}
+
 // ────────────────────────
 //  Delegated interactions
 // ────────────────────────

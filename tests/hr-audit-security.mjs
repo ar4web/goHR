@@ -2,8 +2,9 @@
 // honest gateway. Regression locks for fixed sinks + INFO backlog of the
 // remaining day-by-day escape surface.
 import { readFileSync, readdirSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 
-const R = new URL('..', import.meta.url).pathname.replace(/\/$/, '');
+const R = fileURLToPath(new URL('..', import.meta.url));
 const fail = [];
 const ok = (name, cond, extra = '') => {
   console.log(`${cond ? 'PASS' : 'FAIL'} ${name}${extra && !cond ? ` — ${extra}` : ''}`);

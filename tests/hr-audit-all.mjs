@@ -2,8 +2,9 @@
 // module, EN+AR parity), init wiring, DOM-id xref, links, dup IDs,
 // viewport and responsive tables — across all pages, not just HR.
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 
-const R = new URL('..', import.meta.url).pathname.replace(/\/$/, '');
+const R = fileURLToPath(new URL('..', import.meta.url));
 const read = p => readFileSync(`${R}/${p}`, 'utf8');
 const fail = [];
 const ok = (name, cond, extra = '') => {
@@ -32,8 +33,8 @@ for (const m of nav) {
 }
 const keyList = nav.map(n => n[1]);
 ok('nav-no-dupes', new Set(keyList).size === keyList.length);
-const icons = new Set([...shell.matchAll(/^ {2}([a-z]+): ?['\n]/gm)].map(m => m[1]));
-for (const m of shell.matchAll(/icon: '([a-z]+)'/g)) {
+const icons = new Set([...shell.matchAll(/^ {2}([A-Za-z]+): ?\r?['\n]/gm)].map(m => m[1]));
+for (const m of shell.matchAll(/icon: '([A-Za-z]+)'/g)) {
   ok(`nav-icon-${m[1]}`, icons.has(m[1]));
 }
 
@@ -49,7 +50,12 @@ for (const p of pages) {
   }
   const dp = html.match(/data-page="([^"]+)"/);
   if (dp) {
-    ok(`datapage-${p}`, navKeys.has(dp[1]), dp[1]);
+    // P0 keys contract: dash-canonical; legacy `hr_foo_bar` data-pages alias
+    // to `foo-bar`; detail pages ride their section parent (see DETAIL_PARENT
+    // in shell-render.js) instead of holding a NAV leaf.
+    const canon = dp[1].replace(/^hr_/, '').replace(/_/g, '-');
+    const detailOk = ['contract-detail', 'payslip', 'employee-file', 'review-detail'].includes(dp[1]);
+    ok(`datapage-${p}`, navKeys.has(dp[1]) || navKeys.has(canon) || detailOk, dp[1]);
   }
   const ids = [...html.matchAll(/ id="([^"]+)"/g)].map(m => m[1]);
   ok(`dup-id-${p}`, new Set(ids).size === ids.length);

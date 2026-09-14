@@ -2,8 +2,10 @@
 // feedback + trainings + departments + roles + audit + announcements +
 // reports, plus the settings extension and settings-live engine wiring.
 import { readFileSync, existsSync } from 'node:fs';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
-const R = new URL('..', import.meta.url).pathname.replace(/\/$/, '');
+const R = fileURLToPath(new URL('..', import.meta.url));
+const RU = pathToFileURL(R).href.replace(/\/$/, '');
 const fail = [];
 const ok = (name, cond, extra = '') => {
   console.log(`${cond ? 'PASS' : 'FAIL'} ${name}${extra && !cond ? ` — ${extra}` : ''}`);
@@ -13,7 +15,7 @@ const ok = (name, cond, extra = '') => {
 };
 
 // 1. NAV leaves -> files (HR leaves live in collapsible parents; icons resolve from the parent).
-const { NAV, ICONS } = await import(`${R}/src/v4/shell-render.js`);
+const { NAV, ICONS } = await import(`${RU}/src/v4/shell-render.js`);
 const leaves = [];
 for (const g of NAV) {
   for (const it of g.items || []) {
@@ -27,15 +29,15 @@ for (const g of NAV) {
   }
 }
 const need = [
-  'hr-goals',
-  'hr-reviews',
-  'hr-feedback',
-  'hr-trainings',
-  'hr-departments',
-  'hr-roles',
-  'hr-audit',
-  'hr-announcements',
-  'hr-reports'
+  'goals',
+  'reviews',
+  'feedback',
+  'trainings',
+  'departments',
+  'roles',
+  'audit',
+  'announcements',
+  'reports'
 ];
 ok(
   'nav-9-leaves',
@@ -45,26 +47,26 @@ for (const l of leaves.filter(x => need.includes(x.key))) {
   ok(`nav-file-${l.key}`, existsSync(`${R}/production/${l.href}`), l.href);
   ok(`nav-icon-${l.key}`, !!l.parentIcon && l.parentIcon in ICONS, l.parentIcon);
 }
-ok('review-detail-exists', existsSync(`${R}/production/hr_review.html`));
-ok('review-detail-no-leaf', !leaves.some(l => l.key === 'hr-review'));
-const detailHtml = readFileSync(`${R}/production/hr_review.html`, 'utf8');
-ok('review-detail-rides-reviews', detailHtml.includes('data-page="hr-reviews"'));
+ok('review-detail-exists', existsSync(`${R}/production/review.html`));
+ok('review-detail-no-leaf', !leaves.some(l => l.key === 'review-detail'));
+const detailHtml = readFileSync(`${R}/production/review.html`, 'utf8');
+ok('review-detail-rides-reviews', detailHtml.includes('data-page="review-detail"'));
 // 2. i18n coverage + DOM id xref
 const i18nSrc = readFileSync(`${R}/src/v4/i18n.js`, 'utf8');
 const dictKeys = new Set(
   [...i18nSrc.matchAll(/'((?:nav|common|status|role|hr)\.[^']+)'\s*:/g)].map(m => m[1])
 );
 const pages = [
-  'hr_goals',
-  'hr_reviews',
-  'hr_review',
-  'hr_feedback',
-  'hr_trainings',
-  'hr_departments',
-  'hr_roles',
-  'hr_audit',
-  'hr_announcements',
-  'hr_reports'
+  'goals',
+  'reviews',
+  'review',
+  'feedback',
+  'trainings',
+  'departments',
+  'roles',
+  'audit',
+  'announcements',
+  'reports'
 ];
 const mods = [
   'goals',
@@ -107,7 +109,7 @@ pages.forEach((p, i) => {
   }
 });
 // settings page keys also count as used
-const setHtml = readFileSync(`${R}/production/hr_settings.html`, 'utf8');
+const setHtml = readFileSync(`${R}/production/settings.html`, 'utf8');
 for (const m of setHtml.matchAll(/data-i18n(?:-ph)?="([^"]+)"/g)) {
   used.add(m[1]);
 }
@@ -120,7 +122,7 @@ ok('i18n-coverage', missing.length === 0, missing.join(', '));
 console.log(`  (used=${used.size} dict=${dictKeys.size})`);
 
 // 3. seed xref + anchors
-const seed = await import(`${R}/src/v4/hr-seed.js`);
+const seed = await import(`${RU}/src/v4/hr-seed.js`);
 const emps = new Set(seed.EMPLOYEES.map(e => e.code));
 ok('seed-goals-5', seed.GOALS.length === 5);
 ok(
