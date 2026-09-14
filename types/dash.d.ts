@@ -295,54 +295,10 @@ declare module 'dash/v4/data-adapter' {
 //  Lazy-loaded page modules (init functions)
 // ────────────────────────────────────────────────────────────────────────
 
-declare module 'dash/v4/inbox' {
-  /**
-   * Mount the interactive inbox into `#inbox-root`. With `?api=1`, hydrates
-   * initial messages from `/api/messages`; otherwise uses the seed array.
-   */
-  export function initInbox(): Promise<void>;
-}
-
-declare module 'dash/v4/kanban' {
-  export function initKanban(): void;
-}
-
-declare module 'dash/v4/calendar' {
-  export function initCalendar(): void;
-}
-
-declare module 'dash/v4/file-manager' {
-  export function initFileManager(): void;
-}
-
 declare module 'dash/v4/settings' {
-  /** Wire all settings interactions: persistence, save/cancel, integrations, etc. Idempotent. */
+  /** Settings engine: company profile, Saudization & licence, role preview,
+   *  preferences — bound to the statutory settings store. Idempotent. */
   export function initSettings(): void;
-}
-
-declare module 'dash/v4/form-controls' {
-  /**
-   * Auto-init advanced form controls:
-   *   `[data-date-range]`    — two-month range picker with presets
-   *   `[data-rich-text]`     — toolbar editor (bold / italic / lists / link / code)
-   *   `[data-multi-select]`  — chip-input with autocomplete
-   * Idempotent — safe to call multiple times.
-   */
-  export function initFormControls(): void;
-}
-
-declare module 'dash/v4/details' {
-  export interface ProjectDetail {
-    title: string; client: string; status: string; sCls: string;
-    desc: string; pct: number; due: string;
-    members: Array<{ name: string; ini: string; color: string }>;
-  }
-  export interface ContactDetail {
-    name: string; ini: string; color: string; role: string;
-    projects: number; tasks: number; msgs: number;
-  }
-  export function openProjectModal(d: ProjectDetail): void;
-  export function openContactModal(d: ContactDetail): void;
 }
 
 // ────────────────────────────────────────────────────────────────────────

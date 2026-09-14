@@ -42,42 +42,21 @@ if (document.querySelector('[data-page="dashboard"]')) {
   import('./v4/index-dashboard.js').then(m => m.initIndexDashboard());
 }
 
-// Lazy-load page-specific modules only when their host element is on the page.
-if (document.getElementById('inbox-root')) {
-  import('./v4/inbox.js').then((m) => m.initInbox());
-}
-if (document.querySelector('.calendar-grid')) {
-  import('./v4/calendar.js').then((m) => m.initCalendar());
-}
 if (document.querySelector('[data-hr-settings]')) {
-  import('./v4/settings.js').then((m) => m.initHrSettings());
+  import('./v4/settings.js').then((m) => m.initSettings());
 }
 
-// Lazy-load generic data table views for extended data modules
-if (document.querySelector('[data-hr-bank-accounts], [data-hr-dependents], [data-hr-qualifications], [data-hr-warnings], [data-hr-achievements], [data-hr-promotions], [data-hr-attendance-policies], [data-hr-attendance-locations], [data-hr-approval-workflows], [data-hr-system-notifications], [data-hr-system-alerts], [data-hr-countries], [data-hr-currencies], [data-hr-work-permits], [data-hr-leaves-balances], [data-hr-job-requisitions], [data-hr-training-programs], [data-hr-custom-reports], [data-hr-payroll-components]')) {
-  import('./v4/hr-data-table.js').then((m) => {
-    const keys = ['hr-bank-accounts','hr-dependents','hr-qualifications','hr-warnings','hr-achievements','hr-promotions','hr-attendance-policies','hr-attendance-locations','hr-approval-workflows','hr-system-notifications','hr-system-alerts','hr-countries','hr-currencies','hr-work-permits','hr-leaves-balances','hr-job-requisitions','hr-training-programs','hr-custom-reports','hr-payroll-components'];
-    const active = document.querySelector('[data-page]')?.dataset.page;
-    if (active && keys.includes(active)) { m.initDataTable(active); }
-  });
-}
-
-// P0 page registry: data-page key -> lazy importer. Pilot covers the renamed
-// detail keys + missing visas/tracker; remaining pages migrate here per cluster.
-// Legacy `hr_foo_bar` data-page values normalize to `foo-bar` via normalizePage.
+// Page registry: data-page key -> lazy importer. Only the four kept areas
+// (dashboard via guard above, analytics via global charts/tables, employees,
+// settings) plus their supporting views boot here.
 const PAGES = {
-  'jobs': () => import('./v4/jobs.js').then((m) => m.initJobs()),
-  'goals': () => import('./v4/goals.js').then((m) => m.initGoals()),
-  'contracts': () => import('./v4/contracts.js').then((m) => m.initContracts()),
-  'contract-detail': () => import('./v4/contract.js').then((m) => m.initContract()),
-  'payroll': () => import('./v4/payroll.js').then((m) => m.initPayroll()),
-  'payslip': () => import('./v4/payslip.js').then((m) => m.initPayslip()),
   'employees': () => import('./v4/employees.js').then((m) => m.initEmployees()),
   'employee-file': () => import('./v4/employee-detail.js').then((m) => m.initEmployeeDetail()),
-  'reviews': () => import('./v4/reviews.js').then((m) => m.initReviews()),
-  'review-detail': () => import('./v4/review.js').then((m) => m.initReview()),
-  'visas': () => import('./v4/visas.js').then((m) => m.initVisas()),
-  'tracker': () => import('./v4/tracker.js').then((m) => m.initTracker())
+  'departments': () => import('./v4/departments.js').then((m) => m.initDepartments()),
+  'roles': () => import('./v4/roles.js').then((m) => m.initRoles()),
+  'my-space': () => import('./v4/my-space.js').then((m) => m.initMySpace()),
+  'my-team': () => import('./v4/my-team.js').then((m) => m.initMyTeam()),
+  'org': () => import('./v4/org-chart.js').then((m) => m.initOrgChart())
 };
 const normalizePage = (key) => (key || '').replace(/^hr_/, '').replace(/_/g, '-');
 const pageKey = normalizePage(document.body?.dataset.page);

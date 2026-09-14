@@ -6,18 +6,17 @@ import { getSeed } from './hr-api.js';
 let booted = false;
 
 function spark(el, values, color) {
-  if (!el) return;
+  if (!el) {return;}
   el.innerHTML = values.map(v => `<div class="bar" style="height:${v}%;background:${color}"></div>`).join('');
 }
 
 function renderCards() {
   const emps = getSeed('employees') || [];
-  const assignments = getSeed('assignments') || [];
   const active = emps.filter(e => e.st === 'active').length;
   const onLeave = emps.filter(e => e.st === 'on-leave').length;
   const huroobCount = emps.filter(e => e.st === 'huroob').length;
   const total = emps.length;
-  const distinctDeployed = new Set(assignments.filter(a => a.status === 'active').map(a => a.emp)).size;
+  const distinctDeployed = new Set(emps.filter(e => e.st === 'active' && e.client).map(e => e.code)).size;
   const bench = Math.max(0, active - distinctDeployed);
   const activePct = total ? Math.round((active/total)*100) : 0;
   const rentalPct = active ? Math.round((distinctDeployed/active)*100) : 0;
@@ -26,14 +25,14 @@ function renderCards() {
 
   const set = (id, val, sub) => {
     const el = document.getElementById(id);
-    if (!el) return;
-    const v = el.querySelector('.stat-value'); if (v) v.textContent = String(val);
-    const s = el.querySelector('.stat-subtext'); if (s) s.textContent = sub;
+    if (!el) {return;}
+    const v = el.querySelector('.stat-value'); if (v) {v.textContent = String(val);}
+    const s = el.querySelector('.stat-subtext'); if (s) {s.textContent = sub;}
     el.style.cursor = 'pointer';
   };
   set('card-total', total, `${emps.filter(e=>e.saudi).length} Saudi · ${total - emps.filter(e=>e.saudi).length} Expat`);
   set('card-active', active, `${activePct}% of total · ${emps.filter(e=>e.st==='probation').length} probation`);
-  set('card-rental', distinctDeployed, `${assignments.filter(a=>a.status==='active').length} assignments`);
+  set('card-rental', distinctDeployed, `${distinctDeployed} deployed`);
   set('card-vacation', onLeave, 'On leave now');
   set('card-huroob', huroobCount, huroobCount ? 'Action required' : 'All clear');
   set('card-bench', bench, 'Ready to deploy');
@@ -46,14 +45,14 @@ function renderCards() {
   spark(document.getElementById('spark-huroob'), [10,8,15,5,12,6,20,4,9,7], 'var(--red)');
   spark(document.getElementById('spark-bench'), [45,40,50,38,55,42,60,48,52,46], 'var(--purple)');
 
-  const bar = (id, pct) => { const b=document.getElementById(id); if(b) b.style.width = pct+'%'; };
+  const bar = (id, pct) => { const b=document.getElementById(id); if(b) {b.style.width = pct+'%';} };
   bar('bar-active', activePct);
   bar('bar-rental', rentalPct);
   bar('bar-huroob', huroobPct);
   bar('bar-bench', benchPct);
 
   const meta = document.getElementById('dash-meta');
-  if (meta) meta.textContent = `${total} total · ${active} active · ${distinctDeployed} deployed · ${onLeave} on leave`;
+  if (meta) {meta.textContent = `${total} total · ${active} active · ${distinctDeployed} deployed · ${onLeave} on leave`;}
 
   // Workforce Trend stat — accurate 6M hired vs exited
   const trendStat = document.getElementById('trend-stat');
@@ -70,11 +69,11 @@ function renderCards() {
   }
 
   // click handlers
-  const go = (id, href) => { const e=document.getElementById(id); if(e) e.onclick=()=> location.href=href; };
+  const go = (id, href) => { const e=document.getElementById(id); if(e) {e.onclick=()=> location.href=href;} };
   go('card-total','employees.html');
   go('card-active','employees.html?st=active');
-  go('card-rental','assignments.html');
-  go('card-vacation','leave.html');
+  go('card-rental','employees.html');
+  go('card-vacation','employees.html');
   go('card-huroob','employees.html?st=huroob');
   go('card-bench','employees.html');
 }
@@ -83,7 +82,7 @@ function renderTodo() {
   const tasks = getSeed('tasks') || [];
   const list = document.getElementById('todo-list');
   const counter = document.querySelector('[data-todo-counter]');
-  if (!list) return;
+  if (!list) {return;}
   const rows = tasks.slice(0,6).map(t => {
     const done = t.done;
     const prio = t.priority === 'high' ? 'var(--red)' : t.priority === 'medium' ? 'var(--yellow)' : 'var(--green)';
@@ -95,22 +94,22 @@ function renderTodo() {
 
 function renderNeedsAttention() {
   const el = document.getElementById('needs-attention');
-  if (!el) return;
+  if (!el) {return;}
   const emps = getSeed('employees') || [];
   const huroob = emps.filter(e=>e.st==='huroob');
   const expiring = emps.filter(e=> e.iqamaExp && e.iqamaExp < '2026-11-01' && e.st==='active').slice(0,3);
   const probation = emps.filter(e=>e.st==='probation').slice(0,2);
   const items = [];
-  if (huroob.length) items.push(`<li class="activity-item"><div class="activity-avatar" style="background:var(--red)">!</div><div><div class="activity-body"><strong>${huroob.length} Huroob</strong> — ${huroob[0].nameEn} needs file update</div><div class="activity-time">Today</div></div></li>`);
-  if (expiring.length) items.push(`<li class="activity-item"><div class="activity-avatar" style="background:var(--yellow)">◷</div><div><div class="activity-body"><strong>${expiring.length} Iqama</strong> expiring < 30d — ${expiring[0].nameEn}</div><div class="activity-time">This week</div></div></li>`);
-  if (probation.length) items.push(`<li class="activity-item"><div class="activity-avatar" style="background:var(--blue)">P</div><div><div class="activity-body"><strong>${probation.length} Probation</strong> reviews due</div><div class="activity-time">This week</div></div></li>`);
-  if (!items.length) items.push(`<li class="activity-item"><div class="activity-avatar" style="background:var(--green)">✓</div><div><div class="activity-body"><strong>All clear</strong> — no urgent HR flags</div><div class="activity-time">Just now</div></div></li>`);
+  if (huroob.length) {items.push(`<li class="activity-item"><div class="activity-avatar" style="background:var(--red)">!</div><div><div class="activity-body"><strong>${huroob.length} Huroob</strong> — ${huroob[0].nameEn} needs file update</div><div class="activity-time">Today</div></div></li>`);}
+  if (expiring.length) {items.push(`<li class="activity-item"><div class="activity-avatar" style="background:var(--yellow)">◷</div><div><div class="activity-body"><strong>${expiring.length} Iqama</strong> expiring < 30d — ${expiring[0].nameEn}</div><div class="activity-time">This week</div></div></li>`);}
+  if (probation.length) {items.push(`<li class="activity-item"><div class="activity-avatar" style="background:var(--blue)">P</div><div><div class="activity-body"><strong>${probation.length} Probation</strong> reviews due</div><div class="activity-time">This week</div></div></li>`);}
+  if (!items.length) {items.push('<li class="activity-item"><div class="activity-avatar" style="background:var(--green)">✓</div><div><div class="activity-body"><strong>All clear</strong> — no urgent HR flags</div><div class="activity-time">Just now</div></div></li>');}
   el.innerHTML = `<ul class="activity-list">${items.join('')}</ul>`;
 }
 
 function renderRecentEmployees() {
   const tbody = document.getElementById('recent-employees');
-  if (!tbody) return;
+  if (!tbody) {return;}
   const emps = (getSeed('employees')||[]).slice(-5).reverse();
   const stMap = { active:'green', probation:'blue', 'on-leave':'yellow', huroob:'red', exited:'grey' };
   tbody.innerHTML = emps.map(e => `<tr><td class="cell-mono">${e.code}</td><td><div class="cell-customer"><div class="cell-avatar" style="background:var(--${e.av||'primary'})">${e.nameEn.slice(0,2).toUpperCase()}</div><span class="cell-strong">${e.nameEn}</span></div></td><td>${e.prof||e.titleEn||'-'}</td><td><span class="status status-${stMap[e.st]||'grey'}">${e.st}</span></td><td>${e.join||e.entry||'-'}</td></tr>`).join('');
@@ -129,20 +128,18 @@ function renderExpiry() {
   const total = emps.length || 1;
   const p7 = Math.round((c7/total)*100), p30 = Math.round((c30/total)*100), p90 = Math.round((c90/total)*100);
   const bar = document.getElementById('expiry-bar');
-  if (bar) bar.innerHTML = `<div style="width:${p7}%;background:var(--red)"></div><div style="width:${p30}%;background:var(--yellow)"></div><div style="width:${p90}%;background:var(--green)"></div><div style="width:${100-p7-p30-p90}%;background:var(--border-color)"></div>`;
+  if (bar) {bar.innerHTML = `<div style="width:${p7}%;background:var(--red)"></div><div style="width:${p30}%;background:var(--yellow)"></div><div style="width:${p90}%;background:var(--green)"></div><div style="width:${100-p7-p30-p90}%;background:var(--border-color)"></div>`;}
   const sub = document.getElementById('expiry-sub');
-  if (sub) sub.textContent = `${c7} ≤7d · ${c30} ≤30d · ${c90} ≤90d`;
+  if (sub) {sub.textContent = `${c7} ≤7d · ${c30} ≤30d · ${c90} ≤90d`;}
   const legend = document.getElementById('expiry-legend');
-  if (legend) legend.innerHTML = `<div class="storage-legend-item"><span class="dot" style="background:var(--red)"></span> ≤7 days <span class="val">${c7}</span></div><div class="storage-legend-item"><span class="dot" style="background:var(--yellow)"></span> ≤30 days <span class="val">${c30}</span></div><div class="storage-legend-item"><span class="dot" style="background:var(--green)"></span> ≤90 days <span class="val">${c90}</span></div><div class="storage-legend-item"><span class="dot" style="background:var(--border-color)"></span> Safe <span class="val">${total-c7-c30-c90}</span></div>`;
+  if (legend) {legend.innerHTML = `<div class="storage-legend-item"><span class="dot" style="background:var(--red)"></span> ≤7 days <span class="val">${c7}</span></div><div class="storage-legend-item"><span class="dot" style="background:var(--yellow)"></span> ≤30 days <span class="val">${c30}</span></div><div class="storage-legend-item"><span class="dot" style="background:var(--green)"></span> ≤90 days <span class="val">${c90}</span></div><div class="storage-legend-item"><span class="dot" style="background:var(--border-color)"></span> Safe <span class="val">${total-c7-c30-c90}</span></div>`;}
 }
 
 function renderMix() {
   const emps = getSeed('employees')||[];
-  const assignments = getSeed('assignments')||[];
-  const deployed = new Set(assignments.filter(a=>a.status==='active').map(a=>a.emp)).size;
-  const bench = emps.filter(e=>e.st==='active').length - deployed;
+  const deployed = new Set(emps.filter(e => e.st === 'active' && e.client).map(e => e.code)).size;
   const num = document.getElementById('mix-num');
-  if (num) num.textContent = String(deployed);
+  if (num) {num.textContent = String(deployed);}
   const legend = document.getElementById('mix-legend');
   if (legend) {
     const totalActive = emps.filter(e=>e.st==='active').length || 1;
@@ -154,7 +151,7 @@ function renderMix() {
 
 function renderNationality() {
   const el = document.getElementById('nationality-mix');
-  if (!el) return;
+  if (!el) {return;}
   const emps = getSeed('employees')||[];
   const counts = {};
   emps.forEach(e=> { counts[e.nat||'Unknown'] = (counts[e.nat||'Unknown']||0)+1; });
@@ -175,12 +172,12 @@ function renderNitaqat() {
   const badge = document.getElementById('nitaqat-badge');
   if (badge) { badge.textContent = pct+'%'; badge.className = 'badge badge-'+band; }
   const box = document.getElementById('nitaqat-box');
-  if (box) box.innerHTML = `<div style="display:flex;align-items:center;gap:12px"><div style="flex:1"><div class="storage-bar"><div style="width:${Math.min(pct,100)}%;background:var(--${band})"></div></div><div class="caption-muted" style="margin-top:6px">${saudi} Saudi / ${emps.length} total</div></div><div style="font-size:22px;font-weight:700;color:var(--${band})">${pct}%</div></div><div class="caption-muted" style="margin-top:8px">Target 30% · ${pct>=25?'Platinum':'Need '+ (25-pct) +'% to green'}</div>`;
+  if (box) {box.innerHTML = `<div style="display:flex;align-items:center;gap:12px"><div style="flex:1"><div class="storage-bar"><div style="width:${Math.min(pct,100)}%;background:var(--${band})"></div></div><div class="caption-muted" style="margin-top:6px">${saudi} Saudi / ${emps.length} total</div></div><div style="font-size:22px;font-weight:700;color:var(--${band})">${pct}%</div></div><div class="caption-muted" style="margin-top:8px">Target 30% · ${pct>=25?'Platinum':'Need '+ (25-pct) +'% to green'}</div>`;}
 }
 
 export function initIndexDashboard() {
-  if (booted) return; booted = true;
-  if (!document.querySelector('[data-page="dashboard"]')) return;
+  if (!document.querySelector('[data-page="dashboard"]')) {return;}
   renderCards(); renderTodo(); renderNeedsAttention(); renderRecentEmployees(); renderExpiry(); renderMix(); renderNationality(); renderNitaqat();
+  if (booted) {return;} booted = true;
   window.addEventListener('storage', e=> { if(e.key && e.key.startsWith('hr:')) { renderCards(); renderTodo(); } });
 }

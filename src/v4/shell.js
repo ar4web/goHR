@@ -135,13 +135,16 @@ function bindLinkPrefetch() {
   // the next page's backdrop. Only when an unload really follows — downloads,
   // mail links, same-page anchors and new-tab clicks stay on the page, so a
   // veil there would strand it invisible (the white-screen bug).
+  // Script-URL guard below matches the scheme loosely: browsers ignore
+  // embedded whitespace/control chars, so `java\tscript:` still runs.
+  const isScriptUrl = (h) => /^\s*j\s*a\s*v\s*a\s*s\s*c\s*r\s*i\s*p\s*t\s*:/i.test(h);
   window.addEventListener('pageshow', () => document.body.classList.remove('page-leave'));
   document.addEventListener('click', (e) => {
     if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) {return;}
     const a = e.target && e.target.closest && e.target.closest('a[href]');
     if (!a) {return;}
     const href = a.getAttribute('href') || '';
-    if (!href || href.startsWith('#') || href.startsWith('javascript:')) {return;}
+    if (!href || href.startsWith('#') || isScriptUrl(href)) { return; }
     if (a.target === '_blank' || a.hasAttribute('download')) {return;}
     if (/^(mailto|tel|sms|blob|data):/i.test(href)) {return;}
     document.body.classList.add('page-leave');
@@ -457,18 +460,12 @@ function openShortcutsModal() {
           ${row('Esc', 'Close modal / palette')}
           <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-muted);margin:14px 0 6px">Navigation</div>
           ${row('G then D', 'Go to dashboard')}
-          ${row('G then I', 'Go to inbox')}
-          ${row('G then K', 'Go to kanban')}
+          ${row('G then E', 'Go to employees')}
+          ${row('G then A', 'Go to analytics')}
+          ${row('G then S', 'Go to settings')}
         </div>
         <div>
-          <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-muted);margin:4px 0 6px">Inbox</div>
-          ${row('J', 'Next message')}
-          ${row('K', 'Previous message')}
-          ${row('R', 'Reply')}
-          ${row('S', 'Star message')}
-          ${row('#', 'Move to trash')}
-          ${row('C', 'Compose new')}
-          <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-muted);margin:14px 0 6px">Editor</div>
+          <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-muted);margin:4px 0 6px">Editor</div>
           ${row('⌘+B', 'Bold')}
           ${row('⌘+I', 'Italic')}
           ${row('⌘+K', 'Insert link')}
@@ -537,7 +534,7 @@ function buildNotificationsPanel() {
       `).join('')}
     </div>
     <div class="panel-footer">
-      <a href="notifications.html" class="panel-link">${t('common.viewAllNotif')}</a>
+      <a href="employees.html" class="panel-link">${t('common.viewAllNotif')}</a>
     </div>
   `;
   return wrap;
@@ -587,7 +584,7 @@ function openNotificationDetail(n) {
     `,
     actions: [
       { label: t('common.close'), variant: 'ghost' },
-      { label: t('common.viewAll'), variant: 'outline', action: () => { window.location.href = 'notifications.html'; } }
+      { label: t('common.viewAll'), variant: 'outline', action: () => { window.location.href = 'employees.html'; } }
     ]
   });
 }

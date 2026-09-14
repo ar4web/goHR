@@ -18,7 +18,7 @@ const ok = (name, cond, extra = '') => {
 const i18nSrc = read('src/v4/i18n.js');
 const enSrc = i18nSrc.slice(i18nSrc.indexOf('  en: {'), i18nSrc.indexOf('  ar: {'));
 const arSrc = i18nSrc.slice(i18nSrc.indexOf('  ar: {'));
-const kk = s => new Set([...s.matchAll(/'((?:nav|common|status|role|hr)\.[^']+)'\s*:/g)].map(m => m[1]));
+const kk = s => new Set([...s.matchAll(/'((?:nav|common|status|role|hr|st)\.[^']+)'\s*:/g)].map(m => m[1]));
 const EN = kk(enSrc);
 const AR = kk(arSrc);
 ok('dict-parity', EN.size === AR.size && [...EN].every(k => AR.has(k)) && [...AR].every(k => EN.has(k)));
@@ -26,6 +26,7 @@ console.log(`  (dict EN=${EN.size} AR=${AR.size})`);
 
 // ── NAV ─────────────────────────────────────────────────────────────────
 const shell = read('src/v4/shell-render.js');
+const shellIds = new Set([...shell.matchAll(/ id="([A-Za-z0-9-_]+)"/g)].map(m => m[1]));
 const nav = [...shell.matchAll(/key: '([a-z0-9_-]+)'[\s\S]{0,200}?href: '([a-z0-9_]+\.html)'/g)];
 const navKeys = new Set(nav.map(n => n[1]));
 for (const m of nav) {
@@ -50,12 +51,16 @@ for (const p of pages) {
   }
   const dp = html.match(/data-page="([^"]+)"/);
   if (dp) {
-    // P0 keys contract: dash-canonical; legacy `hr_foo_bar` data-pages alias
-    // to `foo-bar`; detail pages ride their section parent (see DETAIL_PARENT
-    // in shell-render.js) instead of holding a NAV leaf.
+    // Lean keys contract: dash-canonical NAV keys; legacy `hr_foo_bar`
+    // data-pages alias to `foo-bar`; the employee file rides its parent;
+    // dashboard (brand home) + satellite views need no NAV leaf.
     const canon = dp[1].replace(/^hr_/, '').replace(/_/g, '-');
-    const detailOk = ['contract-detail', 'payslip', 'employee-file', 'review-detail'].includes(dp[1]);
-    ok(`datapage-${p}`, navKeys.has(dp[1]) || navKeys.has(canon) || detailOk, dp[1]);
+    const satellite = ['dashboard', 'my-space', 'my-team', 'org'];
+    ok(
+      `datapage-${p}`,
+      navKeys.has(dp[1]) || navKeys.has(canon) || dp[1] === 'employee-file' || satellite.includes(dp[1]),
+      dp[1]
+    );
   }
   const ids = [...html.matchAll(/ id="([^"]+)"/g)].map(m => m[1]);
   ok(`dup-id-${p}`, new Set(ids).size === ids.length);
@@ -85,7 +90,17 @@ for (const p of pages) {
       const id = x[1];
       const inPage = html.includes(`id="${id}"`);
       const inMod = src.includes(`id="${id}"`) || src.includes(`id=\\"${id}\\"`);
-      ok(`dom-id-${p}#${id}`, inPage || inMod, mod);
+      const inShell = shellIds.has(id);
+      // Null-guarded lookups (if (el) / if (!el) / ?.) are progressive
+      // enhancement for optional hosts — safe without the id present.
+      const before = src.slice(Math.max(0, x.index - 90), x.index);
+      const after = src.slice(x.index, x.index + 30);
+      const assigned = /((?:const|let|var)\s+[A-Za-z0-9_$]+)\s*=\s*(?:document\s*\.\s*)?$/.exec(before);
+      const v = assigned ? assigned[1].split(/\s+/).pop() : null;
+      const guarded =
+        /^getElementById\('[^']+'\)\?\./.test(after) ||
+        (v && new RegExp(`if\\s*\\(\\s*!?${v}\\b|${v}\\s*\\?\\.`).test(src));
+      ok(`dom-id-${p}#${id}`, inPage || inMod || inShell || guarded, mod);
     }
   }
 }
@@ -166,12 +181,13 @@ for (const p of pages) {
 const docFiles = [
   ...readdirSync(`${R}`).filter(f => f.endsWith('.md')),
   ...readdirSync(`${R}/docs`).filter(f => f.endsWith('.md')).map(f => `docs/${f}`),
-  ...readdirSync(`${R}/examples`).filter(f => f.endsWith('.md')).map(f => `examples/${f}`),
-  'examples/express-sqlite/README.md',
   'package.json',
-  'public/llms.txt',
   'public/site.webmanifest'
-].filter(f => !['changelog.md', 'docs/hr-blueprint.md', 'docs/improvement-plan.md'].includes(f));
+].filter(
+  f =>
+    !['changelog.md', 'docs/hr-blueprint.md', 'docs/improvement-plan.md'].includes(f) &&
+    existsSync(`${R}/${f}`)
+);
 for (const d of docFiles) {
   const text = read(d);
   for (const m of text.matchAll(brandRe)) {

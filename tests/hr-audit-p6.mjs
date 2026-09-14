@@ -1,6 +1,6 @@
-// P6 static audit: NAV/pages/i18n/seed-xref for goals + reviews + review +
-// feedback + trainings + departments + roles + audit + announcements +
-// reports, plus the settings extension and settings-live engine wiring.
+// Lean audit: settings-window entries (departments + roles), settings page
+// sections + engine, seed xref for departments/roles/scopes/audit, hr-api
+// collections, role preview + audit helper wiring.
 import { readFileSync, existsSync } from 'node:fs';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
@@ -15,7 +15,7 @@ const ok = (name, cond, extra = '') => {
 };
 
 // 1. NAV leaves -> files (HR leaves live in collapsible parents; icons resolve from the parent).
-const { NAV, ICONS } = await import(`${RU}/src/v4/shell-render.js`);
+const { NAV, ICONS, SETTINGS_NAV } = await import(`${RU}/src/v4/shell-render.js`);
 const leaves = [];
 for (const g of NAV) {
   for (const it of g.items || []) {
@@ -28,69 +28,30 @@ for (const g of NAV) {
     }
   }
 }
-const need = [
-  'goals',
-  'reviews',
-  'feedback',
-  'trainings',
-  'departments',
-  'roles',
-  'audit',
-  'announcements',
-  'reports'
-];
-ok(
-  'nav-9-leaves',
-  need.every(k => leaves.some(l => l.key === k))
-);
-for (const l of leaves.filter(x => need.includes(x.key))) {
-  ok(`nav-file-${l.key}`, existsSync(`${R}/production/${l.href}`), l.href);
-  ok(`nav-icon-${l.key}`, !!l.parentIcon && l.parentIcon in ICONS, l.parentIcon);
+// Departments + roles live in the settings window, not the sidebar.
+const winKeys = SETTINGS_NAV.flatMap(s => s.items.map(i => i.key));
+for (const k of ['departments', 'roles']) {
+  ok(`win-${k}`, winKeys.includes(k), k);
 }
-ok('review-detail-exists', existsSync(`${R}/production/review.html`));
-ok('review-detail-no-leaf', !leaves.some(l => l.key === 'review-detail'));
-const detailHtml = readFileSync(`${R}/production/review.html`, 'utf8');
-ok('review-detail-rides-reviews', detailHtml.includes('data-page="review-detail"'));
+for (const l of SETTINGS_NAV.flatMap(s => s.items).filter(x => ['departments', 'roles'].includes(x.key))) {
+  ok(`win-file-${l.key}`, existsSync(`${R}/production/${l.href}`), l.href);
+}
 // 2. i18n coverage + DOM id xref
 const i18nSrc = readFileSync(`${R}/src/v4/i18n.js`, 'utf8');
 const dictKeys = new Set(
-  [...i18nSrc.matchAll(/'((?:nav|common|status|role|hr)\.[^']+)'\s*:/g)].map(m => m[1])
+  [...i18nSrc.matchAll(/'((?:nav|common|status|role|hr|st)\.[^']+)'\s*:/g)].map(m => m[1])
 );
 const pages = [
-  'goals',
-  'reviews',
-  'review',
-  'feedback',
-  'trainings',
   'departments',
-  'roles',
-  'audit',
-  'announcements',
-  'reports'
+  'roles'
 ];
 const mods = [
-  'goals',
-  'reviews',
-  'review',
-  'feedback',
-  'trainings',
   'departments',
-  'roles',
-  'audit',
-  'announcements',
-  'reports'
+  'roles'
 ];
 const roots = {
-  goals: 'data-hr-goals',
-  reviews: 'data-hr-reviews',
-  review: 'data-hr-review',
-  feedback: 'data-hr-feedback',
-  trainings: 'data-hr-trainings',
   departments: 'data-hr-departments',
-  roles: 'data-hr-roles',
-  audit: 'data-hr-audit',
-  announcements: 'data-hr-announcements',
-  reports: 'data-hr-reports'
+  roles: 'data-hr-roles'
 };
 const used = new Set();
 pages.forEach((p, i) => {
@@ -113,8 +74,8 @@ const setHtml = readFileSync(`${R}/production/settings.html`, 'utf8');
 for (const m of setHtml.matchAll(/data-i18n(?:-ph)?="([^"]+)"/g)) {
   used.add(m[1]);
 }
-const setSrc = readFileSync(`${R}/src/v4/hr-settings.js`, 'utf8');
-for (const x of setSrc.matchAll(/\bt\('([^'`$}]+)'\)/g)) {
+const setSrc = readFileSync(`${R}/src/v4/settings.js`, 'utf8');
+for (const x of setSrc.matchAll(/\bt\(\s*['"]([^'"`$}]+)['"]\)/g)) {
   used.add(x[1]);
 }
 const missing = [...used].filter(k => !dictKeys.has(k));
@@ -124,43 +85,6 @@ console.log(`  (used=${used.size} dict=${dictKeys.size})`);
 // 3. seed xref + anchors
 const seed = await import(`${RU}/src/v4/hr-seed.js`);
 const emps = new Set(seed.EMPLOYEES.map(e => e.code));
-ok('seed-goals-5', seed.GOALS.length === 5);
-ok(
-  'seed-goals-xref',
-  seed.GOALS.every(g => emps.has(g.owner))
-);
-ok(
-  'seed-goal-risk-demo',
-  seed.GOALS.some(g => g.id === 'G-2026-02' && g.status === 'at-risk')
-);
-const flow = ['draft', 'self', 'manager', 'calibrated', 'published', 'acked'];
-ok('seed-reviews-4', seed.REVIEWS.length === 4);
-ok(
-  'seed-reviews-xref',
-  seed.REVIEWS.every(r => emps.has(r.emp) && flow.includes(r.status))
-);
-ok(
-  'seed-review-published-demo',
-  seed.REVIEWS.some(r => r.id === 'RV-2026-001' && r.status === 'published' && r.finalRating === 4)
-);
-ok(
-  'seed-review-cycle-demo',
-  seed.REVIEWS.some(r => r.id === 'RV-2026-002' && r.status === 'manager')
-);
-ok('seed-feedback-5', seed.FEEDBACK.length === 5);
-ok(
-  'seed-feedback-xref',
-  seed.FEEDBACK.every(f => emps.has(f.from) && emps.has(f.to) && f.from !== f.to)
-);
-ok('seed-trainings-3', seed.TRAININGS.length === 3);
-ok(
-  'seed-trainings-xref',
-  seed.TRAININGS.every(t => (t.attendees || []).every(a => emps.has(a)))
-);
-ok(
-  'seed-training-planned-demo',
-  seed.TRAININGS.some(t => t.id === 'T-2026-02' && t.status === 'planned')
-);
 ok(
   'seed-depts-head-cc',
   seed.DEPARTMENTS.every(d => emps.has(d.head) && /^CC-\d+$/.test(d.costCenter))
@@ -177,45 +101,28 @@ ok(
   'seed-audit-shape',
   seed.AUDIT_LOG.every(a => a.id && a.at && a.actor && a.action)
 );
-ok('seed-ann-4', seed.ANNOUNCEMENTS.length === 4);
-ok(
-  'seed-ann-xref',
-  seed.ANNOUNCEMENTS.every(a => (a.reads || []).every(r => emps.has(r)))
-);
-ok(
-  'seed-ann-draft-demo',
-  seed.ANNOUNCEMENTS.some(a => a.id === 'AN-2026-014' && a.status === 'draft')
-);
 
-// 4. settings extension
-for (const id of ['set-eosb', 'set-levy', 'set-expcats', 'set-chains', 'set-links']) {
+// 4. settings page sections + engine
+for (const id of ['set-general', 'set-nitaqat', 'set-perms', 'set-prefs']) {
   ok(`settings-body-${id}`, setHtml.includes(`id="${id}"`));
 }
-for (const fn of ['renderEosb', 'renderLevy', 'renderExpCats', 'renderChains', 'renderLinks']) {
-  ok(`settings-fn-${fn}`, setSrc.includes(`function ${fn}(`));
+ok('settings-root', setHtml.includes('data-hr-settings'));
+for (const fn of ['renderGeneral', 'renderNitaqat', 'renderPerms', 'renderPrefs', 'initSettings']) {
+  ok(`settings-fn-${fn}`, setSrc.includes(`function ${fn}(`) || setSrc.includes(`export function ${fn}(`));
 }
-ok('settings-backup-audit', setSrc.includes("'hr:audit'"));
+ok('settings-store', setSrc.includes('getSettings') && setSrc.includes('saveSettings'));
 
-// 5. hr-api collections + settings-live engine wiring
+// 5. hr-api collections + role preview wiring
 const api = readFileSync(`${R}/src/v4/hr-api.js`, 'utf8');
 ok(
   'api-p6-collections',
   [
-    'goals:',
-    'reviews:',
-    'feedback:',
-    'trainings:',
     'departments:',
     'roles:',
     'roleScopes:',
-    'auditLog:',
-    'announcements:'
+    'auditLog:'
   ].every(k => api.includes(k))
 );
-const eosbSrc = readFileSync(`${R}/src/v4/eosb.js`, 'utf8');
-ok('eosb-settings-live', eosbSrc.includes('getEosbConfig()') && !eosbSrc.includes('SEED_EOSB'));
-const expSrc = readFileSync(`${R}/src/v4/expenses.js`, 'utf8');
-ok('expenses-cats-live', expSrc.includes('function expenseCats('));
 const shellJs = readFileSync(`${R}/src/v4/shell.js`, 'utf8');
 ok(
   'shell-role-preview',

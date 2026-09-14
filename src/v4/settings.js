@@ -1,427 +1,286 @@
-// Settings page interactivity:
-// - Persist every toggle / radio / form input to localStorage by stable key
-// - Restore values on next visit
-// - Save / Cancel buttons reflect dirty state and roll back on Cancel
-// - Integration "Connect" buttons toggle to "Disconnect" with persistence
-// - Revoke session removes the row
-// - Danger-zone actions open confirm modals
+// HRGO — settings engine (settings.html).
+// Four sections bound straight to the statutory settings store
+// (getSettings/saveSettings): company profile, Saudization & licence,
+// role preview, preferences. Vanilla + idempotent: render() rebuilds all
+// bodies from the store, one delegated change/click listener persists.
 
+import { t, currentLang, setLang, LANG_EVENT, applyI18n } from './i18n.js';
+import { getSettings, saveSettings } from './hr-statutory.js';
+import { getSeed } from './hr-api.js';
+import { viewedRole, setViewedRole } from './roles.js';
 import { showToast } from './toast.js';
 import { showModal } from './modal.js';
+import { escapeHtml as esc } from './markup.js';
 
-const STORAGE_KEY = 'dash:settings';
-const LEGACY_STORAGE_KEY = 'gentelella:settings';
+let booted = false;
+let saveTimer = 0;
 
-function load() {
+function setPath(obj, path, value) {
+  const parts = path.split('.');
+  let cur = obj;
+  for (let i = 0; i < parts.length - 1; i++) {
+    const k = parts[i];
+    cur[k] = cur[k] ?? (/^\d+$/.test(parts[i + 1]) ? [] : {});
+    cur = cur[k];
+  }
+  cur[parts[parts.length - 1]] = value;
+}
+
+function persist(path, value) {
+  const patch = {};
+  setPath(patch, path, value);
+  saveSettings(patch);
+  window.clearTimeout(saveTimer);
+  saveTimer = window.setTimeout(() => showToast(t('st.saved'), { variant: 'success' }), 600);
+}
+
+function field(label, inner, hint = '') {
+  return `<label class="set-field"><span class="set-label">${label}</span>${inner}${
+    hint ? `<span class="caption-muted">${hint}</span>` : ''
+  }</label>`;
+}
+
+function input(path, value, attrs = '') {
+  return `<input class="form-control" data-set="${path}" value="${esc(value ?? '')}" ${attrs}>`;
+}
+
+function renderGeneral(s) {
+  const c = (s.companies && s.companies[0]) || {};
+  const el = document.getElementById('set-general');
+  if (!el) {
+    return;
+  }
+  el.innerHTML =
+    '<div class="set-grid">' +
+    field(t('st.coNameEn'), input('companies.0.nameEn', c.nameEn)) +
+    field(t('st.coNameAr'), input('companies.0.nameAr', c.nameAr, 'dir="auto"')) +
+    field(t('st.cr'), input('companies.0.cr', c.cr, 'dir="ltr" inputmode="numeric"')) +
+    field(t('st.vat'), input('companies.0.vat', c.vat, 'dir="ltr" inputmode="numeric"')) +
+    field(t('st.phone'), input('companies.0.phone', c.phone, 'dir="ltr" type="tel"')) +
+    field(t('st.address'), input('companies.0.address', c.address, 'dir="auto"')) +
+    field(
+      t('st.language'),
+      '<select class="form-control" data-set="language">' +
+        `<option value="en"${s.language === 'en' ? ' selected' : ''}>English</option>` +
+        `<option value="ar"${s.language === 'ar' ? ' selected' : ''}>العربية</option>` +
+        '</select>'
+    ) +
+    '</div>';
+}
+
+function renderNitaqat(s) {
+  const el = document.getElementById('set-nitaqat');
+  if (!el) {
+    return;
+  }
+  const n = s.nitaqat || {};
+  const lic = s.licence || {};
+  el.innerHTML =
+    '<div class="set-grid">' +
+    field(
+      t('st.target'),
+      `<input class="form-control" data-set="nitaqat.target" type="number" min="0" max="100" step="1" value="${esc(
+        n.target ?? ''
+      )}" dir="ltr">`
+    ) +
+    field(t('st.activity'), `<div class="form-static">${esc(n.activity || '—')}</div>`) +
+    field(t('st.size'), `<div class="form-static">${esc(n.size || '—')}</div>`) +
+    field(t('st.licScope'), `<div class="form-static">${esc(lic.scope || '—')}</div>`) +
+    '</div>' +
+    '<div class="set-row">' +
+    `<div class="toggle${lic.confirmed ? ' on' : ''}" data-set="licence.confirmed" data-bool="1" role="switch" tabindex="0" aria-checked="${lic.confirmed ? 'true' : 'false'}" aria-label="${esc(t('st.licConfirm'))}"></div>` +
+    `<div><div class="set-label">${t('st.licConfirm')}</div><div class="caption-muted">${t('st.licConfirmD')}</div></div>` +
+    '</div>';
+}
+
+function renderPerms() {
+  const el = document.getElementById('set-perms');
+  if (!el) {
+    return;
+  }
+  const roles = getSeed('roles');
+  el.innerHTML =
+    '<div class="set-grid">' +
+    field(
+      t('st.previewAs'),
+      '<select class="form-control" id="set-role-preview">' +
+        roles
+          .map(
+            r =>
+              `<option value="${esc(r.code)}"${r.code === viewedRole() ? ' selected' : ''}>${esc(currentLang() === 'ar' ? r.ar || r.en : r.en)}</option>`
+          )
+          .join('') +
+        '</select>'
+    ) +
+    '</div>';
+}
+
+function renderPrefs() {
+  const el = document.getElementById('set-prefs');
+  if (!el) {
+    return;
+  }
+  const theme = document.documentElement.getAttribute('data-theme') || 'dark';
+  el.innerHTML =
+    '<div class="set-grid">' +
+    field(
+      t('st.theme'),
+      `<div class="btn-group" data-group="theme" role="group" aria-label="${esc(t('st.theme'))}">` +
+        `<button type="button" class="btn${theme === 'light' ? ' active' : ''}" data-theme-pick="light" aria-pressed="${theme === 'light'}">${t('st.themeLight')}</button>` +
+        `<button type="button" class="btn${theme === 'dark' ? ' active' : ''}" data-theme-pick="dark" aria-pressed="${theme === 'dark'}">${t('st.themeDark')}</button>` +
+        '</div>'
+    ) +
+    '</div>' +
+    '<div class="set-row set-danger">' +
+    `<div><div class="set-label">${t('st.reset')}</div><div class="caption-muted">${t('st.resetD')}</div></div>` +
+    `<button type="button" class="btn btn-outline" id="set-reset">${t('st.reset')}</button>` +
+    '</div>';
+}
+
+function applyTheme(next) {
+  document.documentElement.setAttribute('data-theme', next);
+  document.documentElement.style.background = next === 'dark' ? '#111111' : '#f5f7fb';
   try {
-    let raw = localStorage.getItem(STORAGE_KEY);
-    if (raw === null) {
-      raw = localStorage.getItem(LEGACY_STORAGE_KEY);
-      if (raw !== null) {
-        localStorage.setItem(STORAGE_KEY, raw);
-      }
-    }
-    localStorage.removeItem(LEGACY_STORAGE_KEY);
-    return raw ? JSON.parse(raw) : {};
+    localStorage.setItem('theme', next);
   } catch (_e) {
-    return {};
+    /* private mode */
   }
 }
 
-function save(data) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  } catch (_e) { /* private mode */ }
-}
-
-// ────────────────────────
-//  TOGGLES — persist by label text
-// ────────────────────────
-
-function toggleKey(toggle) {
-  const row = toggle.closest('.settings-toggle-row');
-  const label = row?.querySelector('.label')?.textContent.trim();
-  if (!label) {return null;}
-  const section = toggle.closest('.settings-section')?.id || 'general';
-  return `toggle:${section}:${label}`;
-}
-
-function initToggles() {
-  const stored = load();
-  document.querySelectorAll('.settings-toggle-list .toggle').forEach((t) => {
-    const k = toggleKey(t);
-    if (!k) {return;}
-    if (Object.prototype.hasOwnProperty.call(stored, k)) {
-      t.classList.toggle('on', !!stored[k]);
-    }
-  });
-
-  // Click is already handled globally; we listen for the change to persist.
-  document.addEventListener('click', (e) => {
-    const t = e.target.closest('.settings-toggle-list .toggle');
-    if (!t) {return;}
-    // Wait one tick so the global handler updates the class first.
-    setTimeout(() => {
-      const k = toggleKey(t);
-      if (!k) {return;}
-      const data = load();
-      data[k] = t.classList.contains('on');
-      save(data);
-    }, 0);
-  });
-}
-
-// ────────────────────────
-//  RADIO + INPUT persistence (theme, density)
-// ────────────────────────
-
-function initRadios() {
-  const stored = load();
-  document.querySelectorAll('.theme-options input[type="radio"]').forEach((r) => {
-    const k = `radio:${r.name}`;
-    if (stored[k] === r.value) {r.checked = true;}
-    r.addEventListener('change', () => {
-      if (!r.checked) {return;}
-      const data = load();
-      data[k] = r.value;
-      save(data);
-      // Side-effect: theme radio actually applies the theme.
-      if (r.name === 'theme') {applyThemeChoice(r.value);}
-    });
-  });
-}
-
-function applyThemeChoice(choice) {
-  if (choice === 'system') {
-    try { localStorage.removeItem('theme'); } catch (_e) { /* ignore */ }
-    const dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
-  } else {
-    try { localStorage.setItem('theme', choice); } catch (_e) { /* ignore */ }
-    document.documentElement.setAttribute('data-theme', choice);
+function renderAll() {
+  const root = document.querySelector('[data-hr-settings]');
+  if (!root) {
+    return;
   }
-  const btn = document.querySelector('.theme-toggle');
-  if (btn) {btn.setAttribute('aria-pressed', choice === 'dark' ? 'true' : 'false');}
+  const s = getSettings();
+  renderGeneral(s);
+  renderNitaqat(s);
+  renderPerms();
+  renderPrefs();
+  applyI18n(root);
 }
 
-// ────────────────────────
-//  PROFILE FORM — Save / Cancel
-// ────────────────────────
-
-function initProfileForm() {
-  // The settings page wraps profile fields in a <form>. Find the first form
-  // inside the settings-content area.
-  const profileForm = document.querySelector('.settings-content form');
-  if (!profileForm) {return;}
-
-  const inputs = [...profileForm.querySelectorAll('input, textarea, select')];
-  const stored = load();
-  inputs.forEach((el) => {
-    const k = `field:${el.id || el.name}`;
-    if (!k.endsWith(':') && Object.prototype.hasOwnProperty.call(stored, k)) {
-      el.value = stored[k];
-    }
-  });
-
-  const initial = inputs.map((el) => el.value);
-  let dirty = false;
-
-  const saveBtn = profileForm.querySelector('button[type="submit"]');
-  const cancelBtn = profileForm.querySelector('button[type="reset"]');
-  if (saveBtn) {saveBtn.disabled = true;}
-  if (cancelBtn) {cancelBtn.disabled = true;}
-
-  const checkDirty = () => {
-    const current = inputs.map((el) => el.value);
-    dirty = current.some((v, i) => v !== initial[i]);
-    if (saveBtn) {saveBtn.disabled = !dirty;}
-    if (cancelBtn) {cancelBtn.disabled = !dirty;}
-  };
-
-  inputs.forEach((el) => el.addEventListener('input', checkDirty));
-
-  profileForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!dirty) {return;}
-    const data = load();
-    inputs.forEach((el) => {
-      const k = `field:${el.id || el.name}`;
-      if (!k.endsWith(':')) {data[k] = el.value;}
-    });
-    save(data);
-    inputs.forEach((el, i) => { initial[i] = el.value; });
-    dirty = false;
-    if (saveBtn) {saveBtn.disabled = true;}
-    if (cancelBtn) {cancelBtn.disabled = true;}
-    showToast('Profile saved', { variant: 'success' });
-  });
-
-  if (cancelBtn) {
-    cancelBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (!dirty) {return;}
-      inputs.forEach((el, i) => { el.value = initial[i]; });
-      checkDirty();
-      showToast('Changes discarded');
-    });
-  }
-}
-
-// ────────────────────────
-//  INTEGRATIONS — connect/disconnect
-// ────────────────────────
-
-function initIntegrations() {
-  const stored = load();
-  document.querySelectorAll('.integration').forEach((card) => {
-    const titleEl = card.querySelector('.title');
-    const btn = card.querySelector('.btn');
-    if (!titleEl || !btn) {return;}
-    const key = `integration:${titleEl.textContent.trim()}`;
-
-    const isConnected = () => {
-      if (Object.prototype.hasOwnProperty.call(stored, key)) {return stored[key];}
-      // Default state from existing markup label
-      return /connected/i.test(btn.textContent);
-    };
-
-    const paint = () => {
-      const connected = isConnected();
-      btn.textContent = connected ? 'Connected ✓' : 'Connect';
-      btn.classList.toggle('btn-primary', !connected);
-      btn.classList.toggle('btn-outline', connected);
-    };
-    paint();
-
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const data = load();
-      data[key] = !isConnected();
-      Object.assign(stored, data);
-      save(data);
-      paint();
-      showToast(data[key] ? `${titleEl.textContent.trim()} connected` : `${titleEl.textContent.trim()} disconnected`, { variant: data[key] ? 'success' : 'default' });
-    });
+function markNav(hash) {
+  document.querySelectorAll('#set-nav .settings-nav-link').forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === hash);
   });
 }
 
-// ────────────────────────
-//  SESSIONS — revoke
-// ────────────────────────
-
-function initSessions() {
-  document.querySelectorAll('.session-row').forEach((row) => {
-    const btn = row.querySelector('.btn');
-    if (!btn || btn.textContent.trim().toLowerCase() !== 'revoke') {return;}
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const device = row.querySelector('.device')?.textContent.trim() || 'session';
-      showModal({
-        title: 'Revoke session?',
-        body: `<p style="font-size:13px;line-height:1.6;color:var(--text-secondary)">This will sign out <strong>${device}</strong> immediately. The user will need to sign in again.</p>`,
-        actions: [
-          { label: 'Cancel', variant: 'ghost' },
-          {
-            label: 'Revoke',
-            variant: 'danger',
-            action: () => {
-              row.style.transition = 'opacity 200ms, transform 200ms';
-              row.style.opacity = '0';
-              row.style.transform = 'translateX(8px)';
-              setTimeout(() => row.remove(), 220);
-              showToast(`Revoked: ${device}`, { variant: 'success' });
+function resetWorkspace() {
+  showModal({
+    title: t('st.reset'),
+    size: 'sm',
+    body: `<p style="font-size:13px;color:var(--text-secondary);line-height:1.6;margin:0">${esc(t('st.resetD'))}</p>`,
+    actions: [
+      { label: t('common.cancel'), variant: 'ghost' },
+      {
+        label: t('st.reset'),
+        variant: 'primary',
+        action: () => {
+          try {
+            const drop = [];
+            for (let i = 0; i < localStorage.length; i++) {
+              const k = localStorage.key(i);
+              if (k && k.startsWith('hr:')) {
+                drop.push(k);
+              }
             }
+            drop.forEach(k => localStorage.removeItem(k));
+          } catch (_e) {
+            /* private mode */
           }
-        ]
-      });
-    });
+          window.location.reload();
+        }
+      }
+    ]
   });
 }
 
-// ────────────────────────
-//  DANGER ZONE
-// ────────────────────────
-
-function initDanger() {
-  document.querySelectorAll('.danger-row .btn').forEach((btn) => {
-    const label = btn.textContent.trim().toLowerCase();
-    if (label === 'export') {
-      btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const data = load();
-        const blob = new Blob([JSON.stringify({ exportedAt: new Date().toISOString(), settings: data }, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'dash-export.json';
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        setTimeout(() => URL.revokeObjectURL(url), 0);
-        showToast('Workspace export ready', { variant: 'success' });
-      });
-    } else if (label === 'transfer') {
-      btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        showModal({
-          title: 'Transfer workspace ownership',
-          body: `
-            <p style="font-size:13px;line-height:1.6;color:var(--text-secondary);margin-bottom:14px">Transfer ownership to another team member. You'll keep your account but lose admin privileges.</p>
-            <div class="form-group">
-              <label class="form-label" for="transfer-to">Transfer to</label>
-              <select id="transfer-to" class="form-control">
-                <option>Sarah Kowalski (sarah@example.com)</option>
-                <option>Michael Reyes (michael@example.com)</option>
-                <option>Emily Wang (emily@example.com)</option>
-              </select>
-            </div>
-          `,
-          actions: [
-            { label: 'Cancel', variant: 'ghost' },
-            {
-              label: 'Transfer',
-              variant: 'danger',
-              action: (ctx) => {
-                const to = ctx.body.querySelector('#transfer-to').value;
-                showToast(`Transfer initiated to ${to}`, { variant: 'success' });
-              }
-            }
-          ]
-        });
-      });
-    } else if (label === 'delete') {
-      btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        showModal({
-          title: 'Delete account permanently?',
-          body: `
-            <p style="font-size:13px;line-height:1.6;color:var(--text-secondary);margin-bottom:14px">This will <strong>permanently delete</strong> your account, all projects, and all associated data. This action cannot be undone.</p>
-            <div class="form-group">
-              <label class="form-label" for="confirm-delete">Type <code style="background:var(--bg-surface-secondary);padding:1px 4px;border-radius:3px">DELETE</code> to confirm</label>
-              <input id="confirm-delete" class="form-control" autocomplete="off">
-            </div>
-          `,
-          actions: [
-            { label: 'Cancel', variant: 'ghost' },
-            {
-              label: 'Delete account',
-              variant: 'danger',
-              action: (ctx) => {
-                const v = ctx.body.querySelector('#confirm-delete').value;
-                if (v !== 'DELETE') {
-                  showToast('Type DELETE to confirm', { variant: 'error' });
-                  return false;
-                }
-                showToast('Account deletion initiated', { variant: 'error' });
-              }
-            }
-          ]
-        });
-      });
-    }
-  });
-}
-
-// ────────────────────────
-//  TEAM — Invite + Manage
-// ────────────────────────
-
-function initTeam() {
-  const inviteBtn = [...document.querySelectorAll('#team .btn-primary')]
-    .find((b) => b.textContent.trim().toLowerCase().includes('invite'));
-  if (inviteBtn) {
-    inviteBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      showModal({
-        title: 'Invite team member',
-        body: `
-          <div class="form-group">
-            <label class="form-label" for="invite-email">Email</label>
-            <input type="email" id="invite-email" class="form-control" placeholder="colleague@example.com" autocomplete="off">
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="invite-role">Role</label>
-            <select id="invite-role" class="form-control">
-              <option>Member</option>
-              <option>Admin</option>
-              <option>Designer</option>
-              <option>Engineer</option>
-              <option>PM</option>
-            </select>
-          </div>
-        `,
-        actions: [
-          { label: 'Cancel', variant: 'ghost' },
-          {
-            label: 'Send invite',
-            variant: 'primary',
-            action: (ctx) => {
-              const email = ctx.body.querySelector('#invite-email').value.trim();
-              if (!email) {
-                showToast('Add an email address', { variant: 'error' });
-                return false;
-              }
-              showToast(`Invite sent to ${email}`, { variant: 'success' });
-            }
-          }
-        ]
-      });
-    });
-  }
-
-  document.querySelectorAll('#team .session-row .btn').forEach((btn) => {
-    if (btn.textContent.trim().toLowerCase() !== 'manage') {return;}
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const row = btn.closest('.session-row');
-      const name = row?.querySelector('.device')?.textContent.trim() || 'Member';
-      const meta = row?.querySelector('.meta')?.textContent.trim() || '';
-      showModal({
-        title: `Manage ${name}`,
-        body: `
-          <p style="font-size:13px;line-height:1.6;color:var(--text-secondary);margin-bottom:14px">${meta}</p>
-          <div class="form-group">
-            <label class="form-label">Role</label>
-            <select class="form-control" id="manage-role">
-              <option>Member</option><option>Admin</option><option>Designer</option><option>Engineer</option><option>PM</option>
-            </select>
-          </div>
-        `,
-        actions: [
-          { label: 'Remove', variant: 'danger', action: () => {
-            row.remove();
-            showToast(`${name} removed from team`);
-          } },
-          { label: 'Cancel', variant: 'ghost' },
-          { label: 'Save', variant: 'primary', action: (ctx) => {
-            const role = ctx.body.querySelector('#manage-role').value;
-            showToast(`${name} → ${role}`, { variant: 'success' });
-          } }
-        ]
-      });
-    });
-  });
-}
-
-/**
- * Wire up all settings interactions. Idempotent on a single page load.
- */
 export function initSettings() {
-  if (initSettings._wired) {return;}
-  initSettings._wired = true;
-  initToggles();
-  initRadios();
-  initProfileForm();
-  initIntegrations();
-  initSessions();
-  initDanger();
-  initTeam();
+  const root = document.querySelector('[data-hr-settings]');
+  if (!root) {
+    return;
+  }
+  renderAll();
+  // Bindings live on the elements themselves (not the module flag) so a
+  // re-mounted document (or a second init call) wires the live tree exactly
+  // once — InitX() stays safe to call twice.
+  if (!root.dataset.bound) {
+    root.dataset.bound = '1';
+
+    root.addEventListener('change', e => {
+      const el = e.target.closest('[data-set]');
+      if (!el) {
+        return;
+      }
+      const path = el.getAttribute('data-set');
+      let value;
+      if (el.getAttribute('data-bool') === '1') {
+        return; // toggles persist on click below
+      } else if (el.type === 'number') {
+        value = el.value === '' ? '' : Number(el.value);
+      } else {
+        value = el.value;
+      }
+      persist(path, value);
+      if (path === 'language') {
+        setLang(value);
+      }
+    });
+
+    // Toggles flip their own .on class first (global delegation in main-v4
+    // runs before this listener); persist the resulting state here.
+    root.addEventListener('click', e => {
+      const tog = e.target.closest('.toggle[data-set]');
+      if (tog && tog.getAttribute('data-bool') === '1') {
+        window.setTimeout(() => {
+          const on = tog.classList.contains('on');
+          tog.setAttribute('aria-checked', on ? 'true' : 'false');
+          persist(tog.getAttribute('data-set'), on);
+        }, 0);
+        return;
+      }
+      const pick = e.target.closest('[data-theme-pick]');
+      if (pick) {
+        applyTheme(pick.getAttribute('data-theme-pick'));
+        renderPrefs();
+        applyI18n(root);
+        return;
+      }
+      if (e.target.closest('#set-reset')) {
+        resetWorkspace();
+      }
+    });
+
+    root.addEventListener('keydown', e => {
+      const tog = e.target.closest('.toggle[data-set]');
+      if (tog && (e.key === 'Enter' || e.key === ' ')) {
+        e.preventDefault();
+        tog.click();
+      }
+    });
+
+    root.addEventListener('change', e => {
+      if (e.target.id === 'set-role-preview') {
+        setViewedRole(e.target.value);
+        showToast(t('st.saved'), { variant: 'success' });
+      }
+    });
+  } // end root bindings (guarded by root.dataset.bound above)
+
+  const nav = document.getElementById('set-nav');
+  if (nav && !nav.dataset.bound) {
+    nav.dataset.bound = '1';
+    markNav(window.location.hash || '#sec-general');
+    nav.addEventListener('click', e => {
+      const a = e.target.closest('.settings-nav-link');
+      if (a) {
+        markNav(a.getAttribute('href'));
+      }
+    });
+  }
+  if (!booted) {
+    booted = true;
+    window.addEventListener(LANG_EVENT, renderAll);
+  }
 }

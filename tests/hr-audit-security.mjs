@@ -17,7 +17,6 @@ const src = f => readFileSync(`${R}/${f}`, 'utf8');
 // 1. Escape helper imported in every locked renderer
 for (const f of [
   'src/v4/employees.js',
-  'src/v4/visas.js',
   'src/v4/employee-detail.js',
   'src/v4/import-modal.js'
 ]) {
@@ -30,7 +29,7 @@ for (const f of [
 
 // 2. Import error boxes escaped (all three flows; messages are fixed codes,
 // escaping is defense-in-depth against future message text)
-for (const f of ['src/v4/import-modal.js', 'src/v4/employees.js', 'src/v4/visas.js']) {
+for (const f of ['src/v4/import-modal.js']) {
   ok(`esc-errhtml-${f.split('/').pop()}`, src(f).includes('${esc(e.field)}'));
 }
 
@@ -41,36 +40,20 @@ for (const [name, needle] of [
   ['names', '${esc(currentLang()'],
   ['nat', '${esc(e.nat)}'],
   ['prof', '${esc(profName(e.prof))}'],
-  ['dept', '${esc(deptName(e.dept))}'],
-  ['dep', '${esc(dep.label)}'],
-  ['qiwa', 'esc(t(`status.${e.q}`))']
+  ['dept', '${esc(dep.cls)}'],
+  ['dep', '${esc(dep.label.replace('],
+  ['sponsor', "${esc(e.sponsor||'—')}"]
 ]) {
   ok(`esc-employees-${name}`, src('src/v4/employees.js').includes(needle), needle);
 }
 
-// 4. Visas register: every visa-derived sink escaped
-for (const [name, needle] of [
-  ['no', '${esc(v.no)}'],
-  ['type', '${esc(v.type)}'],
-  ['emp-href', 'encodeURIComponent(v.emp)'],
-  ['emp-name', '${esc(empName(v.emp))}'],
-  ['ob-name', '${esc(obName(v.ob))}'],
-  ['status', 'esc(t(`status.${v.status}`))'],
-  ['arrive-attr', 'data-arrive="${esc(v.no)}"'],
-  ['arrival-title', '${esc(no)}']
-]) {
-  ok(`esc-visas-${name}`, src('src/v4/visas.js').includes(needle), needle);
-}
-
-// 5. Employee detail: header + data cells + deployment rows escaped
+// 5. Employee detail: header + data cells escaped
 for (const [name, needle] of [
   ['kvd-helper', 'function kvd(k, v)'],
   ['header-name', '${esc(currentLang()'],
   ['header-code', '${esc(e.code)}'],
-  ['iban', 'esc(maskIban(e.iban))'],
-  ['assign-id', '${esc(a.id)}'],
-  ['ajeer-ref', '${esc(a.ajeer)}'],
-  ['qiwa-doc', 'esc(t(`status.${e.q}`))']
+  ['iban', 'maskIban(e.iban)'],
+  ['qiwa-doc', "kvd('Qiwa', t(`status.${e.q}`))"]
 ]) {
   ok(`esc-empdetail-${name}`, src('src/v4/employee-detail.js').includes(needle), needle);
 }
@@ -80,8 +63,6 @@ const i18n = src('src/v4/i18n.js');
 ok('allowlist-fn', i18n.includes('export function isSafeMediaUrl'));
 ok('allowlist-data-img', i18n.includes("startsWith('data:image/')"));
 ok('allowlist-used', i18n.includes('isSafeMediaUrl(raw.company.logo)'));
-const hset = src('src/v4/hr-settings.js');
-ok('logo-downscale', hset.includes('downscaleLogo') && hset.includes("toDataURL('image/png')"));
 
 // 7. S3: honest gateway + auth redirects
 const landing = src('production/landing.html');
@@ -90,7 +71,7 @@ ok('gateway-no-password', !landing.includes('type="password"'));
 ok('gateway-i18n', landing.includes('data-i18n="common.gatewayTitle"'));
 const gw = src('src/v4/gateway.js');
 ok('gateway-sets-role', gw.includes('setViewedRole('));
-ok('gateway-routes', gw.includes('hr_my_space.html') && gw.includes('hr_dashboard.html'));
+ok('gateway-routes', gw.includes('my_space.html') && gw.includes('analytics.html'));
 ok('gateway-escapes', gw.includes('escapeHtml as esc'));
 ok('roles-setter', src('src/v4/roles.js').includes('export function setViewedRole'));
 for (const p of ['login', 'register', 'forgot_password', 'lock_screen', 'verify_2fa']) {

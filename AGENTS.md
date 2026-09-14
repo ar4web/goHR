@@ -1,7 +1,7 @@
 # AGENTS.md
 
-Dash (`1.0.0`) — internal bilingual (EN/AR) HR command center for KSA. 108 HTML
-pages in `production/`, Vite 8 (Rolldown), vanilla ES2022, SCSS only. No
+Dash (`1.0.0`) — internal bilingual (EN/AR) lean HR management system for KSA. 28 HTML
+pages in `production/` (dashboard, analytics, employees, settings + supporting views), Vite 8 (Rolldown), vanilla ES2022, SCSS only. No
 Bootstrap, no jQuery, no SPA framework. Heavy deps (ECharts 6, DataTables.net 3,
 Leaflet 1.9, `xlsx`) are lazy-imported per page. Counterparts: `docs/workflow.md`,
 `docs/architecture.md`, `docs/deployment.md` — content overlaps on purpose.
@@ -41,7 +41,8 @@ Chunk loop: code one concern → run all gates → commit + push immediately
 pages in EN + AR at desktop + mobile widths.
 
 Standing rules: bilingual UI (EN/AR) on everything new; KSA-first HR logic
-(labor law, GOSI, ZATCA, Nitaqat, Ajeer); no page deletions; settings-driven
+(labor law, GOSI, Nitaqat); lean scope — dashboard, analytics, employees,
+settings (plus auth/layout supporting views); settings-driven
 behavior (never hardcode owner values); Excel import + export on data grids.
 
 ## Architecture
@@ -105,7 +106,7 @@ Table: `<table class="table" data-datatable>` (`data-orderable="false"`,
 ## Don't
 
 - Add jQuery/Bootstrap/SPA framework/Tailwind/extra build steps; edit
-  `dist/`, `node_modules/`, `docs/screenshots/` (generated); delete pages.
+  `dist/`, `node_modules/`, `docs/screenshots/` (generated).
 - `import * as echarts`; `new bootstrap.Modal()`; hand-rolled modal/toast/dropdown;
   hardcoded `/` asset paths; physical-direction CSS; hardcoded colors.
 - Bump CDN scripts with pinned `integrity=` without updating hashes.

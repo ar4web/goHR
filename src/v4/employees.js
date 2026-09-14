@@ -10,7 +10,6 @@ import { exportData } from './import-export.js';
 import { openImportModal } from './import-modal.js';
 import { DEPARTMENTS, PROFESSIONS, CLIENTS, SITES } from './hr-seed.js';
 import { escapeHtml as esc } from './markup.js';
-import { renderEchart } from './chart-helper.js';
 
 const AV = {
   primary: 'var(--avatar-teal)',
@@ -62,17 +61,17 @@ let booted = false;
 
 function profName(code) {
   const p = PROFESSIONS.find(x => x.code === code);
-  if (!p) return code || '—';
+  if (!p) {return code || '—';}
   return currentLang() === 'ar' ? p.ar : p.en;
 }
 function deptName(code) {
   const d = DEPARTMENTS.find(x => x.code === code);
-  if (!d) return code || '—';
+  if (!d) {return code || '—';}
   return currentLang() === 'ar' ? d.ar : d.en;
 }
 function deployOf(e) {
-  if (e.st === 'on-leave') return { cls: 'yellow', label: t('status.on-leave') };
-  if (!e.client) return { cls: 'blue', label: t('status.bench') };
+  if (e.st === 'on-leave') {return { cls: 'yellow', label: t('status.on-leave') };}
+  if (!e.client) {return { cls: 'blue', label: t('status.bench') };}
   const c = CLIENTS.find(x => x.id === e.client);
   const s = SITES.find(x => x.id === e.site);
   const cn = c ? (currentLang() === 'ar' ? c.nameAr : c.nameEn) : e.client;
@@ -80,22 +79,22 @@ function deployOf(e) {
   return { cls: 'green', label: `${t('status.deployed')} · ${cn}${sn ? ` / ${sn}` : ''}` };
 }
 function iqamaBadge(e) {
-  if (e.saudi) return '<span class="status status-green">SA</span>';
-  if (!e.iqamaExp) return `<span class="status status-red">${t('status.missing')}</span>`;
+  if (e.saudi) {return '<span class="status status-green">SA</span>';}
+  if (!e.iqamaExp) {return `<span class="status status-red">${t('status.missing')}</span>`;}
   const d = daysUntil(e.iqamaExp);
-  if (d < 0) return `<span class="status status-red">${fmtDate(e.iqamaExp)} · ${t('status.expired')}</span>`;
-  if (d <= 30) return `<span class="status status-red">${fmtDate(e.iqamaExp)} · ${d}${t('common.days')}</span>`;
-  if (d <= 90) return `<span class="status status-yellow">${fmtDate(e.iqamaExp)} · ${d}${t('common.days')}</span>`;
+  if (d < 0) {return `<span class="status status-red">${fmtDate(e.iqamaExp)} · ${t('status.expired')}</span>`;}
+  if (d <= 30) {return `<span class="status status-red">${fmtDate(e.iqamaExp)} · ${d}${t('common.days')}</span>`;}
+  if (d <= 90) {return `<span class="status status-yellow">${fmtDate(e.iqamaExp)} · ${d}${t('common.days')}</span>`;}
   return `<span class="status status-green">${fmtDate(e.iqamaExp)}</span>`;
 }
 const QIWA_CLS = { authenticated: 'green', sent: 'yellow', draft: 'blue' };
 
 function iqamaBucket(e) {
-  if (e.saudi || !e.iqamaExp) return 'ok';
+  if (e.saudi || !e.iqamaExp) {return 'ok';}
   const d = daysUntil(e.iqamaExp);
-  if (d < 0) return 'expired';
-  if (d <= 30) return 'le30';
-  if (d <= 90) return 'le90';
+  if (d < 0) {return 'expired';}
+  if (d <= 30) {return 'le30';}
+  if (d <= 90) {return 'le90';}
   return 'ok';
 }
 
@@ -115,19 +114,19 @@ function visible(list) {
   );
   const s = filter.sort;
   out.sort((a,b) => {
-    if (s === 'name') return (a.nameEn||'').localeCompare(b.nameEn||'');
-    if (s === 'join') return (a.join||'').localeCompare(b.join||'');
-    if (s === 'basic') return (b.basic||0) - (a.basic||0);
-    if (s === 'iqamaExp') return (a.iqamaExp||'').localeCompare(b.iqamaExp||'');
-    if (s === 'nat') return (a.nat||'').localeCompare(b.nat||'');
-    if (s === 'prof') return (a.prof||'').localeCompare(b.prof||'');
-    if (s === 'nid') return (a.nid||a.iqama||'').localeCompare(b.nid||b.iqama||'');
+    if (s === 'name') {return (a.nameEn||'').localeCompare(b.nameEn||'');}
+    if (s === 'join') {return (a.join||'').localeCompare(b.join||'');}
+    if (s === 'basic') {return (b.basic||0) - (a.basic||0);}
+    if (s === 'iqamaExp') {return (a.iqamaExp||'').localeCompare(b.iqamaExp||'');}
+    if (s === 'nat') {return (a.nat||'').localeCompare(b.nat||'');}
+    if (s === 'prof') {return (a.prof||'').localeCompare(b.prof||'');}
+    if (s === 'nid') {return (a.nid||a.iqama||'').localeCompare(b.nid||b.iqama||'');}
     return (a.code||'').localeCompare(b.code||'');
   });
   return out;
 }
 
-function spark(el, vals, color){ if(!el) return; el.innerHTML = vals.map(v=>`<div class="bar" style="height:${v}%;background:${color}"></div>`).join(''); }
+function spark(el, vals, color){ if(!el) {return;} el.innerHTML = vals.map(v=>`<div class="bar" style="height:${v}%;background:${color}"></div>`).join(''); }
 function renderStats(list) {
   const n = nitaqatEstimate(list);
   const deployed = list.filter(e => e.client && e.st === 'active').length;
@@ -147,7 +146,7 @@ function renderStats(list) {
   setText('stat-sub-expat', `${pctExpat}% of total`);
   setText('stat-sub-deployed', `${pctDeployed}% of active`);
   setText('stat-sub-saud', n.pct>=25?'Platinum':`Need ${25-n.pct}% to green`);
-  const bar = (id,pct,color) => { const b=document.getElementById(id); if(b) b.style.width=pct+'%'; if(b) b.style.background=color; };
+  const bar = (id,pct,color) => { const b=document.getElementById(id); if(b) {b.style.width=pct+'%';} if(b) {b.style.background=color;} };
   bar('bar-saudi', pctSaudi, 'var(--green)');
   bar('bar-expat', pctExpat, 'var(--blue)');
   bar('bar-deployed', pctDeployed, 'var(--purple)');
@@ -159,7 +158,7 @@ function renderStats(list) {
   spark(document.getElementById('spark-bench'), [45,40,50,38,55,42,60,48,52,46], 'var(--yellow)');
   spark(document.getElementById('spark-saud'), [20,25,30,22,35,28,40,38,45,32], 'var(--red)');
   const cnt = document.getElementById('emp-count');
-  if (cnt) cnt.textContent = `${visible(getSeed('employees')).length} / ${list.length}`;
+  if (cnt) {cnt.textContent = `${visible(getSeed('employees')).length} / ${list.length}`;}
   const er = document.getElementById('expiry-report');
   if (er) {
     const total = list.length || 1;
@@ -208,53 +207,6 @@ function populateFilters() {
   }
 }
 
-function renderCharts(list) {
-  const data = visible(list);
-  // Nationality
-  const natCounts = {};
-  data.forEach(e=> { natCounts[e.nat]=(natCounts[e.nat]||0)+1; });
-  const natEntries = Object.entries(natCounts).sort((a,b)=>b[1]-a[1]).slice(0,6);
-  const natEl = document.getElementById('chart-emp-nat');
-  if (natEl) {
-    renderEchart(natEl, (t) => ({
-      tooltip: { trigger: 'item', formatter: '{b}: {c}' },
-      series: [{ type: 'pie', radius: ['45%','75%'], label: { show: false }, data: natEntries.map(([k,v],i)=>({ name:k, value:v, itemStyle:{ color: [t.primary, t.azure, t.green, t.yellow, t.purple, t.red][i%6] } })) }]
-    }), `Nationality ${natEntries.map(([k,v])=>`${k}:${v}`).join(', ')}`);
-    const m = document.getElementById('chart-nat-meta');
-    if (m) m.textContent = natEntries.map(([k,v])=>`${k} ${v}`).join(' · ');
-  }
-  // Department
-  const deptCounts = {};
-  data.forEach(e=> { deptCounts[e.dept]=(deptCounts[e.dept]||0)+1; });
-  const deptEntries = Object.entries(deptCounts).sort((a,b)=>b[1]-a[1]);
-  const deptEl = document.getElementById('chart-emp-dept');
-  if (deptEl) {
-    renderEchart(deptEl, (t) => ({
-      tooltip: { trigger: 'axis' },
-      grid: { left: 40, right: 12, top: 8, bottom: 20 },
-      xAxis: { type: 'value', axisLabel:{ fontSize:10 }, splitLine:{ lineStyle:{ color:t.borderLight } } },
-      yAxis: { type: 'category', data: deptEntries.map(([k])=>k), axisLabel:{ fontSize:10 } },
-      series: [{ type: 'bar', data: deptEntries.map(([,v])=>v), itemStyle:{ color:t.primary, borderRadius:[0,4,4,0] }, barWidth:'60%' }]
-    }), `Dept ${deptEntries.map(([k,v])=>`${k}:${v}`).join(', ')}`, { rtl:'hbar' });
-    const mm = document.getElementById('chart-dept-meta');
-    if (mm) mm.textContent = deptEntries.map(([k,v])=>`${k}:${v}`).join(' · ');
-  }
-  // Status
-  const stCounts = {};
-  data.forEach(e=> { stCounts[e.st]=(stCounts[e.st]||0)+1; });
-  const stEntries = Object.entries(stCounts);
-  const stEl = document.getElementById('chart-emp-st');
-  if (stEl) {
-    const colorMap = { active:'green', probation:'blue', 'on-leave':'yellow', huroob:'red', exited:'grey' };
-    renderEchart(stEl, (t) => ({
-      tooltip: { trigger: 'item' },
-      series: [{ type: 'pie', radius: ['45%','75%'], label:{ show:false }, data: stEntries.map(([k,v])=>({ name:k, value:v, itemStyle:{ color: t[colorMap[k]] || t.primary } })) }]
-    }), `Status ${stEntries.map(([k,v])=>`${k}:${v}`).join(', ')}`);
-    const sm = document.getElementById('chart-st-meta');
-    if (sm) sm.textContent = stEntries.map(([k,v])=>`${k}:${v}`).join(' · ');
-  }
-}
-
 function autoId(idx){
   const d=new Date().toISOString().slice(2,10).replace(/-/g,'').slice(0,6);
   return `EM${d}${String(idx).padStart(2,'0')}`;
@@ -263,23 +215,19 @@ function empType(e){ return e.partTime ? 'Part-time' : 'Full-time'; }
 function hiredBy(e){ return e.dept==='HR' ? 'HR Manager' : 'Recruitment'; }
 function refOf(e){ return e.sponsor ? `Sponsor ${e.sponsor}` : '—'; }
 function docStatus(e){
-  if(e.saudi) return e.nid ? 'Complete' : 'Pending';
+  if(e.saudi) {return e.nid ? 'Complete' : 'Pending';}
   return e.iqama && e.iqamaExp ? 'Complete' : 'Pending';
 }
 function vacEligible(e){
-  if(!e.join) return '—';
+  if(!e.join) {return '—';}
   const join=new Date(e.join);
   const now=new Date();
   const months=(now.getFullYear()-join.getFullYear())*12 + (now.getMonth()-join.getMonth());
   return months>=12 && (e.annualUsed||0) < 21 ? 'Eligible' : 'Not eligible';
 }
-function transferCount(e){
-  const all=getSeed('assignments')||[];
-  return all.filter(a=>a.emp===e.code).length;
-}
 function expiryOf(e){
-  if(e.iqamaExp) return e.iqamaExp;
-  if(e.nidExp) return e.nidExp;
+  if(e.iqamaExp) {return e.iqamaExp;}
+  if(e.nidExp) {return e.nidExp;}
   if(e.saudi && e.join){
     const d=new Date(e.join); d.setFullYear(d.getFullYear()+5);
     return d.toISOString().slice(0,10);
@@ -288,23 +236,23 @@ function expiryOf(e){
 }
 function insStatus(e){
   const exp=expiryOf(e);
-  if(!exp) return '—';
+  if(!exp) {return '—';}
   const d=daysUntil(exp);
   return d<0 ? 'Expired' : d<=30 ? 'Expiring' : 'Active';
 }
 function insCompany(e){ return e.ins || (e.saudi ? '—' : 'Bupa'); }
 function siteCity(e){
   const s=SITES.find(x=>x.id===e.site);
-  if(!s) return { site:e.site||'—', city:e.city||'—' };
+  if(!s) {return { site:e.site||'—', city:e.city||'—' };}
   return { site: currentLang()==='ar'?s.nameAr:s.nameEn, city:s.city||'—' };
 }
 function renderRows() {
   const tbody = document.getElementById('emp-rows');
-  if (!tbody) return;
+  if (!tbody) {return;}
   const items = visible(getSeed('employees'));
   renderStats(getSeed('employees'));
   const cnt = document.getElementById('emp-count');
-  if (cnt) cnt.textContent = `${items.length} / ${getSeed('employees').length}`;
+  if (cnt) {cnt.textContent = `${items.length} / ${getSeed('employees').length}`;}
   tbody.innerHTML = items.map((e,idx) => {
     const idAuto = autoId(idx);
     const exp = expiryOf(e);
@@ -339,10 +287,9 @@ function renderRows() {
       <td style="font-size:12.5px">${esc(refOf(e))}</td>
       <td><span class="status status-${docStatus(e)==='Complete'?'green':'yellow'}">${esc(docStatus(e))}</span></td>
       <td><span class="status status-${vacEligible(e)==='Eligible'?'green':'blue'}">${esc(vacEligible(e))}</span></td>
-      <td style="font-size:12.5px;text-align:center">${transferCount(e)}</td>
       <td style="font-size:12.5px"><span class="status status-${insStatus(e)==='Active'?'green':insStatus(e)==='Expired'?'red':'yellow'}">${esc(insStatus(e))}</span><div style="font-size:11px;color:var(--text-muted)">${esc(insCompany(e))}</div></td>
     </tr>`;
-  }).join('') || `<tr><td colspan="18" style="text-align:center;color:var(--text-muted);padding:24px">${t('common.noData')}</td></tr>`;
+  }).join('')  || `<tr><td colspan="17" style="text-align:center;color:var(--text-muted);padding:24px">${t('common.noData')}</td></tr>`;
 }
 
 function checkedCodes() {
@@ -357,16 +304,16 @@ function exportRows(format, onlyChecked) {
 
 export function initEmployees() {
   const root = document.querySelector('[data-hr-employees]');
-  if (!root) return;
+  if (!root) {return;}
   populateFilters();
   renderRows();
   if (booted) { applyI18n(root); return; }
   booted = true;
   const topSearch = document.getElementById('topbar-search');
   const empSearch = document.getElementById('emp-search');
-  const bindSearch = (el) => { if (!el) return; el.addEventListener('input', e => { filter.q = e.target.value; renderRows(); }); };
-  bindSearch(topSearch);
-  bindSearch(empSearch);
+  const bindSearch = (el) => { if (!el) {return;} el.addEventListener('input', e => { filter.q = e.target.value; renderRows(); }); };
+  if (topSearch) {bindSearch(topSearch);}
+  if (empSearch) {bindSearch(empSearch);}
   document.getElementById('emp-group')?.addEventListener('change', e => { filter.group = e.target.value; renderRows(); });
   document.getElementById('emp-status')?.addEventListener('change', e => { filter.st = e.target.value; renderRows(); });
   document.getElementById('emp-dept')?.addEventListener('change', e => { filter.dept = e.target.value; renderRows(); });
@@ -380,12 +327,12 @@ export function initEmployees() {
   document.getElementById('emp-more')?.addEventListener('click', () => {
     const adv = document.getElementById('emp-advanced');
     const btn = document.getElementById('emp-more');
-    if (!adv) return;
+    if (!adv) {return;}
     const hidden = adv.hasAttribute('hidden');
-    if (hidden) adv.removeAttribute('hidden'); else adv.setAttribute('hidden','');
+    if (hidden) {adv.removeAttribute('hidden');} else {adv.setAttribute('hidden','');}
     btn?.setAttribute('aria-expanded', hidden ? 'true' : 'false');
     const chev = btn?.querySelector('svg');
-    if (chev) chev.style.transform = hidden ? 'rotate(180deg)' : 'rotate(0deg)';
+    if (chev) {chev.style.transform = hidden ? 'rotate(180deg)' : 'rotate(0deg)';}
   });
   // header click sorter
   root.querySelectorAll('th[data-sort]').forEach(th => {
@@ -421,7 +368,7 @@ export function initEmployees() {
   });
   document.getElementById('emp-rows')?.addEventListener('click', e => {
     const btn = e.target.closest('[data-row-menu]');
-    if (!btn) return;
+    if (!btn) {return;}
     e.stopPropagation();
     const code = btn.dataset.code;
     openMenu(btn, [

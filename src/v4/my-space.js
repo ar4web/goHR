@@ -1,5 +1,5 @@
-// HR + Operations — employee self-service "My space" (my_space.html).
-// P0: identity switcher (demo login) + profile, pay slip, deployment, requests.
+// HRGO — employee self-service "My space" (my_space.html).
+// Identity switcher (demo login) + profile, pay slip, deployment, leave balance.
 
 import { showToast } from './toast.js';
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
@@ -31,11 +31,6 @@ function kv(k, v) {
   return `<div class="hr-kv"><span>${k}</span><strong>${v}</strong></div>`;
 }
 
-function reqBadge(st) {
-  const map = { approved: 'green', pending: 'yellow', rejected: 'red' };
-  return `<span class="status status-${map[st] || 'blue'}">${t(`status.${st}`)}</span>`;
-}
-
 function render() {
   const root = document.querySelector('[data-hr-myspace]');
   if (!root) {
@@ -56,7 +51,6 @@ function render() {
   const used = e.annualUsed || 0;
   const client = CLIENTS.find(c => c.id === e.client);
   const site = SITES.find(s => s.id === e.site);
-  const reqs = getSeed('requests').filter(r => r.emp === e.code);
 
   const sel = document.getElementById('my-who');
   if (sel && !sel.options.length) {
@@ -90,9 +84,9 @@ function render() {
     (e.saudi
       ? kv(L('National ID', 'الهوية'), e.nid || '—')
       : kv(
-          L('Iqama expiry', 'انتهاء الإقامة'),
-          e.iqamaExp ? fmtDate(e.iqamaExp) : t('status.missing')
-        )) +
+        L('Iqama expiry', 'انتهاء الإقامة'),
+        e.iqamaExp ? fmtDate(e.iqamaExp) : t('status.missing')
+      )) +
     '</div>';
 
   document.getElementById('my-pay').innerHTML =
@@ -120,18 +114,9 @@ function render() {
     <button type="button" class="btn btn-outline btn-sm" id="my-leave-btn" style="margin-top:10px">${L('Request leave', 'طلب إجازة')}</button>`;
 
   const rq = document.getElementById('my-requests');
-  rq.innerHTML = reqs.length
-    ? `<div class="table-responsive"><table class="table hr-table"><thead><tr>
-    <th>#</th><th>${L('Type', 'النوع')}</th><th>${L('Dates', 'التواريخ')}</th><th>${t('common.status')}</th></tr></thead><tbody>` +
-      reqs
-        .map(
-          r => `<tr><td data-label="#">${r.id}</td><td data-label="${L('Type', 'النوع')}">${r.type}</td>
-      <td data-label="${L('Dates', 'التواريخ')}" style="font-size:12.5px" dir="ltr">${r.from} → ${r.to}</td>
-      <td data-label="${t('common.status')}">${reqBadge(r.st)}</td></tr>`
-        )
-        .join('') +
-      '</tbody></table></div>'
-    : `<div class="hr-empty">${t('common.noData')}</div>`;
+  if (rq) {
+    rq.innerHTML = `<div class="hr-empty">${t('common.noData')}</div>`;
+  }
 
   document.getElementById('my-leave-btn')?.addEventListener('click', () => {
     showToast(

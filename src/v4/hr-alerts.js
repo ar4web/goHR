@@ -1,8 +1,7 @@
-// HR + Operations — live compliance alerts for the topbar bell.
-// Same expiry sources as reports §5: Iqama ≤60d, contracts ≤90d, Ajeer
-// permits ≤60d. Most urgent first, capped at 8. Alerts are sticky live
-// state: they clear when the underlying expiry is resolved, not when
-// "mark all read" is pressed.
+// HRGO — live people alerts for the topbar bell.
+// Iqama expiries (≤60d) across active employees. Most urgent first, capped
+// at 8. Alerts are sticky live state: they clear when the underlying expiry
+// is resolved, not when "mark all read" is pressed.
 
 import { currentLang } from './i18n.js';
 import { L } from './hr-locale.js';
@@ -26,33 +25,7 @@ export function hrAlerts() {
           sticky: true,
           from: L('Iqama expiring', 'الإقامة تنتهي'),
           text: `${e.code} · ${empName(e)}`,
-          href: 'residency.html'
-        });
-      }
-    }
-    for (const c of getSeed('contracts').filter(x => x.status === 'active' && x.end)) {
-      const d = daysUntil(c.end);
-      if (d <= 90) {
-        out.push({
-          d,
-          kind: 'alert',
-          sticky: true,
-          from: L('Contract expiring', 'العقد ينتهي'),
-          text: `${c.id} · ${c.party}`,
-          href: `contract.html?id=${c.id}`
-        });
-      }
-    }
-    for (const p of getSeed('ajeerPermits').filter(x => x.status === 'active' && x.exp)) {
-      const d = daysUntil(p.exp);
-      if (d <= 60) {
-        out.push({
-          d,
-          kind: 'alert',
-          sticky: true,
-          from: L('Ajeer expiring', 'تصريح أجير ينتهي'),
-          text: `${p.no} · ${p.emp}`,
-          href: 'ajeer.html'
+          href: 'employees.html'
         });
       }
     }

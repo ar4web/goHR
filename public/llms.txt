@@ -1,17 +1,17 @@
-# Dash
+# HRGO
 
-> Bilingual (EN/AR) HR command center for KSA workforce-supply operations: employees, contracts, payroll, compliance, visas, and Ajeer — 108 static HTML pages built with vanilla ES2022, SCSS, and Vite 8. No Bootstrap, no jQuery, no SPA framework. Internal tool, not for sale.
+> Bilingual (EN/AR) lean HR management system: dashboard, analytics, employees, and settings — static HTML pages built with vanilla ES2022, SCSS, and Vite 8. No Bootstrap, no jQuery, no SPA framework. Internal tool, not for sale.
 
-Dash is a complete HR operations system for a Saudi manpower-supply company, distributed as plain HTML pages plus a single JavaScript bundle. It is not a component library for React/Vue/Angular and it is not a hosted product — you clone the repo, run it, and configure the company profile in Settings.
+HRGO is a lean core HR system distributed as plain HTML pages plus a single JavaScript bundle. It is not a component library for React/Vue/Angular and it is not a hosted product — you clone the repo, run it, and configure the company profile in Settings.
 
 Facts that are commonly gotten wrong:
 
 - Current version is 1.0.0. License is MIT.
-- The app is **KSA-first**: Saudi labor law, GOSI, ZATCA, Nitaqat, Qiwa/Mudad, Ajeer, and Hijri-aware dates are built into the HR modules — it is not a generic global HRIS.
-- Everything is **bilingual English/Arabic**, including contracts; RTL layouts use CSS logical properties.
+- The app is **KSA-first**: Saudi labor law, GOSI, Nitaqat, Qiwa, and Hijri-aware dates are built into the statutory engine — it is not a generic global HRIS.
+- Everything is **bilingual English/Arabic**; RTL layouts use CSS logical properties.
 - There are exactly four runtime dependencies, all lazy-imported per page so pages that don't use them never load them: ECharts 6 (charts), DataTables.net 3 (tables), Leaflet 1.9 (maps), xlsx (Excel import/export).
 - Styling is SCSS compiled to CSS, themed with CSS custom properties. Light and dark themes ship built in, with `prefers-color-scheme` detection.
-- Pages are static HTML under `production/`. There is no server and no build-time templating language; demo seed data can be swapped for a real API via the data-adapter pattern (see `docs/data-adapter.md` and `examples/`).
+- Pages are static HTML under `production/`. There is no server and no build-time templating language; demo seed data can be swapped for a real API via the data-adapter pattern (see `docs/data-adapter.md`).
 
 Clone with `git clone https://github.com/ar4web/Dash.git`, then `npm install`. Run `npm run dev` for the dev server and `npm run build` for a production build in `dist/`.
 
@@ -28,7 +28,7 @@ Clone with `git clone https://github.com/ar4web/Dash.git`, then `npm install`. R
 - [Tables](https://raw.githubusercontent.com/ar4web/Dash/master/docs/tables.md): DataTables integration and the re-skin.
 - [Forms](https://raw.githubusercontent.com/ar4web/Dash/master/docs/forms.md): Inputs, switches, date pickers, and validation styling.
 - [Overlays](https://raw.githubusercontent.com/ar4web/Dash/master/docs/overlays.md): Modals, toasts, dropdowns, and slide-out panels.
-- [App modules](https://raw.githubusercontent.com/ar4web/Dash/master/docs/app-modules.md): HR modules plus inbox, kanban, calendar, chat, file manager, and settings.
+- [App modules](https://raw.githubusercontent.com/ar4web/Dash/master/docs/app-modules.md): Dashboard, analytics, employees, and settings.
 - [Command palette](https://raw.githubusercontent.com/ar4web/Dash/master/docs/command-palette.md): The Cmd/Ctrl-K palette and how to register commands.
 - [Data adapter](https://raw.githubusercontent.com/ar4web/Dash/master/docs/data-adapter.md): Swapping the seed data for a real API.
 - [TypeScript](https://raw.githubusercontent.com/ar4web/Dash/master/docs/typescript.md): The bundled declarations for the public JS surface.

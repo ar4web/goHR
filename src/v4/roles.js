@@ -17,55 +17,19 @@ const VIEW_KEY = 'hr:role-view';
 export const ROLE_MODULES = [
   {
     group: 'hr.navgroup.overview',
-    pages: ['hr-dashboard', 'hr-reports']
+    pages: ['dashboard', 'analytics']
   },
   {
     group: 'hr.navgroup.people',
-    pages: ['hr-employees', 'hr-onboarding', 'hr-org', 'hr-tracker', 'hr-documents', 'hr-my-team']
-  },
-  {
-    group: 'hr.navgroup.compliance',
-    pages: ['hr-sa-compliance', 'hr-visas', 'hr-residency', 'hr-contracts']
-  },
-  {
-    group: 'hr.navgroup.time',
-    pages: ['hr-attendance', 'hr-timesheets', 'hr-leave', 'hr-leave-calendar', 'hr-approvals']
-  },
-  {
-    group: 'hr.navgroup.operations',
-    pages: ['hr-clients', 'hr-requests', 'hr-assignments', 'hr-ajeer']
-  },
-  {
-    group: 'hr.navgroup.employee',
-    pages: ['hr-payroll', 'hr-gosi', 'hr-wps', 'hr-eosb']
-  },
-  {
-    group: 'hr.navgroup.accounts',
-    pages: ['hr-invoices', 'hr-expenses']
-  },
-  {
-    group: 'hr.navgroup.hiring',
-    pages: ['hr-jobs', 'hr-candidates', 'hr-pipeline', 'hr-interviews', 'hr-offers']
-  },
-  {
-    group: 'hr.navgroup.growth',
-    pages: ['hr-goals', 'hr-reviews', 'hr-feedback', 'hr-trainings', 'hr-announcements']
+    pages: ['employees', 'my-team', 'org']
   },
   {
     group: 'hr.navgroup.portals',
-    pages: ['hr-my-space', 'hr-client']
+    pages: ['my-space']
   },
   {
     group: 'hr.navgroup.settings',
-    pages: [
-      'hr-settings',
-      'hr-departments',
-      'hr-roles',
-      'hr-templates',
-      'hr-holidays',
-      'hr-shifts',
-      'hr-audit'
-    ]
+    pages: ['settings', 'departments', 'roles']
   }
 ];
 
@@ -125,11 +89,11 @@ function renderAll() {
         const star = allow.includes('*');
         return `<tr><td data-label="${L('Role', 'الدور')}"><strong>${r.label}</strong>
           <div style="font-size:11.5px;color:var(--text-muted)">${r.code}</div></td>${allPages
-            .map(p => {
-              const on = star || allow.includes(p);
-              return `<td data-label="${p}" dir="ltr"><input type="checkbox" data-role="${r.code}" data-page="${p}"${on ? ' checked' : ''}${r.code === 'admin' ? ' disabled' : ''} aria-label="${r.code} ${p}"></td>`;
-            })
-            .join('')}</tr>`;
+  .map(p => {
+    const on = star || allow.includes(p);
+    return `<td data-label="${p}" dir="ltr"><input type="checkbox" data-role="${r.code}" data-page="${p}"${on ? ' checked' : ''}${r.code === 'admin' ? ' disabled' : ''} aria-label="${r.code} ${p}"></td>`;
+  })
+  .join('')}</tr>`;
       })
       .join('')}</tbody>`;
   }

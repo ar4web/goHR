@@ -18,144 +18,7 @@ export const NAV = [
     label: '',
     items: [
       { key: 'analytics', href: 'analytics.html', text: 'Analytics', icon: 'barChart' },
-      { key: 'employees', href: 'employees.html', text: 'Employees', icon: 'users' },
-      {
-        text: 'Time',
-        icon: 'clock',
-        i18n: 'hr.navgroup.time',
-        children: [
-          { key: 'attendance', href: 'attendance.html', text: 'Attendance' },
-          { key: 'timesheets', href: 'timesheets.html', text: 'Timesheets' },
-          { key: 'leave', href: 'leave.html', text: 'Leave' },
-          { key: 'approvals', href: 'approvals.html', text: 'Approvals' }
-        ]
-      },
-      {
-        text: 'Hiring',
-        icon: 'briefcase',
-        i18n: 'hr.navgroup.hiring',
-        children: [
-          { key: 'jobs', href: 'jobs.html', text: 'Jobs' },
-          { key: 'candidates', href: 'candidates.html', text: 'Candidates' },
-          { key: 'pipeline', href: 'pipeline.html', text: 'Pipeline' }
-        ]
-      },
-      {
-        text: 'Growth',
-        icon: 'target',
-        i18n: 'hr.navgroup.growth',
-        children: [
-          { key: 'goals', href: 'goals.html', text: 'Goals' },
-          { key: 'reviews', href: 'reviews.html', text: 'Reviews' },
-          { key: 'trainings', href: 'trainings.html', text: 'Training' }
-        ]
-      },
-      {
-        text: 'Payroll',
-        icon: 'creditCard',
-        i18n: 'hr.navgroup.payroll',
-        children: [
-          { key: 'payroll', href: 'payroll.html', text: 'Pay runs' },
-          { key: 'gosi', href: 'gosi.html', text: 'GOSI' },
-          { key: 'wps', href: 'wps.html', text: 'WPS' }
-        ]
-      },
-      {
-        text: 'Compliance',
-        icon: 'shield',
-        i18n: 'hr.navgroup.compliance',
-        children: [
-          { key: 'sa-compliance', href: 'sa_compliance.html', text: 'SA Compliance' },
-          { key: 'residency', href: 'residency.html', text: 'Residency' },
-          { key: 'visas', href: 'visas.html', text: 'Visas' },
-          { key: 'contracts', href: 'contracts.html', text: 'Contracts' }
-        ]
-      },
-      {
-        text: 'Accounts',
-        icon: 'wallet',
-        i18n: 'hr.navgroup.accounts',
-        children: [
-          { key: 'invoices', href: 'invoices.html', text: 'Invoices' },
-          { key: 'expenses', href: 'expenses.html', text: 'Expenses' }
-        ]
-      },
-      {
-        text: 'Operations',
-        icon: 'shop',
-        i18n: 'hr.navgroup.operations',
-        children: [
-          { key: 'clients', href: 'clients.html', text: 'Clients' },
-          { key: 'assignments', href: 'assignments.html', text: 'Assignments' },
-          { key: 'ajeer', href: 'ajeer.html', text: 'Ajeer' },
-          { key: 'tracker', href: 'tracker.html', text: 'Tracker' }
-        ]
-      }
-    ]
-  },
-  {
-    label: 'Data',
-    items: [
-      {
-        text: 'Records',
-        icon: 'fileText',
-        children: [
-          { key: 'dependents', href: 'dependents.html', text: 'Dependents' },
-          { key: 'qualifications', href: 'qualifications.html', text: 'Qualifications' },
-          { key: 'warnings', href: 'warnings.html', text: 'Warnings' },
-          { key: 'achievements', href: 'achievements.html', text: 'Achievements' },
-          { key: 'promotions', href: 'promotions.html', text: 'Promotions' }
-        ]
-      },
-      {
-        text: 'Attendance',
-        icon: 'clock',
-        children: [
-          { key: 'attendance-policies', href: 'attendance_policies.html', text: 'Policies' },
-          { key: 'attendance-locations', href: 'attendance_locations.html', text: 'Locations' }
-        ]
-      },
-      {
-        text: 'Approvals',
-        icon: 'checkCircle',
-        children: [
-          { key: 'approval-workflows', href: 'approval_workflows.html', text: 'Workflows' },
-          { key: 'approval-requests', href: 'approval_requests.html', text: 'Requests' }
-        ]
-      },
-      {
-        text: 'System',
-        icon: 'settings',
-        children: [
-          { key: 'system-notifications', href: 'system_notifications.html', text: 'Notifications' },
-          { key: 'system-alerts', href: 'system_alerts.html', text: 'Alerts' },
-          { key: 'system-activity', href: 'system_activity.html', text: 'Activity' }
-        ]
-      },
-      {
-        text: 'Global',
-        icon: 'globe',
-        children: [
-          { key: 'countries', href: 'countries.html', text: 'Countries' },
-          { key: 'currencies', href: 'currencies.html', text: 'Currencies' },
-          { key: 'work-permits', href: 'work_permits.html', text: 'Work Permits' },
-          { key: 'leaves-balances', href: 'leaves_balances.html', text: 'Leaves' }
-        ]
-      },
-      {
-        text: 'Reports',
-        icon: 'barChart',
-        children: [
-          { key: 'custom-reports', href: 'custom_reports.html', text: 'Reports' },
-          { key: 'report-schedules', href: 'report_schedules.html', text: 'Schedules' }
-        ]
-      }
-    ]
-  },
-  {
-    label: 'Workspace',
-    items: [
-      { key: 'notifications', href: 'notifications.html', text: 'Notifications', icon: 'bell' }
+      { key: 'employees', href: 'employees.html', text: 'Employees', icon: 'users' }
     ]
   }
 ];
@@ -175,11 +38,7 @@ export const SETTINGS_NAV = [
     items: [
       { key: 'settings', href: 'settings.html', text: 'HR Settings' },
       { key: 'departments', href: 'departments.html', text: 'Departments' },
-      { key: 'roles', href: 'roles.html', text: 'Roles & access' },
-      { key: 'templates', href: 'templates.html', text: 'Templates' },
-      { key: 'holidays', href: 'holidays.html', text: 'Holidays' },
-      { key: 'shifts', href: 'shifts.html', text: 'Shifts' },
-      { key: 'audit', href: 'audit.html', text: 'Audit log' }
+      { key: 'roles', href: 'roles.html', text: 'Roles & access' }
     ]
   },
   {
@@ -326,10 +185,7 @@ const SETTINGS_KEYS = new Set(SETTINGS_NAV.flatMap(s => settingsKeys(s.items)));
 // Detail pages carry their own data-page key but highlight their section
 // parent in the sidebar (they share the parent's screen, not its key).
 const DETAIL_PARENT = {
-  'contract-detail': 'contracts',
-  'payslip': 'payroll',
-  'employee-file': 'employees',
-  'review-detail': 'reviews'
+  'employee-file': 'employees'
 };
 
 export function renderSidebar(activeKey) {
