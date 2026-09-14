@@ -219,7 +219,7 @@ const tables = `<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" pr
     { id: '#7837', c: 'MK', cb: COLORS.red,     p: 'Bootstrap Bundle', s: 'Cancelled',  sb: COLORS.red,    d: 'Apr 25' },
     { id: '#7836', c: 'LP', cb: COLORS.green,   p: 'UI Kit Pro',       s: 'Paid',       sb: COLORS.green,  d: 'Apr 25' },
     { id: '#7835', c: 'DR', cb: COLORS.blue,    p: 'Vue Admin',        s: 'Paid',       sb: COLORS.green,  d: 'Apr 24' },
-    { id: '#7834', c: 'YT', cb: COLORS.primary, p: 'React Dash',       s: 'Processing', sb: COLORS.blue,   d: 'Apr 24' }
+    { id: '#7834', c: 'YT', cb: COLORS.primary, p: 'React HRGO',       s: 'Processing', sb: COLORS.blue,   d: 'Apr 24' }
   ].map((r, i) => `
       <g transform="translate(0, ${68 + i * 21})">
         <text x="22" y="7" font-size="6" font-weight="600" fill="${COLORS.primary}" font-family="Inter,sans-serif">${r.id}</text>

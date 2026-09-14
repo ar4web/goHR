@@ -1,6 +1,8 @@
-// Dash — ECharts integration
+// HRGO — ECharts integration
 // Dynamic-imports ECharts only when a [data-chart] element is present on the
 // page, keeping pages without charts free of the ~400kB cost.
+
+import { getSeed } from './hr-api.js';
 
 const tokens = () => {
   const cs = getComputedStyle(document.documentElement);
@@ -38,9 +40,25 @@ function baseOption(t) {
 }
 
 function dashboardNetwork(echarts, el, t) {
-  const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-  const sessions = [420, 580, 510, 720, 680, 790, 752];
-  const pageviews = [320, 460, 410, 580, 540, 660, 620];
+  // Workforce Trend — 6 months Hired vs Exited vs Net (real seed data)
+  const emps = getSeed('employees') || [];
+  const now = new Date('2026-09-13');
+  const months = [];
+  const labels = [];
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(now); d.setMonth(d.getMonth() - i);
+    const y = d.getFullYear(), m = d.getMonth() + 1;
+    const key = `${y}-${String(m).padStart(2,'0')}`;
+    months.push(key);
+    labels.push(d.toLocaleString('en', { month: 'short' }));
+  }
+  const hired = months.map(k => emps.filter(e => (e.join||'').slice(0,7) === k).length);
+  const exited = months.map(k => emps.filter(e => (e.exitDate||'').slice(0,7) === k).length);
+  const net = hired.map((h,i) => h - exited[i]);
+  // cumulative headcount for tooltip context
+  let cum = emps.filter(e => (e.join||'').slice(0,7) < months[0]).length - emps.filter(e => (e.exitDate||'') && (e.exitDate||'').slice(0,7) < months[0]).length;
+  const cumSeries = months.map((_,i) => { cum += net[i]; return cum; });
+
   const chart = echarts.init(el);
   chart.setOption({
     ...baseOption(t),
@@ -48,7 +66,7 @@ function dashboardNetwork(echarts, el, t) {
     legend: { show: false },
     xAxis: {
       type: 'category',
-      data: days,
+      data: labels,
       boundaryGap: false,
       axisLine: { lineStyle: { color: t.borderLight } },
       axisTick: { show: false },
@@ -56,6 +74,7 @@ function dashboardNetwork(echarts, el, t) {
     },
     yAxis: {
       type: 'value',
+      minInterval: 1,
       splitLine: { lineStyle: { color: t.borderLight, type: [4, 3] } },
       axisLabel: { color: t.textMuted, fontSize: 10 },
       axisLine: { show: false },
@@ -63,33 +82,44 @@ function dashboardNetwork(echarts, el, t) {
     },
     series: [
       {
-        name: 'Sessions',
+        name: 'Hired',
         type: 'line',
         smooth: true,
         symbol: 'circle',
         symbolSize: 5,
         showSymbol: false,
-        data: sessions,
-        lineStyle: { color: t.primary, width: 2 },
-        itemStyle: { color: t.primary, borderColor: t.bgSurface, borderWidth: 2 },
+        data: hired,
+        lineStyle: { color: t.green, width: 2 },
+        itemStyle: { color: t.green, borderColor: t.bgSurface, borderWidth: 2 },
         areaStyle: {
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            { offset: 0, color: t.primary + '33' },
-            { offset: 1, color: t.primary + '00' }
+            { offset: 0, color: t.green + '22' },
+            { offset: 1, color: t.green + '00' }
           ])
         }
       },
       {
-        name: 'Page views',
+        name: 'Exited',
         type: 'line',
         smooth: true,
         showSymbol: false,
-        data: pageviews,
-        lineStyle: { color: t.azure, width: 1.5, type: 'dashed' },
-        itemStyle: { color: t.azure }
+        data: exited,
+        lineStyle: { color: t.red, width: 1.5, type: 'dashed' },
+        itemStyle: { color: t.red }
+      },
+      {
+        name: 'Net',
+        type: 'line',
+        smooth: true,
+        showSymbol: false,
+        data: net,
+        lineStyle: { color: t.primary, width: 1.5 },
+        itemStyle: { color: t.primary }
       }
     ]
   });
+  // store cum for tooltip debugging if needed
+  chart._hrMeta = { months, hired, exited, net, cumSeries };
   return chart;
 }
 

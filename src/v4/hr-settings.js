@@ -23,6 +23,7 @@ import {
 import { download } from './import-export.js';
 import { getSeed } from './hr-api.js';
 import { DEPARTMENTS, APPROVAL_CHAINS, ROLES } from './hr-seed.js';
+import { SYSTEM_SETTINGS as SS } from './hr-seed-extra.js';
 
 let booted = false;
 
@@ -651,6 +652,51 @@ function renderLetters() {
   }));
 }
 
+// ── Module visibility management ─────────────────────────────────
+function renderModules() {
+  const el = document.getElementById('set-modules');
+  if (!el) {
+    return;
+  }
+  const current = getSettings().modules || SS.modules;
+  const groups = {};
+  for (const [key, mod] of Object.entries(current)) {
+    const group = mod.category || 'other';
+    if (!groups[group]) {
+      groups[group] = [];
+    }
+    groups[group].push({ key, ...mod });
+  }
+  const groupLabels = { hr: 'HR Modules', finance: 'Finance', compliance: 'Compliance', ops: 'Operations', other: 'Other' };
+  el.innerHTML = Object.entries(groups).map(([group, mods]) => {
+    return '<div class="hr-card" style="padding:12px;margin-bottom:10px">' +
+      '<strong style="font-size:12px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px">' + (groupLabels[group] || group) + '</strong>' +
+      '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px">' +
+      mods.map(m => {
+        return '<label style="display:flex;gap:6px;align-items:center;font-size:12.5px;cursor:pointer;padding:4px 10px;border:1px solid var(--border-color-light);border-radius:var(--radius-sm);background:' + (m.visible ? 'var(--primary-lt)' : 'var(--bg-surface-secondary)') + '">' +
+          '<input type="checkbox" data-mod-toggle="' + m.key + '"' + (m.visible ? ' checked' : '') + '>' +
+          '<span>' + (currentLang() === 'ar' ? (m.labelAr || m.labelEn) : (m.labelEn || m.labelAr)) + '</span>' +
+          '</label>';
+      }).join('') +
+      '</div></div>';
+  }).join('') +
+  '<button type="button" class="btn btn-primary btn-sm" id="set-mod-save">' + L('Save module visibility', 'حفظ رؤية الوحدات') + '</button>';
+  el.querySelectorAll('[data-mod-toggle]').forEach(inp => {
+    inp.addEventListener('change', () => {
+      const label = inp.closest('label');
+      label.style.background = inp.checked ? 'var(--primary-lt)' : 'var(--bg-surface-secondary)';
+    });
+  });
+  el.querySelector('#set-mod-save')?.addEventListener('click', () => {
+    const modules = {};
+    el.querySelectorAll('[data-mod-toggle]').forEach(inp => {
+      modules[inp.dataset.modToggle] = { ...current[inp.dataset.modToggle], visible: inp.checked };
+    });
+    saveSettings({ modules });
+    showToast(L('Module visibility saved', 'تم حفظ رؤية الوحدات'), { variant: 'success' });
+  });
+}
+
 // ── P6: quick links into the admin pages ─────────────────────────────────
 function renderLinks() {
   const el = document.getElementById('set-links');
@@ -734,6 +780,7 @@ function renderAll() {
   renderChains();
   renderDepts();
   renderLinks();
+  renderModules();
   renderExport();
   renderDanger();
   applyI18n(document.querySelector('[data-hr-settings]') || document);

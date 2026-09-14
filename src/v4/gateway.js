@@ -34,7 +34,7 @@ function moduleCount(code) {
 
 export function enterAs(code) {
   setViewedRole(code);
-  window.location.assign(START_PAGE[code] || 'hr_dashboard.html');
+  window.location.assign(START_PAGE[code] || 'analytics.html');
 }
 
 function renderBrand() {

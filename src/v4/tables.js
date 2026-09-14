@@ -1,4 +1,4 @@
-// Dash — DataTables integration
+// HRGO — DataTables integration
 // Dynamic-imports DataTables only when a [data-datatable] table is present.
 
 import { showToast } from './toast.js';
@@ -34,6 +34,7 @@ export async function initTables() {
     const dt = new DataTable(table, {
       pageLength: parseInt(table.dataset.pageLength || '10', 10),
       lengthChange: false,
+      searching: false,
       order: [],
       columnDefs,
       language: {

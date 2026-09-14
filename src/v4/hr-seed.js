@@ -1,11 +1,11 @@
-// HR + Operations — shared demo seed (manpower-supply company, Riyadh).
+// HR + Operations — shared demo seed (HRGO, Riyadh).
 // Fictional data only (sequential fake IDs). Company profile / Nitaqat / licence
 // are placeholders — the owner edits them in Settings (hr_settings.html).
 // In API mode (?api=1) these are replaced by /api/hr/* via hr-api.js.
 
 export const SEED_COMPANY = {
-  nameEn: 'Manpower Supply Co.',
-  nameAr: 'شركة توريد العمالة',
+  nameEn: 'HRGO',
+  nameAr: 'HRGO',
   crNo: '1010XXXXXX',
   addressEn: 'Riyadh, Saudi Arabia',
   addressAr: 'الرياض، المملكة العربية السعودية',
@@ -61,6 +61,20 @@ export const PROFESSIONS = [
   { code: 'specialist', en: 'Specialist', ar: 'أخصائي' }
 ];
 
+export const COMPANIES = [
+  { code: 'co-1', nameEn: 'HRGO', nameAr: 'HRGO', crNo: '1010XXXXXX', taxNo: '310XXXXXX', addressEn: 'Riyadh, Saudi Arabia', addressAr: 'الرياض، المملكة العربية السعودية', phone: '+966 11 000 0000', email: 'info@example.com', website: '', isActive: true },
+  { code: 'co-2', nameEn: 'GOSI', nameAr: 'التأمينات الاجتماعية', crNo: '', taxNo: '', addressEn: 'Riyadh, Saudi Arabia', addressAr: 'الرياض، المملكة العربية السعودية', phone: '+966 11 000 0001', email: 'info@gosi.sa', website: 'www.gosi.sa', isActive: true }
+];
+
+export const SALUTATIONS = [
+  { code: 'mr', en: 'Mr.', ar: 'السيد' },
+  { code: 'mrs', en: 'Mrs.', ar: 'السيدة' },
+  { code: 'ms', en: 'Ms.', ar: 'السيدة' },
+  { code: 'dr', en: 'Dr.', ar: 'دكتور' },
+  { code: 'eng', en: 'Eng.', ar: 'مهندس' },
+  { code: 'prof', en: 'Prof.', ar: 'أستاذ' }
+];
+
 // — T2 Command Center seed extensions (v3 §2–§3, §6) —
 export const SKILLS = [
   { code: 'heavy-driving', en: 'Heavy-vehicle driving', ar: 'قيادة المعدات الثقيلة' },
@@ -100,15 +114,15 @@ export const SKILLS = [
 export const SPONSORS = [
   {
     id: 'HQ',
-    nameEn: 'Manpower Supply Co. — HQ',
-    nameAr: 'شركة توريد العمالة — المركز الرئيسي',
+    nameEn: 'HRGO — HQ',
+    nameAr: 'HRGO — المركز الرئيسي',
     cr: '1010XXXXXX',
     city: 'Riyadh'
   },
   {
     id: 'BR-JED',
-    nameEn: 'Manpower Supply Co. — Jeddah Branch',
-    nameAr: 'شركة توريد العمالة — فرع جدة',
+    nameEn: 'HRGO — Jeddah Branch',
+    nameAr: 'HRGO — فرع جدة',
     cr: '4030XXXXXX',
     city: 'Jeddah'
   }

@@ -1,4 +1,4 @@
-// Dash — data-adapter pattern
+// HRGO — data-adapter pattern
 //
 // Every interactive page ships with hardcoded seed data. Replacing
 // that with a real API call is the most common integration task.

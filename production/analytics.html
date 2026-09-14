@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="hr.nav.analytics">Analytics | HRGO</title>
+<link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
+<script type="module" src="/src/main-v4.js"></script>
+</head>
+<body data-shell="admin" data-page="analytics" data-breadcrumb="Home > Analytics">
+
+<main class="main">
+<div class="page-wrapper" data-hr-dashboard>
+
+  <div class="page-header">
+    <div class="page-header-row">
+      <div>
+        <div class="page-pretitle" data-i18n="hr.ui.pretitle">HR &amp; Operations</div>
+        <h1 class="page-title" data-i18n="hr.nav.analytics">Analytics</h1>
+      </div>
+      <div class="page-actions">
+        <button class="btn btn-ghost" type="button" id="zones-collapse" data-i18n="hr.dashboard.collapseAll">Collapse all</button>
+        <button class="btn btn-ghost" type="button" id="zones-expand" data-i18n="hr.dashboard.expandAll">Expand all</button>
+        <a class="btn btn-outline" href="hr_employees.html" data-i18n="hr.nav.employees">Employees</a>
+        <a class="btn btn-primary" href="hr_sa_compliance.html" data-i18n="hr.dashboard.openCompliance">Open compliance</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="dash-head" id="dash-head"></div>
+
+  <!-- Analytics controls — purpose-built for analysis -->
+  <div class="card" style="padding:12px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <div class="btn-group" data-group aria-label="Range">
+        <button class="btn btn-sm active" data-range="6M">6M</button>
+        <button class="btn btn-sm" data-range="12M">12M</button>
+        <button class="btn btn-sm" data-range="YTD">YTD</button>
+      </div>
+      <select class="form-control" style="height:32px;min-width:140px" id="analytics-segment">
+        <option value="all">All segments</option>
+        <option value="saudi">Saudi only</option>
+        <option value="expat">Expat only</option>
+        <option value="ops">OPS</option>
+        <option value="hr">HR</option>
+      </select>
+      <span class="caption-muted" id="analytics-meta" style="font-size:12px"></span>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-outline btn-sm" id="analytics-export">Export CSV</button>
+      <button class="btn btn-primary btn-sm" id="analytics-refresh">Refresh</button>
+    </div>
+  </div>
+
+  <details class="card zone" open data-zone="money">
+    <summary class="zone-head">
+      <h2 class="zone-title" data-i18n="hr.dashboard.zoneMoney">Business health</h2>
+      <span class="zone-meta" id="zone-money-meta"></span>
+    </summary>
+    <div class="card-body">
+      <div class="row col-4" id="money-cards"></div>
+      <div class="row col-2 stack-gap">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title" data-i18n="hr.dashboard.topClients">Client margins</div>
+          </div>
+          <div class="card-body">
+            <div id="top-clients"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title" data-i18n="hr.dashboard.net">Net after overhead</div>
+          </div>
+          <div class="card-body">
+            <div id="money-net"></div>
+          </div>
+        </div>
+      </div>
+      <p class="fine-print" id="money-formula"></p>
+    </div>
+  </details>
+
+  <details class="card zone" open data-zone="workforce">
+    <summary class="zone-head">
+      <h2 class="zone-title" data-i18n="hr.dashboard.zoneWorkforce">Workforce &amp; HR dynamics</h2>
+      <span class="zone-meta" id="zone-workforce-meta"></span>
+    </summary>
+    <div class="card-body">
+      <div id="huroob-card"></div>
+      <div class="row col-2 stack-gap">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title" data-i18n="hr.dashboard.headcount">Headcount status</div>
+          </div>
+          <div class="card-body">
+            <div class="chart-box chart-sm" id="chart-headcount"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title" data-i18n="hr.dashboard.tenure">Tenure mix</div>
+          </div>
+          <div class="card-body">
+            <div class="chart-box chart-sm" id="chart-tenure"></div>
+          </div>
+        </div>
+      </div>
+      <div class="card stack-gap">
+        <div class="card-header">
+          <div class="card-title" data-i18n="hr.dashboard.separation">Hired / boarded / exited · 6 mo</div>
+        </div>
+        <div class="card-body">
+          <div class="chart-box chart-sm" id="chart-separation"></div>
+        </div>
+      </div>
+    </div>
+  </details>
+
+  <details class="card zone" open data-zone="leave">
+    <summary class="zone-head">
+      <h2 class="zone-title" data-i18n="hr.dashboard.zoneLeave">Vacation &amp; leave</h2>
+      <span class="zone-meta" id="zone-leave-meta"></span>
+    </summary>
+    <div class="card-body">
+      <div class="row col-3" id="vac-cards"></div>
+      <div id="vac-list" class="stack-gap"></div>
+      <div class="row col-2 stack-gap">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title" data-i18n="hr.dashboard.returnEff">Return efficiency</div>
+          </div>
+          <div class="card-body">
+            <div class="chart-box chart-sm" id="chart-return"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title" data-i18n="hr.dashboard.overdueTitle">Overdue returns</div>
+          </div>
+          <div class="card-body">
+            <div id="overdue-table"></div>
+            <div class="chart-box chart-sm" id="chart-delayreasons" style="margin-top:8px"></div>
+          </div>
+        </div>
+      </div>
+      <div class="card stack-gap">
+        <div class="card-header">
+          <div class="card-title" data-i18n="hr.dashboard.eligibleTitle">Eligible for vacation</div>
+        </div>
+        <div class="card-body">
+          <div class="table-scroll" id="eligible-table"></div>
+        </div>
+      </div>
+    </div>
+  </details>
+
+  <details class="card zone" open data-zone="geo">
+    <summary class="zone-head">
+      <h2 class="zone-title" data-i18n="hr.dashboard.zoneGeo">Geography &amp; demographics</h2>
+      <span class="zone-meta" id="zone-geo-meta"></span>
+    </summary>
+    <div class="card-body">
+      <div class="chip-row" id="city-chips"></div>
+      <div class="card stack-gap">
+        <div class="card-header">
+          <div class="card-title" data-i18n="hr.dashboard.rosterTitle">Site roster</div>
+        </div>
+        <div class="card-body">
+          <div class="table-scroll" id="site-roster"></div>
+        </div>
+      </div>
+      <div class="row col-3 stack-gap">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title" data-i18n="hr.dashboard.natMix">Nationality mix</div>
+          </div>
+          <div class="card-body">
+            <div class="chart-box chart-sm chart-xs" id="chart-nationality"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title" data-i18n="hr.dashboard.saudiExpat">Saudi / expat</div>
+          </div>
+          <div class="card-body">
+            <div class="chart-box chart-sm chart-xs" id="chart-saudiexp"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title" data-i18n="hr.dashboard.genderMix">Gender split</div>
+          </div>
+          <div class="card-body">
+            <div class="chart-box chart-sm chart-xs" id="chart-gender"></div>
+          </div>
+        </div>
+      </div>
+      <div class="row col-2 stack-gap">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title" data-i18n="hr.dashboard.profMix">Profession mix</div>
+          </div>
+          <div class="card-body">
+            <div class="chart-box chart-sm" id="chart-profession"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title" data-i18n="hr.dashboard.sponsorMatrix">Sponsorship matrix</div>
+          </div>
+          <div class="card-body">
+            <div id="sponsor-matrix"></div>
+          </div>
+        </div>
+      </div>
+      <div class="card stack-gap">
+        <div class="card-header">
+          <div class="card-title" data-i18n="hr.dashboard.skillsCloud">Skills cloud</div>
+        </div>
+        <div class="card-body">
+          <div class="tag-cloud" id="skills-cloud"></div>
+        </div>
+      </div>
+    </div>
+  </details>
+
+  <details class="card zone" open data-zone="compliance">
+    <summary class="zone-head">
+      <h2 class="zone-title" data-i18n="hr.dashboard.zoneCompliance">Compliance shield</h2>
+      <span class="zone-meta" id="zone-compliance-meta"></span>
+    </summary>
+    <div class="card-body">
+      <div class="chip-row" id="compliance-chips"></div>
+      <div class="row col-3 stack-gap">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title" data-i18n="hr.dashboard.nitaqatMeter">Saudization vs target</div>
+          </div>
+          <div class="card-body">
+            <div id="nitaqat-meter"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title" data-i18n="hr.dashboard.ajeerTitle">Ajeer validity</div>
+          </div>
+          <div class="card-body">
+            <div id="ajeer-validity"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title" data-i18n="hr.dashboard.levyTitle">Expat levy / mo</div>
+          </div>
+          <div class="card-body">
+            <div id="levy-card"></div>
+          </div>
+        </div>
+      </div>
+      <div class="card stack-gap">
+        <div class="card-header">
+          <div class="card-title" data-i18n="hr.dashboard.expiryDeck">Expiration alert deck</div>
+        </div>
+        <div class="card-body">
+          <div class="chip-row" id="iqama-buckets"></div>
+          <div class="row col-3 stack-gap">
+            <div>
+              <div class="vac-group-head"><strong data-i18n="hr.dashboard.iqamaDoc">Iqama</strong></div>
+              <div class="chart-box chart-sm chart-xs" id="chart-exp-iqama"></div>
+            </div>
+            <div>
+              <div class="vac-group-head"><strong data-i18n="hr.dashboard.passportDoc">Passport</strong></div>
+              <div class="chart-box chart-sm chart-xs" id="chart-exp-passport"></div>
+            </div>
+            <div>
+              <div class="vac-group-head"><strong data-i18n="hr.dashboard.insDoc">Medical insurance</strong></div>
+              <div class="chart-box chart-sm chart-xs" id="chart-exp-insurance"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row col-2 stack-gap">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title" data-i18n="hr.dashboard.transfersTitle">Sponsor transfers</div>
+            <div class="card-options">
+              <a class="btn btn-ghost btn-sm" href="hr_residency.html" data-i18n="hr.dashboard.openResidency">Open residency</a>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="kanban" id="transfer-kanban"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title" data-i18n="hr.dashboard.contractsWatch">Contracts ending ≤ 90 days</div>
+          </div>
+          <div class="card-body">
+            <div id="contracts-watch"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </details>
+
+  <details class="card zone" open data-zone="accounts">
+    <summary class="zone-head">
+      <h2 class="zone-title" data-i18n="hr.dashboard.zoneAccounts">Accounts & performance</h2>
+      <span class="zone-meta" id="zone-accounts-meta"></span>
+    </summary>
+    <div class="card-body">
+      <div class="row col-2 stack-gap">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title" data-i18n="hr.dashboard.expenseTitle">Expense distribution</div>
+          </div>
+          <div class="card-body">
+            <div class="chart-box chart-sm" id="chart-expense"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title" data-i18n="hr.dashboard.billingTitle">Billing history</div>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+            <table class="table" id="billing-history">
+              <thead><tr><th scope="col" data-i18n="hr.dashboard.billMonth">Month</th><th scope="col" data-i18n="hr.dashboard.billClient">Client</th><th scope="col" class="num" data-i18n="common.total">Total</th><th scope="col" data-i18n="common.status">Status</th></tr></thead>
+              <tbody></tbody>
+            </table>
+            </div>
+            <a class="btn btn-ghost btn-sm" href="hr_invoices.html" data-i18n="common.viewAll" aria-label="View all invoices">View all</a>
+          </div>
+        </div>
+      </div>
+      <div class="card stack-gap">
+        <div class="card-header">
+          <div class="card-title" data-i18n="hr.dashboard.perfTitle">Performance matrix</div>
+        </div>
+        <div class="card-body">
+          <h3 class="sub" data-i18n="hr.dashboard.trendTitle">Trailing 14-day attendance trend</h3>
+          <div class="chart-box chart-sm" id="chart-perf-trend"></div>
+          <div class="row col-2">
+            <div>
+              <h3 class="sub" data-i18n="hr.dashboard.top5">Top 5</h3>
+              <div class="table-responsive">
+            <table class="table" id="perf-top"><thead><tr><th scope="col"><span aria-hidden="true">#</span><span class="sr-only" data-i18n="hr.dashboard.rank">Rank</span></th><th scope="col" data-i18n="common.name">Name</th><th scope="col" class="num" data-i18n="hr.dashboard.score">Score</th><th scope="col" class="num" data-i18n="hr.dashboard.signals">signals</th></tr></thead><tbody></tbody></table>
+            </div>
+            </div>
+            <div>
+              <h3 class="sub" data-i18n="hr.dashboard.bottom5">Bottom 5</h3>
+              <div class="table-responsive">
+            <table class="table" id="perf-bottom"><thead><tr><th scope="col"><span aria-hidden="true">#</span><span class="sr-only" data-i18n="hr.dashboard.rank">Rank</span></th><th scope="col" data-i18n="common.name">Name</th><th scope="col" class="num" data-i18n="hr.dashboard.score">Score</th><th scope="col" class="num" data-i18n="hr.dashboard.signals">signals</th></tr></thead><tbody></tbody></table>
+            </div>
+            </div>
+          </div>
+          <p class="fine-print" data-i18n="hr.dashboard.perfFormula"></p>
+        </div>
+      </div>
+    </div>
+  </details>
+
+  <details class="card zone" open data-zone="actions">
+    <summary class="zone-head">
+      <h2 class="zone-title" data-i18n="hr.dashboard.zoneActions">Action center</h2>
+      <span class="zone-meta" id="zone-actions-meta"></span>
+    </summary>
+    <div class="card-body">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title" data-i18n="hr.dashboard.tickerTitle">Priority ticker</div>
+        </div>
+        <div class="card-body">
+          <div class="ticker" id="ticker" role="region" aria-live="off">
+            <div class="ticker-track" id="ticker-track"></div>
+          </div>
+        </div>
+      </div>
+      <div class="row col-2 stack-gap">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title" data-i18n="hr.dashboard.tasksTitle">Tasks</div>
+            <span id="tasks-formula"></span>
+          </div>
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table" id="tasks-table">
+                <thead><tr><th scope="col" data-i18n="hr.dashboard.tasksTitle">Tasks</th><th scope="col" data-i18n="hr.dashboard.taskOwner">Owner</th><th scope="col" data-i18n="hr.dashboard.taskDue">Due</th></tr></thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title" data-i18n="hr.dashboard.checklistTitle">Setup checklist</div>
+          </div>
+          <div class="card-body">
+            <div class="meter" role="progressbar" id="setup-progress" aria-label="Setup progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+              <div class="meter-fill" id="setup-progress-fill" style="width:0%;background:var(--green)"></div>
+            </div>
+            <div id="setup-checklist"></div>
+            <a class="btn btn-ghost btn-sm" href="hr_settings.html" data-i18n="hr.dashboard.openSettings">Open settings</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </details>
+
+
+  <div class="row col-2 stack-gap">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title" data-i18n="hr.dashboard.alerts">Needs attention</div>
+        <div class="card-options">
+          <a class="btn btn-ghost btn-sm" href="hr_sa_compliance.html" data-i18n="common.open">Open</a>
+        </div>
+      </div>
+      <div class="card-body">
+        <div id="hr-alerts"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title" data-i18n="hr.dashboard.deployTitle">Deployment mix</div>
+      </div>
+      <div class="card-body">
+        <div id="hr-deploy"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title" data-i18n="hr.dashboard.expiries">Upcoming Iqama expiries</div>
+      <div class="card-options">
+        <a class="btn btn-ghost btn-sm" href="hr_sa_compliance.html" data-i18n="common.viewAll" aria-label="View all expiries">View all</a>
+      </div>
+    </div>
+    <div class="card-body">
+      <div id="hr-expiries"></div>
+    </div>
+  </div>
+
+</div>
+</main>
+
+<script type="module">
+import { initHrDashboard } from '/src/v4/hr-dashboard.js';
+initHrDashboard();
+</script>
+
+</body>
+</html>

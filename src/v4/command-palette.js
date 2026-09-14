@@ -249,14 +249,12 @@ export function initCommandPalette() {
     }
   });
 
-  // Topbar search box opens the palette on focus/click — repurposes the existing UI.
-  const search = document.querySelector('.search-box input');
+  // Topbar search is now the single real search — ⌘K still opens palette.
+  const search = document.getElementById('topbar-search');
   if (search) {
-    const opener = (e) => { e.preventDefault(); search.blur(); open(); };
-    search.addEventListener('focus', opener);
-    search.addEventListener('click', opener);
-    search.setAttribute('readonly', '');
-    search.setAttribute('aria-label', 'Open command palette');
+    search.removeAttribute('readonly');
+    search.setAttribute('aria-label', 'Search');
+    search.setAttribute('placeholder', 'Search…');
   }
 }
 

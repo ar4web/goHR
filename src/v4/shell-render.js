@@ -1,4 +1,4 @@
-// Dash — shell render (pure)
+// HRGO — shell render (pure)
 // String-only renderers. No DOM, no window/document access.
 // Imported by:
 //   1. The Vite plugin (vite.config.js) to inject shell HTML at build/dev time.
@@ -15,38 +15,18 @@
 // HR parents carry `i18n: 'hr.navgroup.x'` so applyShellI18n translates them.
 export const NAV = [
   {
-    label: 'HR & Operations',
+    label: '',
     items: [
+      { key: 'analytics', href: 'analytics.html', text: 'Analytics', icon: 'barChart' },
+      { key: 'hr-employees', href: 'hr_employees.html', text: 'Employees', icon: 'users' },
       {
-        text: 'Overview',
-        icon: 'dashboard',
-        i18n: 'hr.navgroup.overview',
-        children: [
-          { key: 'hr-dashboard', href: 'hr_dashboard.html', text: 'HR Dashboard' },
-          { key: 'hr-reports', href: 'hr_reports.html', text: 'Reports' }
-        ]
-      },
-      {
-        text: 'People',
-        icon: 'users',
-        i18n: 'hr.navgroup.people',
-        children: [
-          { key: 'hr-employees', href: 'hr_employees.html', text: 'Employees' },
-          { key: 'hr-onboarding', href: 'hr_onboarding.html', text: 'Onboarding' },
-          { key: 'hr-org', href: 'hr_org_chart.html', text: 'Org chart' },
-          { key: 'hr-documents', href: 'hr_documents.html', text: 'Vault' },
-          { key: 'hr-my-team', href: 'hr_my_team.html', text: 'My team' }
-        ]
-      },
-      {
-        text: 'Time & Leave',
+        text: 'Time',
         icon: 'clock',
         i18n: 'hr.navgroup.time',
         children: [
           { key: 'hr-attendance', href: 'hr_attendance.html', text: 'Attendance' },
           { key: 'hr-timesheets', href: 'hr_timesheets.html', text: 'Timesheets' },
           { key: 'hr-leave', href: 'hr_leave.html', text: 'Leave' },
-          { key: 'hr-leave-calendar', href: 'hr_leave_calendar.html', text: 'Leave calendar' },
           { key: 'hr-approvals', href: 'hr_approvals.html', text: 'Approvals' }
         ]
       },
@@ -57,9 +37,7 @@ export const NAV = [
         children: [
           { key: 'hr-jobs', href: 'hr_jobs.html', text: 'Jobs' },
           { key: 'hr-candidates', href: 'hr_candidates.html', text: 'Candidates' },
-          { key: 'hr-pipeline', href: 'hr_pipeline.html', text: 'Pipeline' },
-          { key: 'hr-interviews', href: 'hr_interviews.html', text: 'Interviews' },
-          { key: 'hr-offers', href: 'hr_offers.html', text: 'Offers' }
+          { key: 'hr-pipeline', href: 'hr_pipeline.html', text: 'Pipeline' }
         ]
       },
       {
@@ -69,20 +47,17 @@ export const NAV = [
         children: [
           { key: 'hr-goals', href: 'hr_goals.html', text: 'Goals' },
           { key: 'hr-reviews', href: 'hr_reviews.html', text: 'Reviews' },
-          { key: 'hr-feedback', href: 'hr_feedback.html', text: 'Feedback' },
-          { key: 'hr-trainings', href: 'hr_trainings.html', text: 'Trainings' },
-          { key: 'hr-announcements', href: 'hr_announcements.html', text: 'Announcements' }
+          { key: 'hr-trainings', href: 'hr_trainings.html', text: 'Training' }
         ]
       },
       {
-        text: 'Employee',
-        icon: 'id',
-        i18n: 'hr.navgroup.employee',
+        text: 'Payroll',
+        icon: 'creditCard',
+        i18n: 'hr.navgroup.payroll',
         children: [
           { key: 'hr-payroll', href: 'hr_payroll.html', text: 'Pay runs' },
           { key: 'hr-gosi', href: 'hr_gosi.html', text: 'GOSI' },
-          { key: 'hr-wps', href: 'hr_wps.html', text: 'WPS & Mudad' },
-          { key: 'hr-eosb', href: 'hr_eosb.html', text: 'EOSB & settlement' }
+          { key: 'hr-wps', href: 'hr_wps.html', text: 'WPS' }
         ]
       },
       {
@@ -91,8 +66,8 @@ export const NAV = [
         i18n: 'hr.navgroup.compliance',
         children: [
           { key: 'hr-sa-compliance', href: 'hr_sa_compliance.html', text: 'SA Compliance' },
-          { key: 'hr-residency', href: 'hr_residency.html', text: 'Residency & renewals' },
-          { key: 'hr-contracts', href: 'hr_contracts.html', text: 'Contract maker' }
+          { key: 'hr-residency', href: 'hr_residency.html', text: 'Residency' },
+          { key: 'hr-contracts', href: 'hr_contracts.html', text: 'Contracts' }
         ]
       },
       {
@@ -110,29 +85,74 @@ export const NAV = [
         i18n: 'hr.navgroup.operations',
         children: [
           { key: 'hr-clients', href: 'hr_clients.html', text: 'Clients' },
-          { key: 'hr-requests', href: 'hr_requests.html', text: 'Manpower requests' },
           { key: 'hr-assignments', href: 'hr_assignments.html', text: 'Assignments' },
-          { key: 'hr-ajeer', href: 'hr_ajeer.html', text: 'Ajeer permits' }
-        ]
-      },
-      {
-        text: 'Portals',
-        icon: 'profile',
-        i18n: 'hr.navgroup.portals',
-        children: [
-          { key: 'hr-my-space', href: 'hr_my_space.html', text: 'My space' },
-          { key: 'hr-client', href: 'hr_client_dashboard.html', text: 'Client dashboard' }
+          { key: 'hr-ajeer', href: 'hr_ajeer.html', text: 'Ajeer' }
         ]
       }
     ]
   },
   {
-    // Daily-work modules outside HR. Down to a single flat link now that the
-    // demo apps (Chat, Inbox, Kanban, Calendar, Files) are archived.
+    label: 'Data',
+    items: [
+      {
+        text: 'Records',
+        icon: 'fileText',
+        children: [
+          { key: 'hr-dependents', href: 'hr_dependents.html', text: 'Dependents' },
+          { key: 'hr-qualifications', href: 'hr_qualifications.html', text: 'Qualifications' },
+          { key: 'hr-warnings', href: 'hr_warnings.html', text: 'Warnings' },
+          { key: 'hr-achievements', href: 'hr_achievements.html', text: 'Achievements' },
+          { key: 'hr-promotions', href: 'hr_promotions.html', text: 'Promotions' }
+        ]
+      },
+      {
+        text: 'Attendance',
+        icon: 'clock',
+        children: [
+          { key: 'hr-attendance-policies', href: 'hr_attendance_policies.html', text: 'Policies' },
+          { key: 'hr-attendance-locations', href: 'hr_attendance_locations.html', text: 'Locations' }
+        ]
+      },
+      {
+        text: 'Approvals',
+        icon: 'checkCircle',
+        children: [
+          { key: 'hr-approval-workflows', href: 'hr_approval_workflows.html', text: 'Workflows' },
+          { key: 'hr-approval-requests', href: 'hr_approval_requests.html', text: 'Requests' }
+        ]
+      },
+      {
+        text: 'System',
+        icon: 'settings',
+        children: [
+          { key: 'hr-system-notifications', href: 'hr_system_notifications.html', text: 'Notifications' },
+          { key: 'hr-system-alerts', href: 'hr_system_alerts.html', text: 'Alerts' },
+          { key: 'hr-system-activity', href: 'hr_system_activity.html', text: 'Activity' }
+        ]
+      },
+      {
+        text: 'Global',
+        icon: 'globe',
+        children: [
+          { key: 'hr-countries', href: 'hr_countries.html', text: 'Countries' },
+          { key: 'hr-currencies', href: 'hr_currencies.html', text: 'Currencies' },
+          { key: 'hr-work-permits', href: 'hr_work_permits.html', text: 'Work Permits' },
+          { key: 'hr-leaves-balances', href: 'hr_leaves_balances.html', text: 'Leaves' }
+        ]
+      },
+      {
+        text: 'Reports',
+        icon: 'barChart',
+        children: [
+          { key: 'hr-custom-reports', href: 'hr_custom_reports.html', text: 'Reports' },
+          { key: 'hr-report-schedules', href: 'hr_report_schedules.html', text: 'Schedules' }
+        ]
+      }
+    ]
+  },
+  {
     label: 'Workspace',
     items: [
-      // Single flat link (no parent/children): with the demo apps archived,
-      // Notifications is the only daily-work module outside HR.
       { key: 'notifications', href: 'notifications.html', text: 'Notifications', icon: 'bell' }
     ]
   }
@@ -158,13 +178,6 @@ export const SETTINGS_NAV = [
       { key: 'hr-holidays', href: 'hr_holidays.html', text: 'Holidays' },
       { key: 'hr-shifts', href: 'hr_shifts.html', text: 'Shifts' },
       { key: 'hr-audit', href: 'hr_audit.html', text: 'Audit log' }
-    ]
-  },
-  {
-    section: 'Dashboard views',
-    i18n: 'hr.navgroup.views',
-    items: [
-      { key: 'dashboard', href: 'index.html', text: 'Operations' }
     ]
   },
   {
@@ -226,6 +239,18 @@ export const ICONS = {
   code: '<svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg>',
   paint:
     '<svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 11H5a2 2 0 00-2 2v2a2 2 0 002 2h2v3a1 1 0 001 1h3a1 1 0 001-1v-3h7a2 2 0 002-2v-2a2 2 0 00-2-2z"/><path d="M19 11V5a2 2 0 00-2-2h-2a2 2 0 00-2 2v6"/></svg>',
+  creditCard:
+    '<svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>',
+  fileText:
+    '<svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8"/></svg>',
+  checkCircle:
+    '<svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
+  barChart:
+    '<svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20v-6M6 20V10M18 20V4"/></svg>',
+  globe:
+    '<svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
+  target:
+    '<svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg>',
   shield:
     '<svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l8 3v6c0 5-3.5 9.5-8 11-4.5-1.5-8-6-8-11V5l8-3z"/><path d="M9 12l2 2 4-4"/></svg>',
   briefcase:
@@ -245,9 +270,7 @@ export const ICONS = {
   percent:
     '<svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>',
   contract:
-    '<svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M9 15l2 2 4-4"/></svg>',
-  target:
-    '<svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg>'
+    '<svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M9 15l2 2 4-4"/></svg>'
 };
 
 // Flat sidebar, zero dropdowns: every parent links to its section's main
@@ -303,7 +326,7 @@ export function renderSidebar(activeKey) {
   const groups = NAV.map(
     group => `
     <div class="nav-group">
-      <div class="nav-label">${group.label}</div>
+      ${group.label ? `<div class="nav-label">${group.label}</div>` : ''}
       ${group.items.map(item => renderNavItem(item, activeKey)).join('')}
     </div>
   `
@@ -313,10 +336,10 @@ export function renderSidebar(activeKey) {
 
   return `
     <aside class="sidebar" aria-label="Primary navigation">
-      <div class="sidebar-brand">
-        <div class="brand-icon">D</div>
-        <div class="brand-name">Dash</div>
-      </div>
+      <a class="sidebar-brand" href="dashboard.html" aria-label="Go to Dashboard">
+        <div class="brand-icon">H</div>
+        <div class="brand-name">HRGO</div>
+      </a>
       <nav class="sidebar-nav" aria-label="HR sections">${groups}</nav>
       <div class="sidebar-footer">
         <div class="sidebar-settings${settingsActive ? ' has-active' : ''}">

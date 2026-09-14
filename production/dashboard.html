@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard | HRGO</title>
+<link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
+<script type="module" src="/src/main-v4.js"></script>
+</head>
+<body data-shell="admin" data-page="dashboard" data-breadcrumb="Home > Dashboard">
+
+<main class="main">
+<div class="page-wrapper">
+
+  <div class="page-header">
+    <div class="page-header-row">
+      <div>
+        <div class="page-pretitle">HRGO · Workforce Command</div>
+        <h1 class="page-title">Dashboard</h1>
+        <div class="caption-muted" id="dash-meta" style="margin-top:4px"></div>
+      </div>
+      <div class="page-actions">
+        <a class="btn btn-outline" href="hr_employees.html">Employees →</a>
+        <a class="btn btn-primary" href="hr_assignments.html">Assignments →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 6 HR CARDS with spark/progress ── -->
+  <div class="row col-3">
+    <div class="card" id="card-total">
+      <div class="stat">
+        <div class="stat-icon teal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        </div>
+        <div class="stat-content">
+          <div class="stat-label">All Employees</div>
+          <div class="stat-value-row"><span class="stat-value">—</span><span class="stat-change up">● live</span></div>
+          <div class="stat-subtext">—</div>
+        </div>
+        <div class="stat-spark" id="spark-total"></div>
+      </div>
+    </div>
+    <div class="card" id="card-active">
+      <div class="stat">
+        <div class="stat-icon green">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+        </div>
+        <div class="stat-content">
+          <div class="stat-label">Active</div>
+          <div class="stat-value-row"><span class="stat-value">—</span></div>
+          <div class="stat-subtext">—</div>
+        </div>
+        <div class="stat-spark" id="spark-active"></div>
+      </div>
+      <div class="card-body-flush"><div class="progress-thin"><div class="bar" id="bar-active" style="width:0%;background:var(--green)"></div></div></div>
+    </div>
+    <div class="card" id="card-rental">
+      <div class="stat">
+        <div class="stat-icon blue">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l1-5h16l1 5M3 9v10a2 2 0 002 2h14a2 2 0 002-2V9M3 9h18"/><path d="M9 13a3 3 0 006 0"/></svg>
+        </div>
+        <div class="stat-content">
+          <div class="stat-label">On Rental</div>
+          <div class="stat-value-row"><span class="stat-value">—</span></div>
+          <div class="stat-subtext">—</div>
+        </div>
+        <div class="stat-spark" id="spark-rental"></div>
+      </div>
+      <div class="card-body-flush"><div class="progress-thin"><div class="bar" id="bar-rental" style="width:0%;background:var(--blue)"></div></div></div>
+    </div>
+  </div>
+
+  <div class="row col-3">
+    <div class="card" id="card-vacation">
+      <div class="stat">
+        <div class="stat-icon yellow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 21v-9"/><path d="M12 12C8 12 5 10 4 6c4 0 7 2 8 4 1-2 4-4 8-4-1 4-4 6-8 6z"/></svg>
+        </div>
+        <div class="stat-content">
+          <div class="stat-label">On Vacation</div>
+          <div class="stat-value-row"><span class="stat-value">—</span></div>
+          <div class="stat-subtext">—</div>
+        </div>
+        <div class="stat-spark" id="spark-vacation"></div>
+      </div>
+    </div>
+    <div class="card" id="card-huroob">
+      <div class="stat">
+        <div class="stat-icon red">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <div class="stat-content">
+          <div class="stat-label">Runaway</div>
+          <div class="stat-value-row"><span class="stat-value">—</span></div>
+          <div class="stat-subtext">—</div>
+        </div>
+        <div class="stat-spark" id="spark-huroob"></div>
+      </div>
+      <div class="card-body-flush"><div class="progress-thin"><div class="bar" id="bar-huroob" style="width:0%;background:var(--red)"></div></div></div>
+    </div>
+    <div class="card" id="card-bench">
+      <div class="stat">
+        <div class="stat-icon purple">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+        </div>
+        <div class="stat-content">
+          <div class="stat-label">Bench / Available</div>
+          <div class="stat-value-row"><span class="stat-value">—</span></div>
+          <div class="stat-subtext">—</div>
+        </div>
+        <div class="stat-spark" id="spark-bench"></div>
+      </div>
+      <div class="card-body-flush"><div class="progress-thin"><div class="bar" id="bar-bench" style="width:0%;background:var(--purple)"></div></div></div>
+    </div>
+  </div>
+
+  <!-- ── WORKFORCE TREND + NEEDS ATTENTION ── -->
+  <div class="row col-8-4">
+    <div class="card">
+      <div class="chart-header">
+        <div class="chart-header-left">
+          <div class="card-title">Workforce Trend</div>
+          <div class="chart-stat" id="trend-stat" style="margin-top:8px">—</div>
+          <div class="caption-muted">Hired vs exited · last 6 months</div>
+        </div>
+        <div class="chart-tabs">
+          <button class="chart-tab active">6M</button>
+          <button class="chart-tab">12M</button>
+        </div>
+      </div>
+      <div class="chart-area">
+        <div data-chart="dashboard-network" style="width:100%;height:100%"></div>
+      </div>
+      <div class="card-footer chart-legend">
+        <span class="legend-inline"><span class="swatch" style="background:var(--green)"></span> Hired</span>
+        <span class="legend-inline"><span class="swatch" style="background:var(--red);opacity:.7"></span> Exited</span>
+        <span class="legend-inline"><span class="swatch" style="background:var(--primary)"></span> Net</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Needs Attention</div>
+        <div class="card-options"><a class="btn btn-ghost btn-sm" href="hr_sa_compliance.html">Open →</a></div>
+      </div>
+      <div class="card-body card-body-sm" id="needs-attention">
+        <div class="caption-muted" style="padding:12px">Loading…</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── RECENT EMPLOYEES + EXPIRY / MIX ── -->
+  <div class="row col-8-4">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Recent Employees</div>
+          <div class="card-subtitle">Latest 5 · live from roster</div>
+        </div>
+        <a class="btn btn-outline btn-sm" href="hr_employees.html">View all →</a>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table">
+            <thead><tr><th>Code</th><th>Employee</th><th>Profession</th><th>Status</th><th>Join</th></tr></thead>
+            <tbody id="recent-employees"><tr><td colspan="5" class="caption-muted" style="padding:16px;text-align:center">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="stack-col">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Iqama Expiry</div>
+          <div class="card-subtitle" id="expiry-sub">—</div>
+        </div>
+        <div class="card-body">
+          <div class="storage-bar" id="expiry-bar">
+            <div style="width:0%;background:var(--red)"></div>
+            <div style="width:0%;background:var(--yellow)"></div>
+            <div style="width:0%;background:var(--green)"></div>
+          </div>
+          <div class="storage-legend" id="expiry-legend"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Deployment Mix</div></div>
+        <div class="card-body">
+          <div class="donut-block">
+            <div class="donut-svg">
+              <div data-chart="device-usage" style="width:100%;height:100%"></div>
+              <div class="donut-center-label">
+                <div class="num" id="mix-num">—</div>
+                <div class="sub">deployed</div>
+              </div>
+            </div>
+            <div class="donut-legend" id="mix-legend"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── BOTTOM ROW: NATIONALITY + TASKS + COMPLIANCE ── -->
+  <div class="row col-3">
+    <div class="card">
+      <div class="card-header"><div class="card-title">Nationality Mix</div><a class="btn btn-ghost btn-sm" href="hr_employees.html">Roster →</a></div>
+      <div class="card-body card-body-sm" id="nationality-mix"><div class="caption-muted" style="padding:12px">Loading…</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Tasks · To-Do</div>
+          <div class="card-subtitle" data-todo-counter>—</div>
+        </div>
+        <a class="btn btn-ghost btn-sm" href="analytics.html">View all →</a>
+      </div>
+      <div class="card-body card-body-sm" id="todo-list"><div class="caption-muted" style="padding:12px">Loading…</div></div>
+    </div>
+
+    <div class="stack-col">
+      <div class="card">
+        <div class="card-header"><div class="card-title">Saudization</div><span class="badge badge-teal" id="nitaqat-badge">—</span></div>
+        <div class="card-body card-body-sm" id="nitaqat-box"><div class="caption-muted" style="padding:8px">Loading…</div></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Quick Actions</div></div>
+        <div class="card-body card-body-sm">
+          <div class="toggle-row"><div><div class="label">GOSI on time</div><div class="caption-muted" style="font-size:11px">Cap SAR 45k</div></div><div class="toggle on"></div></div>
+          <div class="toggle-row"><div><div class="label">WPS / Mudad</div><div class="caption-muted" style="font-size:11px">SIF ready</div></div><div class="toggle on"></div></div>
+          <div class="toggle-row"><div><div class="label">Ajeer valid</div><div class="caption-muted" style="font-size:11px">Check permits</div></div><div class="toggle"></div></div>
+          <div class="toggle-row"><div><div class="label">Nitaqat green</div><div class="caption-muted" style="font-size:11px">≥ 25%</div></div><div class="toggle on"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</main>
+
+</body>
+</html>

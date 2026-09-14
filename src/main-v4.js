@@ -1,4 +1,4 @@
-// Dash — entry
+// HRGO — entry
 // Self-contained dashboard skin. Loads only the v4 design system.
 
 import './scss/v4/main.scss';
@@ -37,6 +37,11 @@ if ('serviceWorker' in navigator && import.meta.env.PROD) {
   });
 }
 
+// HRGO main dashboard (index.html)
+if (document.querySelector('[data-page="dashboard"]')) {
+  import('./v4/index-dashboard.js').then(m => m.initIndexDashboard());
+}
+
 // Lazy-load page-specific modules only when their host element is on the page.
 if (document.getElementById('inbox-root')) {
   import('./v4/inbox.js').then((m) => m.initInbox());
@@ -44,8 +49,17 @@ if (document.getElementById('inbox-root')) {
 if (document.querySelector('.calendar-grid')) {
   import('./v4/calendar.js').then((m) => m.initCalendar());
 }
-if (document.querySelector('.settings-content')) {
-  import('./v4/settings.js').then((m) => m.initSettings());
+if (document.querySelector('[data-hr-settings]')) {
+  import('./v4/settings.js').then((m) => m.initHrSettings());
+}
+
+// Lazy-load generic data table views for extended data modules
+if (document.querySelector('[data-hr-bank-accounts], [data-hr-dependents], [data-hr-qualifications], [data-hr-warnings], [data-hr-achievements], [data-hr-promotions], [data-hr-attendance-policies], [data-hr-attendance-locations], [data-hr-approval-workflows], [data-hr-system-notifications], [data-hr-system-alerts], [data-hr-countries], [data-hr-currencies], [data-hr-work-permits], [data-hr-leaves-balances], [data-hr-job-requisitions], [data-hr-training-programs], [data-hr-custom-reports], [data-hr-payroll-components]')) {
+  import('./v4/hr-data-table.js').then((m) => {
+    const keys = ['hr-bank-accounts','hr-dependents','hr-qualifications','hr-warnings','hr-achievements','hr-promotions','hr-attendance-policies','hr-attendance-locations','hr-approval-workflows','hr-system-notifications','hr-system-alerts','hr-countries','hr-currencies','hr-work-permits','hr-leaves-balances','hr-job-requisitions','hr-training-programs','hr-custom-reports','hr-payroll-components'];
+    const active = document.querySelector('[data-page]')?.dataset.page;
+    if (active && keys.includes(active)) { m.initDataTable(active); }
+  });
 }
 
 // ────────────────────────

@@ -32,8 +32,41 @@ import { renderEchart } from './chart-helper.js';
 import { escapeHtml as esc } from './markup.js';
 
 let booted = false;
+let analyticsRange = '6M';
+let analyticsSegment = 'all';
 
+function applyAnalyticsFilters() {
+  const meta = document.getElementById('analytics-meta');
+  if (meta) {
+    const emps = getSeed('employees') || [];
+    const base = analyticsSegment === 'saudi' ? emps.filter(e=>e.saudi) : analyticsSegment === 'expat' ? emps.filter(e=>!e.saudi) : analyticsSegment === 'ops' ? emps.filter(e=>e.dept==='OPS') : analyticsSegment === 'hr' ? emps.filter(e=>e.dept==='HR') : emps;
+    meta.textContent = `${analyticsRange} · ${base.length} heads · ${analyticsSegment}`;
+  }
+}
 
+function bindAnalyticsBar() {
+  document.querySelectorAll('[data-range]').forEach(b => {
+    b.addEventListener('click', () => {
+      analyticsRange = b.dataset.range;
+      document.querySelectorAll('[data-range]').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      applyAnalyticsFilters();
+    });
+  });
+  const sel = document.getElementById('analytics-segment');
+  if (sel) sel.addEventListener('change', () => { analyticsSegment = sel.value; applyAnalyticsFilters(); });
+  const exp = document.getElementById('analytics-export');
+  if (exp) exp.addEventListener('click', () => {
+    import('./import-export.js').then(m => {
+      const emps = getSeed('employees')||[];
+      const rows = emps.map(e=>({ code:e.code, name:e.nameEn, nat:e.nat, status:e.st, join:e.join }));
+      m.exportData(rows, 'analytics.csv');
+    });
+  });
+  const ref = document.getElementById('analytics-refresh');
+  if (ref) ref.addEventListener('click', () => location.reload());
+  applyAnalyticsFilters();
+}
 
 function alerts() {
   const out = [];
@@ -1160,6 +1193,7 @@ export function initHrDashboard() {
     return;
   }
   renderAll();
+  bindAnalyticsBar();
   if (booted) {
     return;
   }

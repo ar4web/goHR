@@ -69,7 +69,11 @@
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow);
-  transition: box-shadow 150ms;
+  transition: box-shadow var(--transition), border-color var(--transition), transform var(--transition);
+}
+.card:hover {
+  box-shadow: var(--card-shadow-hover);
+  border-color: rgba(26,187,156,0.15);
 }
 .card.is-refreshing {
   position: relative;

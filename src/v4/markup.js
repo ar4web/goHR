@@ -1,4 +1,4 @@
-// Dash — HTML escaping helper.
+// HRGO — HTML escaping helper.
 // Single shared `escapeHtml`, imported by every page script that builds
 // markup dynamically, so user-supplied strings are never hand-escaped.
 

@@ -1,5 +1,5 @@
 # Build the Vite multi-page site and deploy to GitHub Pages.
-# The repo serves under /gentelella/ on Pages, so BASE_PATH matches.
+# The repo serves under /hrgo/ on Pages, so BASE_PATH matches.
 name: Deploy to GitHub Pages
 
 on:
@@ -36,7 +36,7 @@ jobs:
       - run: npm run lint
 
       - name: Build
-        run: BASE_PATH=/gentelella/ npm run build
+        run: BASE_PATH=/hrgo/ npm run build
 
       - uses: actions/configure-pages@v5
 

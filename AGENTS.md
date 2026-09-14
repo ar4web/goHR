@@ -3,8 +3,8 @@
 Dash (`1.0.0`) — internal bilingual (EN/AR) HR command center for KSA. 108 HTML
 pages in `production/`, Vite 8 (Rolldown), vanilla ES2022, SCSS only. No
 Bootstrap, no jQuery, no SPA framework. Heavy deps (ECharts 6, DataTables.net 3,
-Leaflet 1.9, `xlsx`) are lazy-imported per page. Counterparts: `CLAUDE.md`,
-`.cursor/rules/`, `.github/copilot-instructions.md` — content overlaps on purpose.
+Leaflet 1.9, `xlsx`) are lazy-imported per page. Counterparts: `docs/workflow.md`,
+`docs/architecture.md`, `docs/deployment.md` — content overlaps on purpose.
 
 ## Setup & commands
 
@@ -14,7 +14,8 @@ Requires Node 20 (`.nvmrc`) + npm. No DB, no env vars; seed data works offline.
 nvm use && npm install
 npm run dev                # :9173 (PORT=… to override), opens /production/index.html
 npm run preview            # serve dist/ on :9174
-npm run build              # → dist/ ; subpath: BASE_PATH=/Dash/ npm run build
+npm run build              # → dist/ ; CI uses BASE_PATH=/hrgo/ npm run build
+npm run build:dev          # → dist/ with sourcemaps for debugging
 
 npm test                   # 16× node suites: hr-audit-*, hr-logic-*, import, seed, security
 node tests/hr-logic-p1.mjs # single static/logic suite (any file in tests/*.mjs)
@@ -23,9 +24,13 @@ npx vitest run tests/runtime-smoke.test.js -t "<name>"  # single runtime test
 
 npm run lint               # ESLint over src/ only — 0 errors required
 npm run lint:fix
+npm run format             # prettier --write src/
 npx prettier --check <touched files>  # format gate is touched-lines only
 npm run new -- <slug>      # scaffold production/<slug>.html
 npm run smoke              # boot dev server, assert 200 on every page
+npm run analyze            # build + open dist/stats.html (bundle analyzer)
+npm run screenshots        # generate social-preview assets
+npm run deploy:preview     # bash scripts/deploy-preview.sh
 ```
 
 ## Workflow
@@ -107,6 +112,6 @@ Table: `<table class="table" data-datatable>` (`data-orderable="false"`,
 
 ## Pointers
 
-- Full architecture brief: `CLAUDE.md`. Contributor loop + gates: `CONTRIBUTING.md`, `docs/workflow.md`.
-- Bundle/shell/lazy imports: `docs/architecture.md`. Deploy/cache headers: `docs/deployment.md`, `scripts/deploy-preview.sh`.
+- Contributor loop + gates: `docs/workflow.md`. Full architecture brief: `docs/architecture.md`. Bundle/shell/lazy imports: `docs/architecture.md`. Deploy/cache headers: `docs/deployment.md`, `scripts/deploy-preview.sh`.
 - Public JS surface types: `types/dash.d.ts`.
+- CI deploy path is `/hrgo/` (GitHub Pages). `npm run lint` runs before build in CI; Playwright browser download is skipped (`PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'`).
