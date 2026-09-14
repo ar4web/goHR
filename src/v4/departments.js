@@ -1,4 +1,4 @@
-// HR + Operations — departments (hr_departments.html).
+// HR + Operations — departments (departments.html).
 // Shares the `hr:custom-lists` store with Settings: a single source of
 // truth for codes/names, extended here with head + cost center.
 

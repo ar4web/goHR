@@ -18,16 +18,16 @@ export const NAV = [
     label: '',
     items: [
       { key: 'analytics', href: 'analytics.html', text: 'Analytics', icon: 'barChart' },
-      { key: 'hr-employees', href: 'hr_employees.html', text: 'Employees', icon: 'users' },
+      { key: 'employees', href: 'employees.html', text: 'Employees', icon: 'users' },
       {
         text: 'Time',
         icon: 'clock',
         i18n: 'hr.navgroup.time',
         children: [
-          { key: 'hr-attendance', href: 'hr_attendance.html', text: 'Attendance' },
-          { key: 'hr-timesheets', href: 'hr_timesheets.html', text: 'Timesheets' },
-          { key: 'hr-leave', href: 'hr_leave.html', text: 'Leave' },
-          { key: 'hr-approvals', href: 'hr_approvals.html', text: 'Approvals' }
+          { key: 'attendance', href: 'attendance.html', text: 'Attendance' },
+          { key: 'timesheets', href: 'timesheets.html', text: 'Timesheets' },
+          { key: 'leave', href: 'leave.html', text: 'Leave' },
+          { key: 'approvals', href: 'approvals.html', text: 'Approvals' }
         ]
       },
       {
@@ -35,9 +35,9 @@ export const NAV = [
         icon: 'briefcase',
         i18n: 'hr.navgroup.hiring',
         children: [
-          { key: 'hr-jobs', href: 'hr_jobs.html', text: 'Jobs' },
-          { key: 'hr-candidates', href: 'hr_candidates.html', text: 'Candidates' },
-          { key: 'hr-pipeline', href: 'hr_pipeline.html', text: 'Pipeline' }
+          { key: 'jobs', href: 'jobs.html', text: 'Jobs' },
+          { key: 'candidates', href: 'candidates.html', text: 'Candidates' },
+          { key: 'pipeline', href: 'pipeline.html', text: 'Pipeline' }
         ]
       },
       {
@@ -45,9 +45,9 @@ export const NAV = [
         icon: 'target',
         i18n: 'hr.navgroup.growth',
         children: [
-          { key: 'hr-goals', href: 'hr_goals.html', text: 'Goals' },
-          { key: 'hr-reviews', href: 'hr_reviews.html', text: 'Reviews' },
-          { key: 'hr-trainings', href: 'hr_trainings.html', text: 'Training' }
+          { key: 'goals', href: 'goals.html', text: 'Goals' },
+          { key: 'reviews', href: 'reviews.html', text: 'Reviews' },
+          { key: 'trainings', href: 'trainings.html', text: 'Training' }
         ]
       },
       {
@@ -55,9 +55,9 @@ export const NAV = [
         icon: 'creditCard',
         i18n: 'hr.navgroup.payroll',
         children: [
-          { key: 'hr-payroll', href: 'hr_payroll.html', text: 'Pay runs' },
-          { key: 'hr-gosi', href: 'hr_gosi.html', text: 'GOSI' },
-          { key: 'hr-wps', href: 'hr_wps.html', text: 'WPS' }
+          { key: 'payroll', href: 'payroll.html', text: 'Pay runs' },
+          { key: 'gosi', href: 'gosi.html', text: 'GOSI' },
+          { key: 'wps', href: 'wps.html', text: 'WPS' }
         ]
       },
       {
@@ -65,9 +65,9 @@ export const NAV = [
         icon: 'shield',
         i18n: 'hr.navgroup.compliance',
         children: [
-          { key: 'hr-sa-compliance', href: 'hr_sa_compliance.html', text: 'SA Compliance' },
-          { key: 'hr-residency', href: 'hr_residency.html', text: 'Residency' },
-          { key: 'hr-contracts', href: 'hr_contracts.html', text: 'Contracts' }
+          { key: 'sa-compliance', href: 'sa_compliance.html', text: 'SA Compliance' },
+          { key: 'residency', href: 'residency.html', text: 'Residency' },
+          { key: 'contracts', href: 'contracts.html', text: 'Contracts' }
         ]
       },
       {
@@ -75,8 +75,8 @@ export const NAV = [
         icon: 'wallet',
         i18n: 'hr.navgroup.accounts',
         children: [
-          { key: 'hr-invoices', href: 'hr_invoices.html', text: 'Invoices' },
-          { key: 'hr-expenses', href: 'hr_expenses.html', text: 'Expenses' }
+          { key: 'invoices', href: 'invoices.html', text: 'Invoices' },
+          { key: 'expenses', href: 'expenses.html', text: 'Expenses' }
         ]
       },
       {
@@ -84,9 +84,9 @@ export const NAV = [
         icon: 'shop',
         i18n: 'hr.navgroup.operations',
         children: [
-          { key: 'hr-clients', href: 'hr_clients.html', text: 'Clients' },
-          { key: 'hr-assignments', href: 'hr_assignments.html', text: 'Assignments' },
-          { key: 'hr-ajeer', href: 'hr_ajeer.html', text: 'Ajeer' }
+          { key: 'clients', href: 'clients.html', text: 'Clients' },
+          { key: 'assignments', href: 'assignments.html', text: 'Assignments' },
+          { key: 'ajeer', href: 'ajeer.html', text: 'Ajeer' }
         ]
       }
     ]
@@ -98,54 +98,54 @@ export const NAV = [
         text: 'Records',
         icon: 'fileText',
         children: [
-          { key: 'hr-dependents', href: 'hr_dependents.html', text: 'Dependents' },
-          { key: 'hr-qualifications', href: 'hr_qualifications.html', text: 'Qualifications' },
-          { key: 'hr-warnings', href: 'hr_warnings.html', text: 'Warnings' },
-          { key: 'hr-achievements', href: 'hr_achievements.html', text: 'Achievements' },
-          { key: 'hr-promotions', href: 'hr_promotions.html', text: 'Promotions' }
+          { key: 'dependents', href: 'dependents.html', text: 'Dependents' },
+          { key: 'qualifications', href: 'qualifications.html', text: 'Qualifications' },
+          { key: 'warnings', href: 'warnings.html', text: 'Warnings' },
+          { key: 'achievements', href: 'achievements.html', text: 'Achievements' },
+          { key: 'promotions', href: 'promotions.html', text: 'Promotions' }
         ]
       },
       {
         text: 'Attendance',
         icon: 'clock',
         children: [
-          { key: 'hr-attendance-policies', href: 'hr_attendance_policies.html', text: 'Policies' },
-          { key: 'hr-attendance-locations', href: 'hr_attendance_locations.html', text: 'Locations' }
+          { key: 'attendance-policies', href: 'attendance_policies.html', text: 'Policies' },
+          { key: 'attendance-locations', href: 'attendance_locations.html', text: 'Locations' }
         ]
       },
       {
         text: 'Approvals',
         icon: 'checkCircle',
         children: [
-          { key: 'hr-approval-workflows', href: 'hr_approval_workflows.html', text: 'Workflows' },
-          { key: 'hr-approval-requests', href: 'hr_approval_requests.html', text: 'Requests' }
+          { key: 'approval-workflows', href: 'approval_workflows.html', text: 'Workflows' },
+          { key: 'approval-requests', href: 'approval_requests.html', text: 'Requests' }
         ]
       },
       {
         text: 'System',
         icon: 'settings',
         children: [
-          { key: 'hr-system-notifications', href: 'hr_system_notifications.html', text: 'Notifications' },
-          { key: 'hr-system-alerts', href: 'hr_system_alerts.html', text: 'Alerts' },
-          { key: 'hr-system-activity', href: 'hr_system_activity.html', text: 'Activity' }
+          { key: 'system-notifications', href: 'system_notifications.html', text: 'Notifications' },
+          { key: 'system-alerts', href: 'system_alerts.html', text: 'Alerts' },
+          { key: 'system-activity', href: 'system_activity.html', text: 'Activity' }
         ]
       },
       {
         text: 'Global',
         icon: 'globe',
         children: [
-          { key: 'hr-countries', href: 'hr_countries.html', text: 'Countries' },
-          { key: 'hr-currencies', href: 'hr_currencies.html', text: 'Currencies' },
-          { key: 'hr-work-permits', href: 'hr_work_permits.html', text: 'Work Permits' },
-          { key: 'hr-leaves-balances', href: 'hr_leaves_balances.html', text: 'Leaves' }
+          { key: 'countries', href: 'countries.html', text: 'Countries' },
+          { key: 'currencies', href: 'currencies.html', text: 'Currencies' },
+          { key: 'work-permits', href: 'work_permits.html', text: 'Work Permits' },
+          { key: 'leaves-balances', href: 'leaves_balances.html', text: 'Leaves' }
         ]
       },
       {
         text: 'Reports',
         icon: 'barChart',
         children: [
-          { key: 'hr-custom-reports', href: 'hr_custom_reports.html', text: 'Reports' },
-          { key: 'hr-report-schedules', href: 'hr_report_schedules.html', text: 'Schedules' }
+          { key: 'custom-reports', href: 'custom_reports.html', text: 'Reports' },
+          { key: 'report-schedules', href: 'report_schedules.html', text: 'Schedules' }
         ]
       }
     ]
@@ -171,13 +171,13 @@ export const SETTINGS_NAV = [
     section: 'HR Settings',
     i18n: 'hr.navgroup.settings',
     items: [
-      { key: 'hr-settings', href: 'hr_settings.html', text: 'HR Settings' },
-      { key: 'hr-departments', href: 'hr_departments.html', text: 'Departments' },
-      { key: 'hr-roles', href: 'hr_roles.html', text: 'Roles & access' },
-      { key: 'hr-templates', href: 'hr_templates.html', text: 'Templates' },
-      { key: 'hr-holidays', href: 'hr_holidays.html', text: 'Holidays' },
-      { key: 'hr-shifts', href: 'hr_shifts.html', text: 'Shifts' },
-      { key: 'hr-audit', href: 'hr_audit.html', text: 'Audit log' }
+      { key: 'settings', href: 'settings.html', text: 'HR Settings' },
+      { key: 'departments', href: 'departments.html', text: 'Departments' },
+      { key: 'roles', href: 'roles.html', text: 'Roles & access' },
+      { key: 'templates', href: 'templates.html', text: 'Templates' },
+      { key: 'holidays', href: 'holidays.html', text: 'Holidays' },
+      { key: 'shifts', href: 'shifts.html', text: 'Shifts' },
+      { key: 'audit', href: 'audit.html', text: 'Audit log' }
     ]
   },
   {

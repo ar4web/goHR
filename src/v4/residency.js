@@ -1,4 +1,4 @@
-// HR + Operations — residency & renewals (hr_residency.html).
+// HR + Operations — residency & renewals (residency.html).
 // Expiry board + pre-renewal checklist auto-eval + Qiwa transfer cases.
 
 import { showToast } from './toast.js';
@@ -74,7 +74,7 @@ function renderBoard() {
       const checks = checksOf(e);
       const okN = checks.filter(c => c.ok).length;
       return `<tr class="${selected === e.code ? 'row-selected' : ''}">
-      <td data-label="${L('Worker', 'العامل')}"><a href="hr_employee.html?code=${e.code}">${empName(e)}</a>
+      <td data-label="${L('Worker', 'العامل')}"><a href="employee.html?code=${e.code}">${empName(e)}</a>
         <div style="font-size:11.5px;color:var(--text-muted)" dir="ltr">${e.iqama || '—'}</div></td>
       <td data-label="${L('Iqama', 'الإقامة')}">${bandBadge(e.iqamaExp)}</td>
       <td data-label="${L('Passport', 'الجواز')}">${bandBadge(d.passportExp)}</td>
@@ -112,7 +112,7 @@ function renderDetail() {
         <div class="cell-strong" style="font-size:15px">${empName(e)}</div>
         <div style="font-size:12.5px;color:var(--text-muted)">${e.code} · <span dir="ltr">${e.iqama || '—'}</span></div>
       </div>
-      <a class="btn btn-ghost btn-sm" href="hr_employee.html?code=${e.code}">${L('Full file', 'الملف الكامل')}</a>
+      <a class="btn btn-ghost btn-sm" href="employee.html?code=${e.code}">${L('Full file', 'الملف الكامل')}</a>
     </div>
     <div style="font-size:12.5px;font-weight:700;margin-bottom:6px">${t('common.checklist')}</div>
     ${checks
@@ -226,7 +226,7 @@ function renderTransfers() {
     .map(
       x => `<tr>
       <td data-label="${L('Case', 'القضية')}" dir="ltr">${x.id}</td>
-      <td data-label="${L('Worker', 'العامل')}">${x.ob ? `<a href="hr_onboarding.html?case=${x.ob}">${currentLang() === 'ar' ? x.nameAr || x.nameEn : x.nameEn}</a>` : currentLang() === 'ar' ? x.nameAr || x.nameEn : x.nameEn}</td>
+      <td data-label="${L('Worker', 'العامل')}">${x.ob ? `<a href="onboarding.html?case=${x.ob}">${currentLang() === 'ar' ? x.nameAr || x.nameEn : x.nameEn}</a>` : currentLang() === 'ar' ? x.nameAr || x.nameEn : x.nameEn}</td>
       <td data-label="${L('From sponsor', 'الكفيل السابق')}" style="font-size:12.5px">${x.from}</td>
       <td data-label="${L('Fee', 'الرسوم')}">${fmtSAR(x.fee)}</td>
       <td data-label="${L('Notice ends', 'نهاية الإشعار')}" style="font-size:12.5px">${fmtDate(x.noticeEnd)}</td>

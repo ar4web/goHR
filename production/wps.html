@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="nav.hr-wps">WPS &amp; Mudad | HRGO</title>
+<link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
+<script type="module" src="/src/main-v4.js"></script>
+</head>
+<body data-shell="admin" data-page="wps" data-breadcrumb="Home > WPS & Mudad">
+
+<main class="main">
+<div class="page-wrapper" data-hr-wps>
+
+  <div class="page-header">
+    <div class="page-header-row">
+      <div>
+        <div class="page-pretitle" data-i18n="hr.ui.pretitle">HR &amp; Operations</div>
+        <h1 class="page-title" data-i18n="nav.hr-wps">WPS &amp; Mudad</h1>
+      </div>
+      <div class="page-actions">
+        <button class="btn btn-outline" id="w-export-csv">CSV</button>
+        <button class="btn btn-outline" id="w-copy" data-i18n="hr.p4.copy">Copy</button>
+        <button class="btn btn-primary" id="w-download" data-i18n="hr.p4.download">Download</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <div class="hr-form-2col">
+        <div class="form-group"><label class="form-label" for="w-run" data-i18n="hr.p4.run">Pay run</label>
+          <select class="form-control" id="w-run" dir="ltr"></select></div>
+        <div class="form-group"><label class="form-label" data-i18n="common.status">Status</label>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+            <span id="w-status"></span>
+            <span style="font-size:12.5px"><span data-i18n="hr.p4.deadline">Payday deadline</span>: <strong dir="ltr" id="w-deadline">—</strong></span>
+            <button class="btn btn-primary btn-sm" id="w-advance"></button>
+          </div>
+          <div style="margin-top:8px" id="w-alert"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hr-stat-cards">
+    <div class="hr-stat"><div class="k" data-i18n="hr.p4.net">Net payable</div><div class="v" id="w-stat-pay">0</div></div>
+    <div class="hr-stat"><div class="k" data-i18n="hr.p4.workers">Workers</div><div class="v" id="w-stat-n">0</div></div>
+    <div class="hr-stat"><div class="k" data-i18n="hr.p4.missingIban">Missing IBAN</div><div class="v" id="w-stat-iban">0</div></div>
+    <div class="hr-stat"><div class="k" data-i18n="hr.p4.diff">Diff</div><div class="v" id="w-stat-diff">0</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table hr-table">
+          <thead><tr>
+            <th data-i18n="hr.p4.employee">Employee</th>
+            <th data-i18n="hr.p4.regWage">Registered wage</th>
+            <th data-i18n="hr.p4.net">Net payable</th>
+            <th data-i18n="hr.p4.check">Check</th>
+            <th>IBAN</th>
+          </tr></thead>
+          <tbody id="w-rows"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <h3 class="card-title" data-i18n="hr.p4.sif">SIF file</h3>
+      <div id="w-errors" style="margin-bottom:8px"></div>
+      <pre class="hr-sif" id="w-sif" dir="ltr"></pre>
+    </div>
+  </div>
+
+</div>
+</main>
+
+<script type="module">
+import { initWps } from '/src/v4/wps.js';
+initWps();
+</script>
+
+</body>
+</html>

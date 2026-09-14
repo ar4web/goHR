@@ -1,4 +1,4 @@
-// HR + Operations — roles & access (hr_roles.html).
+// HR + Operations — roles & access (roles.html).
 // UX-only permission matrix: it drives which sidebar items are shown in
 // this demo client. The server ALWAYS re-checks permissions — never trust
 // client-side hiding as a security boundary.

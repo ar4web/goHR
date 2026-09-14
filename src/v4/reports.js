@@ -1,4 +1,4 @@
-// HR + Operations — reports (hr_reports.html).
+// HR + Operations — reports (reports.html).
 // Five exportable packs: workforce, hiring funnel, finance (payroll + GOSI
 // + EOSB provision + expenses + billing), billing, compliance expiries.
 // KPI cards + tables + CSS bars — the shared chart layer exposes no page

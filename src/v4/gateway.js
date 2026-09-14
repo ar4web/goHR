@@ -17,8 +17,8 @@ import { escapeHtml as esc } from './markup.js';
 let booted = false;
 
 const START_PAGE = {
-  employee: 'hr_my_space.html',
-  manager: 'hr_my_team.html'
+  employee: 'my_space.html',
+  manager: 'my_team.html'
 };
 
 function moduleCount(code) {

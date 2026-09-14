@@ -1,4 +1,4 @@
-// HR + Operations — contract view/print/sign (hr_contract.html).
+// HR + Operations — contract view/print/sign (contract.html).
 // Renders the pinned template version with stored values; sign-state and
 // filing actions mirror the registers.
 

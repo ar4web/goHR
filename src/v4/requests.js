@@ -1,4 +1,4 @@
-// HR + Operations — manpower requests pipeline (hr_requests.html).
+// HR + Operations — manpower requests pipeline (requests.html).
 // Client demand → sourcing → proposed → deploying → fulfilled. Idempotent.
 
 import { showToast } from './toast.js';

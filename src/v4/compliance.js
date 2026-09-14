@@ -1,4 +1,4 @@
-// HR + Operations — SA compliance command center (hr_sa_compliance.html).
+// HR + Operations — SA compliance command center (sa_compliance.html).
 // Tabs: Ajeer gates / Residencies / Qiwa contracts / Saudization / Action queue.
 
 import { openMenu } from './menus.js';
@@ -52,7 +52,7 @@ function actions() {
         where: `Ajeer · ${a.id}`,
         who: e ? empName(e) : a.emp,
         what: r,
-        href: e ? `hr_employee.html?code=${e.code}` : 'hr_employees.html'
+        href: e ? `employee.html?code=${e.code}` : 'employees.html'
       })
     );
   });
@@ -65,7 +65,7 @@ function actions() {
       where: L('Residency', 'الإقامة'),
       who: empName(e),
       what: d < 0 ? 'iqama-expired' : `iqama-expires-${d}d`,
-      href: `hr_employee.html?code=${e.code}`
+      href: `employee.html?code=${e.code}`
     });
   });
   qiwaRows().forEach(e =>
@@ -74,7 +74,7 @@ function actions() {
       where: 'Qiwa',
       who: empName(e),
       what: `qiwa-${e.q}`,
-      href: `hr_employee.html?code=${e.code}`
+      href: `employee.html?code=${e.code}`
     })
   );
   const rank = { red: 0, yellow: 1 };
@@ -126,7 +126,7 @@ function renderBody() {
         .map(
           ({ a, e, c, gate }) => `<tr>
         <td data-label="#">${a.id}</td>
-        <td data-label="${L('Worker', 'الموظف')}">${e ? `<a href="hr_employee.html?code=${e.code}">${empName(e)}</a>` : a.emp}</td>
+        <td data-label="${L('Worker', 'الموظف')}">${e ? `<a href="employee.html?code=${e.code}">${empName(e)}</a>` : a.emp}</td>
         <td data-label="${L('Client', 'العميل')}" style="font-size:12.5px">${c ? (currentLang() === 'ar' ? c.nameAr : c.nameEn) : a.client}</td>
         <td data-label="Ajeer">${a.ajeer ? `<span class="status status-green">${a.ajeer}</span><div style="font-size:11.5px;color:var(--text-muted)">${fmtDate(a.ajeerExp)}</div>` : `<span class="status status-red">${t('status.missing')}</span>`}</td>
         <td data-label="${L('Result', 'النتيجة')}">${gate.ok ? `<span class="status status-green">${t('status.deployable')}</span>` : `<span class="status status-red">${t('status.blocked')}</span><div style="font-size:11.5px;color:var(--text-muted)">${gate.reasons.join(', ')}</div>`}</td>
@@ -147,7 +147,7 @@ function renderBody() {
               : d < 0
                 ? t('status.expired')
                 : `${d} ${t('common.days')}`;
-          return `<tr><td data-label="${L('Worker', 'الموظف')}"><a href="hr_employee.html?code=${e.code}">${empName(e)}</a></td>
+          return `<tr><td data-label="${L('Worker', 'الموظف')}"><a href="employee.html?code=${e.code}">${empName(e)}</a></td>
         <td data-label="${L('Iqama', 'الإقامة')}" dir="ltr">${e.iqama || '—'}</td>
         <td data-label="${L('Expiry', 'الانتهاء')}">${e.iqamaExp ? fmtDate(e.iqamaExp) : '—'}</td>
         <td data-label="${t('common.status')}"><span class="status status-${cls}">${msg}</span></td></tr>`;
@@ -160,7 +160,7 @@ function renderBody() {
       <th>${L('Worker', 'الموظف')}</th><th>${L('Join date', 'الالتحاق')}</th><th>Qiwa</th></tr></thead><tbody>` +
       qiwaRows()
         .map(
-          e => `<tr><td data-label="${L('Worker', 'الموظف')}"><a href="hr_employee.html?code=${e.code}">${empName(e)}</a></td>
+          e => `<tr><td data-label="${L('Worker', 'الموظف')}"><a href="employee.html?code=${e.code}">${empName(e)}</a></td>
         <td data-label="${L('Join date', 'الالتحاق')}">${fmtDate(e.join)}</td>
         <td data-label="Qiwa"><span class="status status-${e.q === 'sent' ? 'yellow' : 'blue'}">${t(`status.${e.q}`)}</span></td></tr>`
         )

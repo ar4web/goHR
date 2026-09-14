@@ -1,4 +1,4 @@
-// HR + Operations — leave calendar (hr_leave_calendar.html).
+// HR + Operations — leave calendar (leave_calendar.html).
 // Month grid: weekends + Hijri days + holidays + leave overlays. Idempotent.
 
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
@@ -152,7 +152,7 @@ function renderDetail() {
         ? leaves
             .map(
               r => `
-      <div class="hr-kv"><span><a href="hr_employee.html?code=${r.emp}">${empName(r.emp)}</a> · ${typeName(r.type)}</span>
+      <div class="hr-kv"><span><a href="employee.html?code=${r.emp}">${empName(r.emp)}</a> · ${typeName(r.type)}</span>
       <strong><span class="status status-${r.status === 'approved' ? 'green' : 'yellow'}">${t(`status.${r.status}`)}</span></strong></div>`
             )
             .join('')

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="nav.hr-ajeer">Ajeer permits | HRGO</title>
+<link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
+<script type="module" src="/src/main-v4.js"></script>
+</head>
+<body data-shell="admin" data-page="ajeer" data-breadcrumb="Home > Ajeer permits">
+
+<main class="main">
+<div class="page-wrapper" data-hr-ajeer>
+
+  <div class="page-header">
+    <div class="page-header-row">
+      <div>
+        <div class="page-pretitle" data-i18n="hr.ui.pretitle">HR &amp; Operations</div>
+        <h1 class="page-title" data-i18n="nav.hr-ajeer">Ajeer permits</h1>
+      </div>
+      <div class="page-actions">
+        <button class="btn btn-outline" id="aj-import" data-i18n="common.import">Import</button>
+        <button class="btn btn-outline" id="aj-export" data-i18n="common.export">Export</button>
+        <button class="btn btn-primary" id="aj-issue" data-i18n="hr.p3.issue">Issue permit</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="hr-stat-cards">
+    <div class="hr-stat"><div class="k" data-i18n="common.active">Active</div><div class="v" id="aj-stat-active">0</div></div>
+    <div class="hr-stat"><div class="k" data-i18n="status.expiring">Expiring</div><div class="v" id="aj-stat-expiring">0</div></div>
+    <div class="hr-stat"><div class="k" data-i18n="status.expired">Expired</div><div class="v" id="aj-stat-expired">0</div></div>
+    <div class="hr-stat"><div class="k" data-i18n="status.returned">Returned</div><div class="v" id="aj-stat-returned">0</div></div>
+  </div>
+
+  <div class="hr-controls">
+    <select class="form-control" id="aj-status" aria-label="Status"></select>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table hr-table">
+          <thead><tr>
+            <th data-i18n="hr.p3.permit">Permit</th>
+            <th data-i18n="hr.p2.worker">Worker</th>
+            <th data-i18n="hr.p3.profession">Profession</th>
+            <th data-i18n="hr.p3.expiry">Expiry</th>
+            <th data-i18n="common.status">Status</th>
+            <th data-i18n="common.actions">Actions</th>
+          </tr></thead>
+          <tbody id="aj-rows"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+</main>
+
+<script type="module">
+import { initAjeer } from '/src/v4/ajeer.js';
+initAjeer();
+</script>
+
+</body>
+</html>

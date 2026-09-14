@@ -196,7 +196,7 @@ function buildCompanyCells() {
   }
   const manage = document.createElement('a');
   manage.className = 'settings-cell';
-  manage.href = 'hr_settings.html';
+  manage.href = 'settings.html';
   const mlabel = document.createElement('span');
   mlabel.className = 'settings-cell-label';
   mlabel.textContent = t('hr.company.manage');
@@ -715,7 +715,7 @@ export function mountShell() {
   applyRolePreview();
 }
 
-// "View sidebar as" preview (hr_roles.html): hide HR leaves the selected
+// "View sidebar as" preview (roles.html): hide HR leaves the selected
 // role may not see. Display-only — the server enforces real permissions.
 function applyRolePreview() {
   try {

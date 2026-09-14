@@ -1,4 +1,4 @@
-// HR + Operations — GOSI report (hr_gosi.html).
+// HR + Operations — GOSI report (gosi.html).
 // Contributory wage = basic + housing (cap SAR 45,000). Old system (enrolled
 // before 3 Jul 2024) is fixed 9.75/11.75; new system follows the graduated
 // pension ladder; expats are hazards-only 2% employer (§0.6).

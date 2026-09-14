@@ -71,12 +71,12 @@ function renderCards() {
 
   // click handlers
   const go = (id, href) => { const e=document.getElementById(id); if(e) e.onclick=()=> location.href=href; };
-  go('card-total','hr_employees.html');
-  go('card-active','hr_employees.html?st=active');
-  go('card-rental','hr_assignments.html');
-  go('card-vacation','hr_leave.html');
-  go('card-huroob','hr_employees.html?st=huroob');
-  go('card-bench','hr_employees.html');
+  go('card-total','employees.html');
+  go('card-active','employees.html?st=active');
+  go('card-rental','assignments.html');
+  go('card-vacation','leave.html');
+  go('card-huroob','employees.html?st=huroob');
+  go('card-bench','employees.html');
 }
 
 function renderTodo() {

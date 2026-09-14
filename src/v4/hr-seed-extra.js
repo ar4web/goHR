@@ -141,10 +141,10 @@ export const EXPENSE_APPROVERS = [
 
 // ── System notifications ──
 export const SYSTEM_NOTIFICATIONS = [
-  { id: 'SN-001', module: 'employees', titleEn: 'Iqama Expiry Alert', titleAr: 'تنبيه انتهاء الإقامة', messageEn: '5 employees have Iqama expiring within 30 days', messageAr: '5 موظفين تنتهي إقامتهم خلال 30 يومًا', priority: 'high', isRead: false, actionUrl: 'hr_sa_compliance.html', recipientId: 'EMP-0001', createdAt: '2026-09-10T08:00:00' },
-  { id: 'SN-002', module: 'payroll', titleEn: 'August Payroll Paid', titleAr: 'تم صرف راتب أغسطس', messageEn: 'August 2026 payroll batch processed successfully', messageAr: 'تمت معالجة دفعة راتب أغسطس 2026 بنجاح', priority: 'medium', isRead: true, actionUrl: 'hr_payroll.html', recipientId: 'EMP-0004', createdAt: '2026-09-02T10:00:00' },
-  { id: 'SN-003', module: 'leave', titleEn: 'Leave Request Pending', titleAr: 'طلب إجازة معلّق', messageEn: '3 leave requests need your approval', messageAr: '3 طلبات إجازة تحتاج موافقتك', priority: 'urgent', isRead: false, actionUrl: 'hr_leave.html', recipientId: 'EMP-0002', createdAt: '2026-09-12T09:00:00' },
-  { id: 'SN-004', module: 'visas', titleEn: 'Visa Renewal Required', titleAr: 'يجب تجديد التأشيرة', messageEn: '2 work permits expiring this month', messageAr: 'تأشيرتا عمل تنتهيان هذا الشهر', priority: 'high', isRead: false, actionUrl: 'hr_visas.html', recipientId: 'EMP-0001', createdAt: '2026-09-08T14:00:00' }
+  { id: 'SN-001', module: 'employees', titleEn: 'Iqama Expiry Alert', titleAr: 'تنبيه انتهاء الإقامة', messageEn: '5 employees have Iqama expiring within 30 days', messageAr: '5 موظفين تنتهي إقامتهم خلال 30 يومًا', priority: 'high', isRead: false, actionUrl: 'sa_compliance.html', recipientId: 'EMP-0001', createdAt: '2026-09-10T08:00:00' },
+  { id: 'SN-002', module: 'payroll', titleEn: 'August Payroll Paid', titleAr: 'تم صرف راتب أغسطس', messageEn: 'August 2026 payroll batch processed successfully', messageAr: 'تمت معالجة دفعة راتب أغسطس 2026 بنجاح', priority: 'medium', isRead: true, actionUrl: 'payroll.html', recipientId: 'EMP-0004', createdAt: '2026-09-02T10:00:00' },
+  { id: 'SN-003', module: 'leave', titleEn: 'Leave Request Pending', titleAr: 'طلب إجازة معلّق', messageEn: '3 leave requests need your approval', messageAr: '3 طلبات إجازة تحتاج موافقتك', priority: 'urgent', isRead: false, actionUrl: 'leave.html', recipientId: 'EMP-0002', createdAt: '2026-09-12T09:00:00' },
+  { id: 'SN-004', module: 'visas', titleEn: 'Visa Renewal Required', titleAr: 'يجب تجديد التأشيرة', messageEn: '2 work permits expiring this month', messageAr: 'تأشيرتا عمل تنتهيان هذا الشهر', priority: 'high', isRead: false, actionUrl: 'visas.html', recipientId: 'EMP-0001', createdAt: '2026-09-08T14:00:00' }
 ];
 
 // ── Approval workflows ──
@@ -527,11 +527,11 @@ export const PERFORMANCE_GOALS = [
 
 // ── Tasks (extended) ──
 export const TASKS_EXTENDED = [
-  { id: 'TSK-009', titleEn: 'Review GOSI rates for 2027', titleAr: 'مراجعة معدلات التأمينات لعام 2027', owner: 'EMP-0004', due: '2026-09-20', priority: 'high', done: false, link: 'hr_gosi.html' },
-  { id: 'TSK-010', titleEn: 'Update employee skills assessment', titleAr: 'تحديث تقييم المهارات', owner: 'EMP-0002', due: '2026-09-25', priority: 'medium', done: false, link: 'hr_employees.html' },
-  { id: 'TSK-011', titleEn: 'Generate September payslips', titleAr: 'إنشاء كشوف الرواتب لشهر سبتمبر', owner: 'EMP-0004', due: '2026-09-27', priority: 'high', done: false, link: 'hr_payroll.html' },
-  { id: 'TSK-012', titleEn: 'Complete WPS filing for August', titleAr: 'إتمام تقديم WPS لأغسطس', owner: 'EMP-0004', due: '2026-09-10', priority: 'high', done: true, link: 'hr_wps.html' },
-  { id: 'TSK-013', titleEn: 'Update Nitaqat targets', titleAr: 'تحديث مستهدفات النطاقات', owner: 'EMP-0001', due: '2026-09-15', priority: 'medium', done: false, link: 'hr_settings.html' }
+  { id: 'TSK-009', titleEn: 'Review GOSI rates for 2027', titleAr: 'مراجعة معدلات التأمينات لعام 2027', owner: 'EMP-0004', due: '2026-09-20', priority: 'high', done: false, link: 'gosi.html' },
+  { id: 'TSK-010', titleEn: 'Update employee skills assessment', titleAr: 'تحديث تقييم المهارات', owner: 'EMP-0002', due: '2026-09-25', priority: 'medium', done: false, link: 'employees.html' },
+  { id: 'TSK-011', titleEn: 'Generate September payslips', titleAr: 'إنشاء كشوف الرواتب لشهر سبتمبر', owner: 'EMP-0004', due: '2026-09-27', priority: 'high', done: false, link: 'payroll.html' },
+  { id: 'TSK-012', titleEn: 'Complete WPS filing for August', titleAr: 'إتمام تقديم WPS لأغسطس', owner: 'EMP-0004', due: '2026-09-10', priority: 'high', done: true, link: 'wps.html' },
+  { id: 'TSK-013', titleEn: 'Update Nitaqat targets', titleAr: 'تحديث مستهدفات النطاقات', owner: 'EMP-0001', due: '2026-09-15', priority: 'medium', done: false, link: 'settings.html' }
 ];
 
 // ── Announcements ──

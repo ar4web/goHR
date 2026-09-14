@@ -1,4 +1,4 @@
-// HR + Operations — my team (hr_my_team.html).
+// HR + Operations — my team (my_team.html).
 // Manager view: members today + leave + pending approvals. Idempotent.
 
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
@@ -115,12 +115,12 @@ function renderAll() {
         <div class="hr-360-top">
           <div class="cell-avatar" style="width:40px;height:40px;font-size:14px;background:${AV[e.av] || 'var(--avatar-teal)'};color:#fff">${initialsOf(e.nameEn)}</div>
           <div style="flex:1;min-width:0">
-            <div class="cell-strong"><a href="hr_employee.html?code=${e.code}">${empName(e)}</a></div>
+            <div class="cell-strong"><a href="employee.html?code=${e.code}">${empName(e)}</a></div>
             <div style="font-size:11.5px;color:var(--text-muted)">${e.code} · ${title || e.dept}</div>
           </div>
         </div>
         <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">${statusChip(e)}
-        ${p ? `<a class="status status-yellow" href="hr_approvals.html" style="text-decoration:none">${p} ${L('pending', 'معلقة')}</a>` : ''}</div>
+        ${p ? `<a class="status status-yellow" href="approvals.html" style="text-decoration:none">${p} ${L('pending', 'معلقة')}</a>` : ''}</div>
       </div></div>`;
         })
         .join('') +
@@ -132,8 +132,8 @@ function renderAll() {
       ? pend
           .map(r => {
             const e = getSeed('employees').find(x => x.code === r.emp);
-            return `<div class="hr-kv"><span><a href="hr_employee.html?code=${r.emp}">${e ? empName(e) : r.emp}</a> · ${r.type} · <span dir="ltr">${r.from} → ${r.to}</span></span>
-        <strong><a class="btn btn-outline btn-sm" href="hr_approvals.html">${L('Review', 'مراجعة')}</a></strong></div>`;
+            return `<div class="hr-kv"><span><a href="employee.html?code=${r.emp}">${e ? empName(e) : r.emp}</a> · ${r.type} · <span dir="ltr">${r.from} → ${r.to}</span></span>
+        <strong><a class="btn btn-outline btn-sm" href="approvals.html">${L('Review', 'مراجعة')}</a></strong></div>`;
           })
           .join('')
       : `<div class="hr-empty">${L('No pending requests for this team.', 'لا طلبات معلقة لهذا الفريق.')}</div>`;

@@ -1,4 +1,4 @@
-// HR + Operations — employee self-service "My space" (hr_my_space.html).
+// HR + Operations — employee self-service "My space" (my_space.html).
 // P0: identity switcher (demo login) + profile, pay slip, deployment, requests.
 
 import { showToast } from './toast.js';

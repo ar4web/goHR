@@ -1,4 +1,4 @@
-// HR + Operations — approvals queue (hr_approvals.html).
+// HR + Operations — approvals queue (approvals.html).
 // Generic mobile-first queue over leave + timesheets (chains v1). Idempotent.
 
 import { showToast } from './toast.js';

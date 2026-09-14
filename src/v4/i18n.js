@@ -233,6 +233,28 @@ const STR = {
     'hr.nav.dashboard': 'HR Dashboard',
     'hr.nav.analytics': 'Analytics',
     'nav.analytics': 'Analytics',
+    'nav.employees': 'Employees',
+    'nav.attendance': 'Attendance',
+    'nav.timesheets': 'Timesheets',
+    'nav.leave': 'Leave',
+    'nav.approvals': 'Approvals',
+    'nav.jobs': 'Jobs',
+    'nav.candidates': 'Candidates',
+    'nav.pipeline': 'Pipeline',
+    'nav.goals': 'Goals',
+    'nav.reviews': 'Reviews',
+    'nav.trainings': 'Training',
+    'nav.payroll': 'Pay runs',
+    'nav.gosi': 'GOSI',
+    'nav.wps': 'WPS',
+    'nav.sa-compliance': 'SA Compliance',
+    'nav.residency': 'Residency',
+    'nav.contracts': 'Contracts',
+    'nav.invoices': 'Invoices',
+    'nav.expenses': 'Expenses',
+    'nav.clients': 'Clients',
+    'nav.assignments': 'Assignments',
+    'nav.ajeer': 'Ajeer',
     'hr.nav.employees': 'Employees',
     'hr.nav.compliance': 'SA Compliance',
     'hr.nav.settings': 'HR Settings',
@@ -1608,7 +1630,8 @@ export function applyShellI18n() {
       if (!item.children) {
         const a = g.querySelector(`a[href="${item.href}"] .nav-text`);
         if (a) {
-          a.textContent = t(`nav.${item.key}`);
+          const k = `nav.${item.key}`;
+          if (t(k) !== k) a.textContent = t(k);
         }
         return;
       }

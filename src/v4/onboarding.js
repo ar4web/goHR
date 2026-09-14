@@ -1,4 +1,4 @@
-// HR + Operations — onboarding wizard (hr_onboarding.html).
+// HR + Operations — onboarding wizard (onboarding.html).
 // §4.7 visa→deploy stage machine + checklists + Art.40 cost capture. Idempotent.
 
 import { showToast } from './toast.js';
@@ -216,7 +216,7 @@ function renderList() {
       <td data-label="${L('Candidate', 'المرشح')}"><strong>${caseName(c)}</strong>
         <div style="font-size:11.5px;color:var(--text-muted)">${c.nat} · ${profName(c.prof)}</div></td>
       <td data-label="${L('Stage', 'المرحلة')}"><span class="status status-blue">${c.stage} · ${L(st.en, st.ar)}</span>
-        ${c.emp ? `<div style="font-size:11.5px;margin-top:4px"><a href="hr_employee.html?code=${c.emp}" dir="ltr">${c.emp}</a></div>` : ''}</td>
+        ${c.emp ? `<div style="font-size:11.5px;margin-top:4px"><a href="employee.html?code=${c.emp}" dir="ltr">${c.emp}</a></div>` : ''}</td>
       <td data-label="${L('Progress', 'التقدم')}"><div class="hr-bar-track"><div class="hr-bar-fill" style="width:${p.pct}%;background:var(--primary)"></div></div>
         <div style="font-size:11.5px;color:var(--text-muted)">${p.done}/${p.total}</div></td>
       <td data-label=""><button class="btn btn-outline btn-sm" data-open="${c.id}">${t('common.open')}</button></td>
@@ -311,7 +311,7 @@ function renderDetail() {
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
           <button class="btn btn-primary btn-sm" id="ob-advance">${t('common.advance')} →</button>
           ${c.stage >= 9 && !c.emp && c.type === 'overseas' ? `<button class="btn btn-outline btn-sm" id="ob-convert">${t('common.convert')}</button>` : ''}
-          ${c.emp ? `<a class="btn btn-ghost btn-sm" href="hr_employee.html?code=${c.emp}">${c.emp}</a>` : ''}
+          ${c.emp ? `<a class="btn btn-ghost btn-sm" href="employee.html?code=${c.emp}">${c.emp}</a>` : ''}
         </div>
       </div>`
     }

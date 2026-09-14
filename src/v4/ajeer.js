@@ -1,4 +1,4 @@
-// HR + Operations — Ajeer permits register (hr_ajeer.html).
+// HR + Operations — Ajeer permits register (ajeer.html).
 // E-contracts per deployment: issue / renew / return + profession match. Idempotent.
 
 import { showToast } from './toast.js';
@@ -93,7 +93,7 @@ function renderRows() {
       return `<tr>
       <td data-label="${L('Permit', 'التصريح')}"><span dir="ltr"><strong>${p.no}</strong></span>
         <div style="font-size:11.5px;color:var(--text-muted)" dir="ltr">${p.asn || '—'}</div></td>
-      <td data-label="${L('Worker', 'العامل')}"><a href="hr_employee.html?code=${p.emp}">${empName(p.emp)}</a>
+      <td data-label="${L('Worker', 'العامل')}"><a href="employee.html?code=${p.emp}">${empName(p.emp)}</a>
         <div style="font-size:11.5px;color:var(--text-muted)">${clientName(p.client)} · ${siteName(p.site)}</div></td>
       <td data-label="${L('Profession', 'المهنة')}">${profName(p.prof)}
         <div style="margin-top:2px"><span class="status status-${match ? 'green' : 'red'}">${match ? L('Match', 'مطابق') : L('Mismatch', 'غير مطابق')}</span></div></td>

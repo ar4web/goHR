@@ -1,4 +1,4 @@
-// HR + Operations — client invoices (hr_invoices.html).
+// HR + Operations — client invoices (invoices.html).
 // Monthly billing from approved timesheets + 15% VAT. Idempotent.
 
 import { showToast } from './toast.js';

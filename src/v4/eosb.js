@@ -1,4 +1,4 @@
-// HR + Operations — EOSB + final settlement (hr_eosb.html).
+// HR + Operations — EOSB + final settlement (eosb.html).
 // Art. 84: ½ month per year for the first 5 years, 1 month after, pro-rata.
 // Art. 85 (2026 nuance): the resignation haircut applies ONLY to fixed-term
 // resignation; Art. 80 dismissal forfeits the award. Wage basis + cap come

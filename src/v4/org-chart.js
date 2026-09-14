@@ -1,4 +1,4 @@
-// HR + Operations — org chart (hr_org_chart.html).
+// HR + Operations — org chart (org_chart.html).
 // Reporting tree from ORG_LINKS + departments summary. Idempotent.
 
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
@@ -43,7 +43,7 @@ const AV = {
 
 function nodeHtml(e) {
   const title = currentLang() === 'ar' ? e.titleAr || e.titleEn : e.titleEn;
-  return `<a class="org-node" href="hr_employee.html?code=${e.code}">
+  return `<a class="org-node" href="employee.html?code=${e.code}">
     <span class="cell-avatar" style="width:30px;height:30px;font-size:11px;background:${AV[e.av] || 'var(--avatar-teal)'};color:#fff">${initialsOf(e.nameEn)}</span>
     <span class="org-meta"><strong>${empName(e)}</strong><span>${title || ''}</span></span>
     ${e.st !== 'active' ? `<span class="status status-yellow">${t(`status.${e.st}`)}</span>` : ''}

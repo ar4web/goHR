@@ -1,4 +1,4 @@
-// HR + Operations — review detail (hr_review.html).
+// HR + Operations — review detail (review.html).
 // One screen per cycle stage: self → manager → calibrate → publish → ack.
 // Published/acked reviews are immutable; every transition is audit-logged.
 

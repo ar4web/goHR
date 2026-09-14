@@ -1,4 +1,4 @@
-// HR + Operations — timesheets (hr_timesheets.html).
+// HR + Operations — timesheets (timesheets.html).
 // Week grid per site + submit + lock. Approval happens in hr_approvals.
 
 import { showToast } from './toast.js';
@@ -122,7 +122,7 @@ function renderDetail() {
     ${(x.lines || [])
       .map(
         l => `<tr>
-      <td data-label="${L('Worker', 'العامل')}"><a href="hr_employee.html?code=${l.emp}">${empName(l.emp)}</a></td>
+      <td data-label="${L('Worker', 'العامل')}"><a href="employee.html?code=${l.emp}">${empName(l.emp)}</a></td>
       <td data-label="${L('Days', 'الأيام')}" dir="ltr">${l.days}</td>
       <td data-label="${L('Regular h', 'الأساسي')}" dir="ltr">${l.regH}</td>
       <td data-label="${L('OT h', 'الإضافي')}" dir="ltr">${l.otH}</td>
@@ -138,7 +138,7 @@ function renderDetail() {
     </div>
     ${
       locked
-        ? `<p style="font-size:12.5px;color:var(--text-muted)">${x.status === 'approved' ? L('Locked — feeds client billing (P3).', 'مقفل — يغذي فوترة العملاء.') : L('Locked — waiting in the approvals queue.', 'مقفل — بانتظار الموافقات.')} <a href="hr_approvals.html">${L('Open approvals', 'فتح الموافقات')}</a></p>`
+        ? `<p style="font-size:12.5px;color:var(--text-muted)">${x.status === 'approved' ? L('Locked — feeds client billing (P3).', 'مقفل — يغذي فوترة العملاء.') : L('Locked — waiting in the approvals queue.', 'مقفل — بانتظار الموافقات.')} <a href="approvals.html">${L('Open approvals', 'فتح الموافقات')}</a></p>`
         : `<div style="display:flex;gap:8px;margin-top:10px"><button class="btn btn-primary btn-sm" id="ts-submit">${L('Submit for approval', 'اعتماد وإرسال')}</button></div>`
     }`;
   document.getElementById('ts-submit')?.addEventListener('click', () => {

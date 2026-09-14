@@ -1,4 +1,4 @@
-// HR + Operations — document vault (hr_documents.html).
+// HR + Operations — document vault (documents.html).
 // Vault + expiries + required-doc coverage gaps. Idempotent.
 
 import { showToast } from './toast.js';
@@ -45,7 +45,7 @@ function bandBadge(iso) {
 
 function linkedLabel(d) {
   if (d.emp) {
-    return `<a href="hr_employee.html?code=${d.emp}">${empName(d.emp)}</a>`;
+    return `<a href="employee.html?code=${d.emp}">${empName(d.emp)}</a>`;
   }
   if (d.client) {
     const c = getSeed('clients').find(x => x.id === d.client);
@@ -127,7 +127,7 @@ function renderGaps() {
       <th>${L('Worker', 'العامل')}</th><th>${L('Missing', 'المفقود')}</th><th></th></tr></thead><tbody>${rows
         .map(
           g => `<tr>
-        <td data-label="${L('Worker', 'العامل')}"><a href="hr_employee.html?code=${g.e.code}">${empName(g.e.code)}</a></td>
+        <td data-label="${L('Worker', 'العامل')}"><a href="employee.html?code=${g.e.code}">${empName(g.e.code)}</a></td>
         <td data-label="${L('Missing', 'المفقود')}">${g.missing.map(m => `<span class="status status-yellow">${typeName(m)}</span>`).join(' ')}</td>
         <td data-label=""><button class="btn btn-outline btn-sm" data-upload-for="${g.e.code}">${t('common.upload')}</button></td>
       </tr>`

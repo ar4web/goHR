@@ -1,4 +1,4 @@
-// HR + Operations — interviews (hr_interviews.html).
+// HR + Operations — interviews (interviews.html).
 // Passing moves the candidate interview → offer; failing rejects them.
 
 import { showToast } from './toast.js';

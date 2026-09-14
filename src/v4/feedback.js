@@ -1,4 +1,4 @@
-// HR + Operations — 360 feedback wall (hr_feedback.html).
+// HR + Operations — 360 feedback wall (feedback.html).
 // Praise / coaching / shoutout cards by kind; sender defaults to the
 // currently-selected demo user (hr:my-code).
 

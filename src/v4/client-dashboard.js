@@ -1,4 +1,4 @@
-// HR + Operations — client portal dashboard v1 (hr_client_dashboard.html).
+// HR + Operations — client portal dashboard v1 (client_dashboard.html).
 // Client switcher + KPIs + deployed roster + invoices + raise-a-request (P0 demo).
 
 import { showToast } from './toast.js';

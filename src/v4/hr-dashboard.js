@@ -1,4 +1,4 @@
-// HR + Operations — CEO Command Center (hr_dashboard.html). Header strip +
+// HR + Operations — CEO Command Center (dashboard.html). Header strip +
 // Zone A business health + §1 workforce dynamics + legacy stat cards, alerts,
 // deployment mix and expiries (later zones subsume the legacy cards). Idempotent.
 
@@ -85,7 +85,7 @@ function alerts() {
             ? 'red'
             : 'yellow',
         text: `${a.id} · ${currentLang() === 'ar' ? e.nameAr : e.nameEn} — ${g.reasons.join(', ')}`,
-        href: `hr_employee.html?code=${e.code}`
+        href: `employee.html?code=${e.code}`
       });
     }
   });
@@ -96,7 +96,7 @@ function alerts() {
         out.push({
           sev: 'red',
           text: `${L('Missing Iqama expiry', 'تاريخ انتهاء الإقامة مفقود')} · ${currentLang() === 'ar' ? e.nameAr : e.nameEn}`,
-          href: `hr_employee.html?code=${e.code}`
+          href: `employee.html?code=${e.code}`
         });
         return;
       }
@@ -105,7 +105,7 @@ function alerts() {
         out.push({
           sev: d <= 30 ? 'red' : 'yellow',
           text: `${L('Iqama', 'الإقامة')} ${fmtDate(e.iqamaExp)} (${d}${L('d', 'ي')}) · ${currentLang() === 'ar' ? e.nameAr : e.nameEn}`,
-          href: `hr_employee.html?code=${e.code}`
+          href: `employee.html?code=${e.code}`
         });
       }
     });
@@ -154,7 +154,7 @@ function renderExpiries() {
       rows
         .map(
           ({ e, d }) => `<tr>
-      <td data-label="${L('Worker', 'الموظف')}"><a href="hr_employee.html?code=${e.code}">${currentLang() === 'ar' ? e.nameAr || e.nameEn : e.nameEn}</a></td>
+      <td data-label="${L('Worker', 'الموظف')}"><a href="employee.html?code=${e.code}">${currentLang() === 'ar' ? e.nameAr || e.nameEn : e.nameEn}</a></td>
       <td data-label="${L('Expiry', 'الانتهاء')}">${fmtDate(e.iqamaExp)}</td>
       <td data-label="${t('common.status')}"><span class="status status-${d <= 30 ? 'red' : 'yellow'}">${d}${L('d', 'ي')}</span></td>
     </tr>`
@@ -225,7 +225,7 @@ function renderHead() {
       <span class="status status-${tone}">${esc(t('hr.dashboard.nitaqat'))} ${esc(String(n.pct))}%${s.nitaqat.target > 0 ? ` / ${esc(String(s.nitaqat.target))}%` : ''}</span>
       ${
   left
-    ? `<a class="status status-yellow" href="hr_settings.html" style="text-decoration:none">${left} ${esc(t('hr.dashboard.setupSteps'))}</a>`
+    ? `<a class="status status-yellow" href="settings.html" style="text-decoration:none">${left} ${esc(t('hr.dashboard.setupSteps'))}</a>`
     : `<span class="status status-green">${esc(L('All set', 'تم الإعداد'))}</span>`
 }
     </div>`;
@@ -337,7 +337,7 @@ function renderZoneA() {
       label: t('hr.dashboard.revenue'),
       value: fmtSAR(money.revenue),
       sub: `${money.crewHeads} ${t('hr.dashboard.heads')}`,
-      href: 'hr_client_dashboard.html',
+      href: 'client_dashboard.html',
       change: revChange,
       spark: revSpark,
       sparkColor: 'var(--green)'
@@ -348,7 +348,7 @@ function renderZoneA() {
       label: t('hr.dashboard.crewCost'),
       value: fmtSAR(money.crewCost),
       sub: `${L('Pay + levy + GOSI', 'الأجر + المقابل + التأمينات')}`,
-      href: 'hr_payroll.html'
+      href: 'payroll.html'
     }) +
     moneyCard({
       icon: 'flag',
@@ -356,7 +356,7 @@ function renderZoneA() {
       label: t('hr.dashboard.crewMargin'),
       value: fmtSAR(money.crewMargin),
       sub: `${money.crewMarginPct}%`,
-      href: 'hr_client_dashboard.html',
+      href: 'client_dashboard.html',
       change: marginChange,
       bar: { pct: Math.max(0, Math.min(100, Math.round((money.crewMarginPct / 15) * 100))), color: toneVar }
     }) +
@@ -366,7 +366,7 @@ function renderZoneA() {
       label: t('hr.dashboard.receivables'),
       value: fmtSAR(money.receivables),
       sub: L('Unpaid invoices', 'فواتير غير مسددة'),
-      href: 'hr_invoices.html'
+      href: 'invoices.html'
     });
 
   const meta = document.getElementById('zone-money-meta');
@@ -404,7 +404,7 @@ function renderZoneA() {
       </div>
       ${
   money.crewMarginPct < 5
-    ? `<a class="hr-alert hr-alert-red" href="hr_client_dashboard.html"><span class="status status-red">${esc(t('common.urgent'))}</span><span>${esc(t('hr.dashboard.thinMargin'))}</span></a>`
+    ? `<a class="hr-alert hr-alert-red" href="client_dashboard.html"><span class="status status-red">${esc(t('common.urgent'))}</span><span>${esc(t('hr.dashboard.thinMargin'))}</span></a>`
     : ''
 }`;
   }
@@ -434,7 +434,7 @@ function renderS1() {
   if (hc2) {
     const flagged = emps.filter(e => e.st === 'huroob');
     hc2.innerHTML = flagged.length
-      ? `<a class="hr-alert hr-alert-red" href="hr_employee.html?code=${encodeURIComponent(flagged[0].code)}" style="margin-bottom:12px">
+      ? `<a class="hr-alert hr-alert-red" href="employee.html?code=${encodeURIComponent(flagged[0].code)}" style="margin-bottom:12px">
           <span class="status status-red">${flagged.length} × ${esc(t('status.huroob'))}</span>
           <span><strong>${esc(t('hr.dashboard.huroobTitle'))}</strong> — ${flagged.map(e => esc(currentLang() === 'ar' ? e.nameAr || e.nameEn : e.nameEn)).join(currentLang() === 'ar' ? '، ' : ', ')} · ${esc(flagged[0].reportedAt || '')}</span>
         </a>`
@@ -605,7 +605,7 @@ function renderS2() {
       label: t('hr.dashboard.vacNow'),
       value: String(w.onVacation.length),
       sub: t('hr.dashboard.heads'),
-      href: 'hr_leave.html'
+      href: 'leave.html'
     }) +
     moneyCard({
       icon: 'clock',
@@ -613,7 +613,7 @@ function renderS2() {
       label: t('hr.dashboard.vacDeparting'),
       value: String(w.departing.length),
       sub: t('hr.dashboard.heads'),
-      href: 'hr_leave.html',
+      href: 'leave.html',
       change: momBadge(depByMonth.get(curMo), depByMonth.get(prevMo)),
       spark: months6.map(m => depByMonth.get(m)),
       sparkColor: 'var(--yellow)'
@@ -624,7 +624,7 @@ function renderS2() {
       label: t('hr.dashboard.vacReturning'),
       value: String(w.returning.length),
       sub: t('hr.dashboard.heads'),
-      href: 'hr_leave.html',
+      href: 'leave.html',
       change: momBadge(retByMonth.get(curMo), retByMonth.get(prevMo))
     });
 
@@ -649,7 +649,7 @@ function renderS2() {
               .filter(Boolean)
               .map(
                 r => `<tr>
-        <td><a href="hr_employee.html?code=${encodeURIComponent(r.emp)}">${esc(empName(r.emp))}</a><br><small style="color:var(--text-secondary)" dir="ltr">${esc(r.id)}</small></td>
+        <td><a href="employee.html?code=${encodeURIComponent(r.emp)}">${esc(empName(r.emp))}</a><br><small style="color:var(--text-secondary)" dir="ltr">${esc(r.id)}</small></td>
         <td dir="ltr" style="text-align:end;white-space:nowrap">${esc(fmtDate(r.from))} → ${esc(fmtDate(r.to))}</td>
         <td dir="ltr" style="text-align:end;white-space:nowrap">${esc(String(r.days))} ${esc(t('common.days'))}</td>
       </tr>`
@@ -699,7 +699,7 @@ function renderS2() {
               Math.round((new Date(r.returnedAt) - new Date(r.to)) / 86400000)
             );
             return `<tr>
-      <td><a href="hr_employee.html?code=${encodeURIComponent(r.emp)}">${esc(empName(r.emp))}</a><br><small style="color:var(--text-secondary)" dir="ltr">${esc(r.id)}</small></td>
+      <td><a href="employee.html?code=${encodeURIComponent(r.emp)}">${esc(empName(r.emp))}</a><br><small style="color:var(--text-secondary)" dir="ltr">${esc(r.id)}</small></td>
       <td><span class="status status-red">${late} ${esc(t('hr.dashboard.daysLate'))}</span><br><small style="color:var(--text-secondary)">${esc(t('hr.dashboard.reason'))}: ${esc(delayReasonName(r.delayReason))}</small></td>
     </tr>`;
           })
@@ -747,10 +747,10 @@ function renderS2() {
       elig
         .map(
           x => `<tr>
-    <td><a href="hr_employee.html?code=${encodeURIComponent(x.code)}">${esc(empName(x.code))}</a></td>
+    <td><a href="employee.html?code=${encodeURIComponent(x.code)}">${esc(empName(x.code))}</a></td>
     <td dir="ltr" style="white-space:nowrap">${esc(String(x.left))} ${esc(t('common.days'))}</td>
     <td dir="ltr" style="white-space:nowrap">${x.lastTo ? esc(fmtDate(x.lastTo)) : '—'}</td>
-    <td style="text-align:end"><a class="btn btn-outline btn-sm" href="hr_leave.html">${esc(t('hr.dashboard.request'))}</a></td>
+    <td style="text-align:end"><a class="btn btn-outline btn-sm" href="leave.html">${esc(t('hr.dashboard.request'))}</a></td>
   </tr>`
         )
         .join('') +
@@ -807,7 +807,7 @@ function renderRoster(siteId) {
           rows
             .map(
               a => `<tr>
-      <td><a href="hr_employee.html?code=${encodeURIComponent(a.emp)}">${esc(empName(a.emp))}</a><br><small style="color:var(--text-secondary)">${esc(profName((getSeed('employees').find(e => e.code === a.emp) || {}).prof))}</small></td>
+      <td><a href="employee.html?code=${encodeURIComponent(a.emp)}">${esc(empName(a.emp))}</a><br><small style="color:var(--text-secondary)">${esc(profName((getSeed('employees').find(e => e.code === a.emp) || {}).prof))}</small></td>
       <td dir="ltr" style="text-align:end;white-space:nowrap">${esc(fmtSAR(a.rate))}</td>
     </tr>`
             )
@@ -1095,7 +1095,7 @@ function renderS4() {
       watch
         .map(
           c => `<tr>
-    <td><a href="hr_contracts.html" dir="ltr">${esc(c.id)}</a><br><small style="color:var(--text-secondary)">${esc(c.partyKind === 'employee' ? empName(c.party) : clientName(c.party))}</small></td>
+    <td><a href="contracts.html" dir="ltr">${esc(c.id)}</a><br><small style="color:var(--text-secondary)">${esc(c.partyKind === 'employee' ? empName(c.party) : clientName(c.party))}</small></td>
     <td dir="ltr" style="text-align:end;white-space:nowrap">${esc(fmtDate(c.end))}</td>
     <td style="text-align:end"><span class="status status-${c.days <= 30 ? 'red' : 'yellow'}">${c.days} ${esc(t('hr.dashboard.daysLeft'))}</span></td>
   </tr>`

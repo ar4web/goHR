@@ -1,4 +1,4 @@
-// HR + Operations — candidates (hr_candidates.html).
+// HR + Operations — candidates (candidates.html).
 // Internal intake (agents/CSV/referral); exports moveCandidate() so the
 // pipeline board shares the same stage rules (hired needs an accepted offer).
 
@@ -143,7 +143,7 @@ function renderAll() {
             `<button class="btn btn-outline btn-sm" data-fwd="${c.id}" ${STAGES.indexOf(c.stage) >= STAGES.length - 1 ? 'disabled' : ''}>←</button>`
           );
           acts.push(
-            `<a class="btn btn-outline btn-sm" href="hr_interviews.html?candidate=${c.id}">${L('Interview', 'مقابلة')}</a>`
+            `<a class="btn btn-outline btn-sm" href="interviews.html?candidate=${c.id}">${L('Interview', 'مقابلة')}</a>`
           );
           acts.push(
             `<button class="btn btn-outline btn-sm" data-reject="${c.id}">${t('status.rejected')}</button>`

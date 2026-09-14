@@ -1,4 +1,4 @@
-// HR + Operations — contract maker + registers (hr_contracts.html).
+// HR + Operations — contract maker + registers (contracts.html).
 // Maker wizard: pick type → pick party (auto-fills) → fill highlighted fields
 // → bilingual preview → draft/issue. Sign-track + file + expiry clock live in
 // the registers. Probation >180 days is blocked at issue (§0.4).
@@ -121,7 +121,7 @@ function renderRows() {
     .map(c => {
       const x = tpl(c.type);
       const acts = [
-        `<a class="btn btn-outline btn-sm" href="hr_contract.html?id=${c.id}">${t('common.view')}</a>`
+        `<a class="btn btn-outline btn-sm" href="contract.html?id=${c.id}">${t('common.view')}</a>`
       ];
       if (SIGN_NEXT[c.sign]) {
         acts.push(

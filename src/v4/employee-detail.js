@@ -1,4 +1,4 @@
-// HR + Operations — employee 360 file (hr_employee.html?code=EMP-0001).
+// HR + Operations — employee 360 file (employee.html?code=EMP-0001).
 // Tabs: Overview / Job & Pay / GOSI / Residency / Deployment / Leave / Documents.
 
 import { showToast } from './toast.js';
@@ -85,29 +85,36 @@ function tabButtons() {
 }
 
 function renderHeader(e) {
-  const el = document.getElementById('emp360-head');
-  if (!el) {
-    return;
-  }
+  const aHead = document.getElementById('a4-head');
+  const avatarEl = document.getElementById('a4-avatar');
+  if (avatarEl) { avatarEl.style.background = AV[e.av] || 'var(--avatar-teal)'; avatarEl.textContent = initialsOf(e.nameEn); }
+  if (!aHead) return;
   const client = CLIENTS.find(c => c.id === e.client);
-  el.innerHTML = `
-    <div class="hr-360-top">
-      <div class="cell-avatar" style="width:64px;height:64px;font-size:22px;background:${AV[e.av] || 'var(--avatar-teal)'};color:white">${esc(initialsOf(e.nameEn))}</div>
-      <div style="flex:1;min-width:0">
-        <h2 class="page-title" style="margin:0">${esc(currentLang() === 'ar' ? e.nameAr || e.nameEn : e.nameEn)}</h2>
-        <div style="color:var(--text-muted);font-size:13px">${esc(currentLang() === 'ar' ? e.nameEn : e.nameAr || '')} · ${esc(e.code)}</div>
+  const site = SITES.find(s => s.id === e.site);
+  const total = (e.basic||0)+(e.housing||0)+(e.transport||0);
+  aHead.innerHTML = `
+    <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap">
+      <div style="flex:1;min-width:220px">
+        <h2 style="margin:0;font-size:18px;font-weight:700">${esc(currentLang()==='ar'?e.nameAr||e.nameEn:e.nameEn)}</h2>
+        <div style="color:var(--text-muted);font-size:12.5px">${esc(e.code)} · ${esc(profName(e.prof))} · ${esc(deptName(e.dept))} · ${esc(fmtDate(e.join))}</div>
         <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">
-          <span class="status status-${e.st === 'active' ? 'green' : 'yellow'}">${esc(t(`status.${e.st}`))}</span>
+          <span class="status status-${e.st==='active'?'green':e.st==='huroob'?'red':'yellow'}">${esc(t(`status.${e.st}`))}</span>
           <span class="status status-blue">${esc(e.nat)}</span>
-          ${client ? `<span class="status status-green">${t('status.deployed')} · ${esc(currentLang() === 'ar' ? client.nameAr : client.nameEn)}</span>` : e.saudi ? '' : `<span class="status status-blue">${t('status.bench')}</span>`}
+          ${client ? `<span class="status status-green">${esc(currentLang()==='ar'?client.nameAr:client.nameEn)}${site?` · ${esc(currentLang()==='ar'?site.nameAr:site.nameEn)}`:''}</span>` : `<span class="status status-blue">${t('status.bench')}</span>`}
         </div>
       </div>
-      <div class="page-actions" style="margin:0">
-        <button class="btn btn-outline btn-sm" id="emp360-export">${t('common.export')}</button>
-        <button class="btn btn-outline btn-sm" id="emp360-edit">${t('common.edit')}</button>
+      <div style="text-align:end;min-width:140px">
+        <div style="font-size:11px;color:var(--text-muted)">Total package</div>
+        <div style="font-size:18px;font-weight:700;color:var(--primary)">${esc(fmtSAR(total))}</div>
+        <div style="font-size:11px;color:var(--text-muted)">${esc(e.phone||'')}<br>${esc(e.email||'')}</div>
       </div>
-    </div>
-    <div class="hr-tabs" role="tablist">${tabButtons()}</div>`;
+    </div>`;
+  // keep old header for compat but hide
+  const el = document.getElementById('emp360-head');
+  if (el) el.style.display = 'none';
+  document.getElementById('emp360-export')?.addEventListener('click', () => {
+    exportData('xlsx', e.code, [{key:'code',label:'Code'},{key:'nameEn',label:'Name'},{key:'nat',label:'Nat'},{key:'prof',label:'Prof'},{key:'join',label:'Join'},{key:'basic',label:'Basic'}],[e],'Employee');
+  });
   el.querySelectorAll('[data-tab]').forEach(b =>
     b.addEventListener('click', () => {
       activeTab = b.dataset.tab;
@@ -142,19 +149,29 @@ function renderHeader(e) {
 }
 
 function renderBody(e) {
-  const el = document.getElementById('emp360-body');
-  if (!el) {
-    return;
-  }
+  const grid = document.getElementById('a4-grid');
+  const extra = document.getElementById('a4-extra');
+  if (!grid) return;
   const total = (e.basic || 0) + (e.housing || 0) + (e.transport || 0);
-  const g = calcGosi({
-    basic: e.basic,
-    housing: e.housing,
-    isSaudi: e.saudi,
-    enrolledOn: e.gosiOn
-  });
+  const g = calcGosi({ basic: e.basic, housing: e.housing, isSaudi: e.saudi, enrolledOn: e.gosiOn });
   const eosb = calcEOSB({ basic: e.basic, joinDate: e.join, endReason: 'termination' });
   const assigns = getSeed('assignments').filter(a => a.emp === e.code);
+  const doc = getSeed('residencyDocs')?.find(d=>d.emp===e.code) || {};
+  // A4 dense dossier — all areas visible, not tabs
+  const overview = '<div class="a4-card"><h3>Personal</h3>' + '<div class="hr-kv"><span>Code</span><strong>'+esc(e.code)+'</strong></div>' + kvd('Nationality',e.nat) + kvd(e.saudi?'National ID':'Iqama', e.saudi?e.nid||'—':e.iqama||'—') + kvd('Phone',e.phone||'—') + kvd('Email',e.email||'—') + kvd('Join', `${fmtDate(e.join)} · ${fmtHijri(e.join)}`) + (e.entry?kvd('KSA entry',fmtDate(e.entry)):'') + kvd('Qiwa', t(`status.${e.q}`)) + '</div>';
+  const job = '<div class="a4-card"><h3>Job & Pay</h3>' + kvd('Department',deptName(e.dept)) + kvd('Title', currentLang()==='ar'?e.titleAr||e.titleEn:e.titleEn) + kvd('Profession',profName(e.prof)) + kvd('Basic',fmtSAR(e.basic)) + kvd('Housing',fmtSAR(e.housing)) + kvd('Transport',fmtSAR(e.transport)) + kv('Total', `<b>${fmtSAR(total)}</b>`) + kvd('EOSB est.',fmtSAR(eosb.net)) + '</div>';
+  const gosi = '<div class="a4-card"><h3>GOSI</h3>' + kvd('GOSI no.', e.gosi || (e.saudi?'—':'Expat 2%')) + kv('System', g.system==='expat'?'Expat 2%':g.system==='old'?'Old 9%':`New ${Math.round(g.pensionRate*100)}%`) + kvd('Contributory',fmtSAR(g.base)) + kvd('Employee',fmtSAR(g.employee)) + kvd('Employer',fmtSAR(g.employer)) + '</div>';
+  const residency = e.saudi ? `<div class="a4-card"><h3>Residency</h3><div class="hr-kv"><span>National ID</span><strong>${esc(e.nid||'—')}</strong></div></div>` : '<div class="a4-card"><h3>Residency</h3>' + kvd('Iqama no.',e.iqama||'—') + kv('Expiry', expBadge(e.iqamaExp)) + kvd('Iqama profession',profName(e.prof)) + kv(e.iban?maskIban(e.iban):'—', e.bank||'—') + '</div>';
+  const deployment = assigns.length ? `<div class="a4-card" style="grid-column:1 / -1"><h3>Deployment · ${assigns.length} assignments</h3><div class="table-responsive"><table class="table"><thead><tr><th>Assignment</th><th>Client / Site</th><th>Period</th><th>Ajeer</th></tr></thead><tbody>` + assigns.map(a=>{ const c=CLIENTS.find(x=>x.id===a.client); const s=SITES.find(x=>x.id===a.site); return `<tr><td>${esc(a.id)}<div style="font-size:11px;color:var(--text-muted)">${esc(fmtSAR(a.rate))}/mo</div></td><td>${esc(c? (currentLang()==='ar'?c.nameAr:c.nameEn):a.client)}<div style="font-size:11px;color:var(--text-muted)">${esc(s? (currentLang()==='ar'?s.nameAr:s.nameEn):'')}</div></td><td style="font-size:12px">${esc(fmtDate(a.start))} → ${esc(fmtDate(a.end))}</td><td>${a.ajeer?`<span class="status status-green">${esc(a.ajeer)}</span>`:`<span class="status status-red">Missing</span>`}</td></tr>`; }).join('') + `</tbody></table></div></div>` : `<div class="a4-card"><h3>Deployment</h3><div style="color:var(--text-muted);font-size:12.5px">Bench — no active assignment</div></div>`;
+  const leave = '<div class="a4-card"><h3>Leave</h3>' + kvd('Entitlement', `${annualEntitlement(e.join)} days`) + kvd('Used', `${e.annualUsed||0} days`) + kv('Left', `<b>${Math.max(0, annualEntitlement(e.join)-(e.annualUsed||0))} days</b>`) + '</div>';
+  const docs = '<div class="a4-card"><h3>Documents</h3>' + kvd('Contract','PDF · Valid') + kvd(e.saudi?'NID copy':'Iqama copy','PDF · Valid') + kvd('Qiwa', t(`status.${e.q}`)) + kvd('Insurance', doc.ins?`${doc.ins} · ${fmtDate(doc.insExp)}`:'—') + kvd('Passport', doc.passport?`${doc.passport} · ${fmtDate(doc.passportExp)}`:'—') + '</div>';
+  const skills = e.skills?.length ? '<div class="a4-card"><h3>Skills</h3><div style="display:flex;gap:6px;flex-wrap:wrap">' + e.skills.map(s=>`<span class="status status-blue" style="font-size:11px">${esc(s)}</span>`).join('') + '</div></div>' : '';
+  grid.innerHTML = overview + job + gosi + residency + deployment + leave + docs + skills;
+  if (extra) extra.innerHTML = `<div class="a4-card"><h3>Notes</h3><div style="font-size:12.5px;color:var(--text-muted)">File: ${esc(e.code)} · Generated ${fmtDate(new Date().toISOString().slice(0,10))} · HRGO A4 dossier — print with Ctrl+P</div></div>`;
+  // keep old body hidden
+  const el = document.getElementById('emp360-body');
+  if (el) el.style.display='none';
+  return;
   let html;
   if (activeTab === 'overview') {
     html =

@@ -1,4 +1,4 @@
-// HR + Operations — clients register (hr_clients.html).
+// HR + Operations — clients register (clients.html).
 // Profiles + Nitaqat/WPS standing + deployment counts. Idempotent.
 
 import { showToast } from './toast.js';

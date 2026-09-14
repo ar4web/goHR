@@ -1,4 +1,4 @@
-// HR + Operations — template library (hr_templates.html).
+// HR + Operations — template library (templates.html).
 // Bilingual bodies with {{placeholders}}; every save is linted (balanced
 // braces + known names only) and bumps the version — issued contracts keep
 // their pinned version.

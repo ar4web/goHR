@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="nav.hr-approvals">Approvals | HRGO</title>
+<link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
+<script type="module" src="/src/main-v4.js"></script>
+</head>
+<body data-shell="admin" data-page="approvals" data-breadcrumb="Home > Approvals">
+
+<main class="main">
+<div class="page-wrapper" data-hr-approvals>
+
+  <div class="page-header">
+    <div class="page-header-row">
+      <div>
+        <div class="page-pretitle" data-i18n="hr.ui.pretitle">HR &amp; Operations</div>
+        <h1 class="page-title" data-i18n="nav.hr-approvals">Approvals</h1>
+      </div>
+      <div class="page-actions">
+        <button class="btn btn-outline" id="ap-export" data-i18n="common.export">Export</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="hr-controls">
+    <select class="form-control" id="ap-actor" aria-label="Acting role"></select>
+  </div>
+
+  <div class="hr-tabs" id="ap-tabs" style="margin-bottom:14px"></div>
+
+  <div id="ap-body"></div>
+
+</div>
+</main>
+
+<script type="module">
+import { initApprovals } from '/src/v4/approvals.js';
+initApprovals();
+</script>
+
+</body>
+</html>

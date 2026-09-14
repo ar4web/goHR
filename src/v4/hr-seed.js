@@ -1,6 +1,6 @@
 // HR + Operations — shared demo seed (HRGO, Riyadh).
 // Fictional data only (sequential fake IDs). Company profile / Nitaqat / licence
-// are placeholders — the owner edits them in Settings (hr_settings.html).
+// are placeholders — the owner edits them in Settings (settings.html).
 // In API mode (?api=1) these are replaced by /api/hr/* via hr-api.js.
 
 export const SEED_COMPANY = {
@@ -146,7 +146,7 @@ export const TASKS = [
     due: '2026-09-15',
     priority: 'high',
     done: false,
-    link: 'hr_sa_compliance.html'
+    link: 'sa_compliance.html'
   },
   {
     id: 'TSK-02',
@@ -156,7 +156,7 @@ export const TASKS = [
     due: '2026-09-14',
     priority: 'high',
     done: false,
-    link: 'hr_employee.html?code=EMP-0027'
+    link: 'employee.html?code=EMP-0027'
   },
   {
     id: 'TSK-03',
@@ -166,7 +166,7 @@ export const TASKS = [
     due: '2026-09-12',
     priority: 'medium',
     done: false,
-    link: 'hr_leave.html'
+    link: 'leave.html'
   },
   {
     id: 'TSK-04',
@@ -176,7 +176,7 @@ export const TASKS = [
     due: '2026-09-13',
     priority: 'high',
     done: false,
-    link: 'hr_wps.html'
+    link: 'wps.html'
   },
   {
     id: 'TSK-05',
@@ -186,7 +186,7 @@ export const TASKS = [
     due: '2026-09-25',
     priority: 'medium',
     done: false,
-    link: 'hr_eosb.html'
+    link: 'eosb.html'
   },
   {
     id: 'TSK-06',
@@ -196,7 +196,7 @@ export const TASKS = [
     due: '2026-09-18',
     priority: 'low',
     done: false,
-    link: 'hr_employees.html'
+    link: 'employees.html'
   },
   {
     id: 'TSK-07',
@@ -206,7 +206,7 @@ export const TASKS = [
     due: '2026-09-20',
     priority: 'medium',
     done: false,
-    link: 'hr_settings.html'
+    link: 'settings.html'
   },
   {
     id: 'TSK-08',
@@ -216,7 +216,7 @@ export const TASKS = [
     due: '2026-09-05',
     priority: 'high',
     done: false,
-    link: 'hr_gosi.html'
+    link: 'gosi.html'
   }
 ];
 

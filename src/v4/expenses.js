@@ -1,4 +1,4 @@
-// HR + Operations — expenses + advances (hr_expenses.html).
+// HR + Operations — expenses + advances (expenses.html).
 // Claim flow: draft → submitted → approved → paid (or rejected). Category
 // limits flag over-limit claims for the approver; receipt-required categories
 // block submission without a receipt; billable claims carry a client for the

@@ -1,4 +1,4 @@
-// HR + Operations — workforce tracker (hr_tracker.html).
+// HR + Operations — workforce tracker (tracker.html).
 // Board with 100% derived statuses (no manual status field). Idempotent.
 
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
@@ -137,7 +137,7 @@ function profName(code) {
 
 function card(e, track) {
   const name = currentLang() === 'ar' ? e.nameAr || e.nameEn : e.nameEn;
-  return `<a class="track-card" href="hr_employee.html?code=${e.code}">
+  return `<a class="track-card" href="employee.html?code=${e.code}">
     <div class="cell-avatar" style="width:34px;height:34px;font-size:12px;background:${AV[e.av] || 'var(--avatar-teal)'};color:#fff">${initialsOf(e.nameEn)}</div>
     <div style="flex:1;min-width:0">
       <div class="cell-strong" style="font-size:13px">${name}</div>
@@ -185,7 +185,7 @@ function renderPipeline() {
   el.innerHTML = list.length
     ? list
       .map(
-        c => `<a class="hr-dept-chip" href="hr_onboarding.html?case=${c.id}">
+        c => `<a class="hr-dept-chip" href="onboarding.html?case=${c.id}">
           ${currentLang() === 'ar' ? c.nameAr || c.nameEn : c.nameEn} · ${t('common.stage')} ${c.stage}</a>`
       )
       .join('')

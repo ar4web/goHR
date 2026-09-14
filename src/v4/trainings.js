@@ -1,4 +1,4 @@
-// HR + Operations — trainings (hr_trainings.html).
+// HR + Operations — trainings (trainings.html).
 // Course catalog + attendees + hours rollup: audit-friendly evidence that
 // mandatory training (safety, onboarding) actually happened.
 

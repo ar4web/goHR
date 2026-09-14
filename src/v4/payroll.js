@@ -1,4 +1,4 @@
-// HR + Operations — pay runs (hr_payroll.html).
+// HR + Operations — pay runs (payroll.html).
 // Lines are computed live from employees + per-run adjustments via calcPayLine
 // so seed math can never drift; approved/paid runs are locked in the UI.
 // Art. 40: employer-borne deduction cats (iqama/levy/insurance/recruitment)
@@ -129,7 +129,7 @@ function renderRows(run, rows) {
       <td data-label="${L('Net', 'الصافي')}" dir="ltr"><strong>${fmtSAR(line.net)}</strong></td>
       <td data-label=""><div style="display:flex;gap:6px;flex-wrap:wrap">
         ${locked ? '' : `<button class="btn btn-outline btn-sm" data-adj="${e.code}">${L('Adjust', 'تعديل')}</button>`}
-        <a class="btn btn-outline btn-sm" href="hr_payslip.html?run=${run.id}&emp=${e.code}">${L('Payslip', 'القسيمة')}</a>
+        <a class="btn btn-outline btn-sm" href="payslip.html?run=${run.id}&emp=${e.code}">${L('Payslip', 'القسيمة')}</a>
       </div></td>
     </tr>`;
     })

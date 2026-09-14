@@ -1,4 +1,4 @@
-// HR + Operations — review cycles (hr_reviews.html).
+// HR + Operations — review cycles (reviews.html).
 // Cycle: draft → self → manager → calibrated → published → acked.
 // Ratings live on the detail page; published reviews are immutable.
 
@@ -82,7 +82,7 @@ function renderAll() {
       <td data-label="${L('Manager', 'المدير')}" dir="ltr">${rate(r.mgrRating)}</td>
       <td data-label="${L('Final', 'النهائي')}" dir="ltr"><strong>${rate(r.finalRating)}</strong></td>
       <td data-label="${t('common.status')}"><span class="status status-${ST_CLS[r.status] || 'blue'}">${reviewLabel(r.status)}</span></td>
-      <td data-label=""><a class="btn btn-outline btn-sm" href="hr_review.html?id=${r.id}">${L('Open', 'فتح')}</a></td>
+      <td data-label=""><a class="btn btn-outline btn-sm" href="review.html?id=${r.id}">${L('Open', 'فتح')}</a></td>
     </tr>`;
       })
       .join('');

@@ -1,4 +1,4 @@
-// HR + Operations — deployments board (hr_assignments.html).
+// HR + Operations — deployments board (assignments.html).
 // Assignments gated by Ajeer e-contracts + licence scope + 3y cap. Idempotent.
 
 import { showToast } from './toast.js';
@@ -122,7 +122,7 @@ function renderRows() {
       const pst = a.status === 'active' ? permitStatus(a.ajeerExp) : '—';
       const pcls = pst === 'active' ? 'green' : pst === 'expiring' ? 'yellow' : 'red';
       return `<tr>
-      <td data-label="${L('Worker', 'العامل')}"><a href="hr_employee.html?code=${a.emp}">${empName(a.emp)}</a>
+      <td data-label="${L('Worker', 'العامل')}"><a href="employee.html?code=${a.emp}">${empName(a.emp)}</a>
         <div style="font-size:11.5px;color:var(--text-muted)" dir="ltr">${a.id}</div></td>
       <td data-label="${L('Client', 'العميل')}">${clientName(a.client)}
         <div style="font-size:11.5px;color:var(--text-muted)">${siteName(a.site)}</div></td>

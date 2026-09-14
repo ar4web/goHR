@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="nav.hr-client">Client dashboard | HRGO</title>
+<link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
+<script type="module" src="/src/main-v4.js"></script>
+</head>
+<body data-shell="admin" data-page="client" data-breadcrumb="Home > Client dashboard">
+
+<main class="main">
+<div class="page-wrapper" data-hr-client>
+
+  <div class="page-header">
+    <div class="page-header-row">
+      <div>
+        <div class="page-pretitle" data-i18n="hr.ui.pretitle">HR &amp; Operations</div>
+        <h1 class="page-title" data-i18n="hr.nav.client">Client dashboard</h1>
+      </div>
+      <div class="page-actions">
+        <select class="form-control" id="cl-who" aria-label="Switch client" style="max-width:220px"></select>
+        <button class="btn btn-outline" id="cl-export" data-i18n="common.export">Export</button>
+        <button class="btn btn-primary" id="cl-request" data-i18n="hr.client.raise">Raise a request</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-body">
+      <div class="hr-360-top" id="cl-head"></div>
+    </div>
+  </div>
+
+  <div class="row col-2" id="cl-kpis" style="margin-bottom:16px"></div>
+
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-header"><div class="card-title" data-i18n="hr.client.roster">Deployed roster</div></div>
+    <div class="card-body" id="cl-roster"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-title" data-i18n="hr.client.invoices">Invoices</div></div>
+    <div class="card-body" id="cl-invoices"></div>
+  </div>
+
+</div>
+</main>
+
+<script type="module">
+import { initClientDashboard } from '/src/v4/client-dashboard.js';
+initClientDashboard();
+</script>
+
+</body>
+</html>

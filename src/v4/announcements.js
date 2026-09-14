@@ -1,4 +1,4 @@
-// HR + Operations — announcements (hr_announcements.html).
+// HR + Operations — announcements (announcements.html).
 // Draft → publish → archive board with per-employee read receipts; reads
 // attribute to the currently-selected demo user (hr:my-code).
 

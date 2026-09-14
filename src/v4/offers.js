@@ -1,4 +1,4 @@
-// HR + Operations — job offers (hr_offers.html).
+// HR + Operations — job offers (offers.html).
 // Flow: draft → approved → sent → accepted/declined. The bilingual letter
 // renders template L1; Saudi offers below the SAR 4,000 Nitaqat floor raise a
 // hint. Accepting moves the candidate to hired; Hire opens onboarding.

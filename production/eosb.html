@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="nav.hr-eosb">EOSB &amp; settlement | HRGO</title>
+<link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
+<script type="module" src="/src/main-v4.js"></script>
+</head>
+<body data-shell="admin" data-page="eosb" data-breadcrumb="Home > EOSB & settlement">
+
+<main class="main">
+<div class="page-wrapper" data-hr-eosb>
+
+  <div class="page-header">
+    <div class="page-header-row">
+      <div>
+        <div class="page-pretitle" data-i18n="hr.ui.pretitle">HR &amp; Operations</div>
+        <h1 class="page-title" data-i18n="nav.hr-eosb">EOSB &amp; settlement</h1>
+      </div>
+      <div class="page-actions">
+        <button class="btn btn-outline" id="eo-export-xlsx">Excel</button>
+        <button class="btn btn-outline" id="eo-export-csv">CSV</button>
+        <button class="btn btn-outline" id="eo-copy" data-i18n="hr.p4.copy">Copy</button>
+        <button class="btn btn-primary" id="es-print" data-i18n="common.print">Print</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <h3 class="card-title" data-i18n="hr.p4.calculator">EOSB calculator</h3>
+      <div class="hr-form-2col">
+        <div class="form-group"><label class="form-label" for="eo-emp" data-i18n="hr.p4.employee">Employee</label>
+          <select class="form-control" id="eo-emp"></select></div>
+        <div class="form-group"><label class="form-label" for="eo-end" data-i18n="hr.p4.endDate">End date</label>
+          <input class="form-control" id="eo-end" type="date" dir="ltr"></div>
+        <div class="form-group"><label class="form-label" for="eo-reason" data-i18n="hr.p4.reason">Reason</label>
+          <select class="form-control" id="eo-reason"></select></div>
+        <div class="form-group"><label class="form-label" for="eo-basis" data-i18n="hr.p4.basis">Wage basis</label>
+          <select class="form-control" id="eo-basis"></select></div>
+      </div>
+      <div id="eo-result" style="margin-top:8px"></div>
+    </div>
+  </div>
+
+  <div class="hr-stat-cards">
+    <div class="hr-stat"><div class="k" data-i18n="hr.p4.provision">Total provision</div><div class="v" id="eo-stat-prov">0</div></div>
+    <div class="hr-stat"><div class="k" data-i18n="hr.p4.monthlyCharge">Monthly charge</div><div class="v" id="eo-stat-month">0</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <h3 class="card-title" data-i18n="hr.p4.accrual">Accrual provision</h3>
+      <div class="table-responsive">
+        <table class="table hr-table">
+          <thead><tr>
+            <th data-i18n="hr.p4.employee">Employee</th>
+            <th data-i18n="hr.p4.service">Service</th>
+            <th data-i18n="hr.p4.basis">Wage basis</th>
+            <th data-i18n="hr.p4.accrued">Accrued</th>
+            <th data-i18n="hr.p4.monthlyProv">Monthly provision</th>
+          </tr></thead>
+          <tbody id="eo-rows"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <h3 class="card-title" data-i18n="hr.p4.settlement">Final settlement</h3>
+      <div class="hr-form-2col">
+        <div class="form-group"><label class="form-label" for="es-emp" data-i18n="hr.p4.employee">Employee</label>
+          <select class="form-control" id="es-emp"></select></div>
+        <div class="form-group"><label class="form-label" for="es-end" data-i18n="hr.p4.endDate">End date</label>
+          <input class="form-control" id="es-end" type="date" dir="ltr"></div>
+        <div class="form-group"><label class="form-label" for="es-reason" data-i18n="hr.p4.reason">Reason</label>
+          <select class="form-control" id="es-reason"></select></div>
+        <div class="form-group"><label class="form-label" for="es-leave" data-i18n="hr.p4.leaveDays">Leave days</label>
+          <input class="form-control" id="es-leave" type="number" min="0" step="1" dir="ltr"></div>
+        <div class="form-group"><label class="form-label" for="es-salary" data-i18n="hr.p4.salary">Outstanding salary</label>
+          <input class="form-control" id="es-salary" type="number" min="0" step="1" value="0" dir="ltr"></div>
+        <div class="form-group"><label class="form-label" for="es-ticket" data-i18n="hr.p4.ticket">Ticket</label>
+          <input class="form-control" id="es-ticket" type="number" min="0" step="1" value="0" dir="ltr"></div>
+        <div class="form-group"><label class="form-label" for="es-other" data-i18n="hr.p4.other">Other</label>
+          <input class="form-control" id="es-other" type="number" min="0" step="1" value="0" dir="ltr"></div>
+      </div>
+      <div id="es-doc" style="margin-top:8px"></div>
+    </div>
+  </div>
+
+</div>
+</main>
+
+<script type="module">
+import { initEosb } from '/src/v4/eosb.js';
+initEosb();
+</script>
+
+</body>
+</html>

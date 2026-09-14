@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Employee file | HRGO</title>
+<link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
+<script type="module" src="/src/main-v4.js"></script>
+<style>
+.a4{width:100%;background:var(--bg-surface);border-radius:var(--radius);overflow:hidden;border:1px solid var(--border-color-light)}
+.a4-head{padding:16px 20px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;background:var(--bg-surface-secondary);border-bottom:1px solid var(--border-color-light)}
+.a4-avatar{width:64px;height:64px;border-radius:50%;border:3px solid var(--bg-surface);box-shadow:0 2px 8px rgba(0,0,0,0.08);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#fff;flex-shrink:0}
+.a4-body{padding:16px}
+.a4-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.a4-card{border:1px solid var(--border-color-light);border-radius:var(--radius-sm);padding:12px;background:var(--bg-surface)}
+.a4-card h3{margin:0 0 8px;font-size:12px;font-weight:700;letter-spacing:0.4px;text-transform:uppercase;color:var(--text-muted)}
+.hr-kv{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed var(--border-color-light);font-size:12.5px}
+.hr-kv:last-child{border:0}
+.hr-kv span{color:var(--text-muted)}
+.hr-kv strong{font-weight:500;color:var(--text);text-align:end}
+</style>
+</head>
+<body data-shell="admin" data-page="employees" data-breadcrumb="Home > Employees > File">
+
+<main class="main">
+<div class="page-wrapper" data-hr-employee>
+
+  <div class="page-header">
+    <div class="page-header-row">
+      <div>
+        <div class="page-pretitle"><a href="employees.html">Employees</a></div>
+        <h1 class="page-title">Employee file</h1>
+      </div>
+      <div class="page-actions">
+        <button class="btn btn-outline btn-sm" id="emp360-export">Export</button>
+        <button class="btn btn-primary btn-sm" id="emp360-edit">Edit</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="a4" id="a4-root">
+    <div class="a4-head">
+      <div class="a4-avatar" id="a4-avatar"></div>
+      <div id="a4-head" style="flex:1;min-width:240px"></div>
+    </div>
+    <div class="a4-body">
+      <div class="a4-grid" id="a4-grid"></div>
+      <div style="margin-top:12px" id="a4-extra"></div>
+    </div>
+  </div>
+
+</div>
+</main>
+
+<script type="module">
+import { initEmployeeDetail } from '/src/v4/employee-detail.js';
+initEmployeeDetail();
+</script>
+
+</body>
+</html>

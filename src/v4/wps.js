@@ -1,4 +1,4 @@
-// HR + Operations — WPS / Mudad (hr_wps.html).
+// HR + Operations — WPS / Mudad (wps.html).
 // Builds the period SIF from the pay run, diffs registered contract wage vs
 // net payable per worker, and tracks the Mudad upload state machine
 // (draft → submitted → accepted → paid). Pay within the first 10 days of the

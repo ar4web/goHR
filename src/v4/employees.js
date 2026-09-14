@@ -1,4 +1,4 @@
-// HRGO — employee directory (hr_employees.html). Central dataset.
+// HRGO — employee directory (employees.html). Central dataset.
 // Top charts + comprehensive filters + full table (name → all). Links to every page.
 
 import { openMenu } from './menus.js';
@@ -322,7 +322,7 @@ function renderRows() {
         <div class="cell-customer">
           <div class="cell-avatar" style="background:${AV[e.av]||'var(--avatar-teal)'};color:white">${esc(initialsOf(e.nameEn))}</div>
           <div>
-            <div class="cell-strong"><a href="hr_employee.html?code=${encodeURIComponent(e.code)}">${esc(currentLang()==='ar'? e.nameAr||e.nameEn : e.nameEn)}</a></div>
+            <div class="cell-strong"><a href="employee.html?code=${encodeURIComponent(e.code)}">${esc(currentLang()==='ar'? e.nameAr||e.nameEn : e.nameEn)}</a></div>
             <div style="font-size:11px;color:var(--text-muted)">${esc(e.code)}</div>
           </div>
         </div>
@@ -425,7 +425,7 @@ export function initEmployees() {
     e.stopPropagation();
     const code = btn.dataset.code;
     openMenu(btn, [
-      { label: currentLang()==='ar'?'فتح الملف':'Open file', action: () => { window.location.href = `hr_employee.html?code=${code}`; } },
+      { label: currentLang()==='ar'?'فتح الملف':'Open file', action: () => { window.location.href = `employee.html?code=${code}`; } },
       { label: `${t('common.export')} CSV`, action: () => exportData('csv', code, EXPORT_COLS, getSeed('employees').filter(x=>x.code===code)) }
     ]);
   });

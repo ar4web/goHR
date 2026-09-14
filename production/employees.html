@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="nav.hr-employees">Employees | HRGO</title>
+<link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
+<script type="module" src="/src/main-v4.js"></script>
+</head>
+<body data-shell="admin" data-page="employees" data-breadcrumb="Home > Employees">
+
+<main class="main">
+<div class="page-wrapper" data-hr-employees>
+
+  <div class="page-header">
+    <div class="page-header-row">
+      <div>
+        <div class="page-pretitle" data-i18n="hr.ui.pretitle">HR &amp; Operations</div>
+        <h1 class="page-title" data-i18n="hr.nav.employees">Employees</h1>
+      </div>
+      <div class="page-actions">
+        <button class="btn btn-outline" id="emp-import" data-i18n="common.import">Import</button>
+        <button class="btn btn-primary" id="emp-export" data-i18n="common.export">Export</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATS — attractive with icon + trend -->
+  <div class="row col-3" style="margin-bottom:12px">
+    <div class="card">
+      <div class="stat">
+        <div class="stat-icon teal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
+        <div class="stat-content"><div class="stat-label">Total</div><div class="stat-value-row"><span class="stat-value" id="emp-stat-total">0</span><span class="stat-change up" id="stat-change-total">●</span></div><div class="stat-subtext" id="stat-sub-total">All heads</div></div>
+        <div class="stat-spark" id="spark-total"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="stat">
+        <div class="stat-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7"/></svg></div>
+        <div class="stat-content"><div class="stat-label">Saudi</div><div class="stat-value-row"><span class="stat-value" id="emp-stat-saudi">0</span></div><div class="stat-subtext" id="stat-sub-saudi">—</div></div>
+        <div class="stat-spark" id="spark-saudi"></div>
+      </div>
+      <div class="card-body-flush"><div class="progress-thin"><div class="bar" id="bar-saudi" style="width:0%;background:var(--green)"></div></div></div>
+    </div>
+    <div class="card">
+      <div class="stat">
+        <div class="stat-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l1-5h16l1 5M3 9v10a2 2 0 002 2h14a2 2 0 002-2V9M3 9h18"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/></svg></div>
+        <div class="stat-content"><div class="stat-label">Expat</div><div class="stat-value-row"><span class="stat-value" id="emp-stat-expat">0</span></div><div class="stat-subtext" id="stat-sub-expat">—</div></div>
+        <div class="stat-spark" id="spark-expat"></div>
+      </div>
+      <div class="card-body-flush"><div class="progress-thin"><div class="bar" id="bar-expat" style="width:0%;background:var(--blue)"></div></div></div>
+    </div>
+    <div class="card">
+      <div class="stat">
+        <div class="stat-icon purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg></div>
+        <div class="stat-content"><div class="stat-label">Deployed</div><div class="stat-value-row"><span class="stat-value" id="emp-stat-deployed">0</span></div><div class="stat-subtext" id="stat-sub-deployed">—</div></div>
+        <div class="stat-spark" id="spark-deployed"></div>
+      </div>
+      <div class="card-body-flush"><div class="progress-thin"><div class="bar" id="bar-deployed" style="width:0%;background:var(--purple)"></div></div></div>
+    </div>
+    <div class="card">
+      <div class="stat">
+        <div class="stat-icon yellow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 21v-9"/><path d="M12 12C8 12 5 10 4 6c4 0 7 2 8 4 1-2 4-4 8-4-1 4-4 6-8 6z"/></svg></div>
+        <div class="stat-content"><div class="stat-label">Bench</div><div class="stat-value-row"><span class="stat-value" id="emp-stat-bench">0</span></div><div class="stat-subtext" id="stat-sub-bench">Available</div></div>
+        <div class="stat-spark" id="spark-bench"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="stat">
+        <div class="stat-icon red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v12M9 10l3 3 3-3"/></svg></div>
+        <div class="stat-content"><div class="stat-label">Saudization</div><div class="stat-value-row"><span class="stat-value" id="emp-stat-saud">0%</span></div><div class="stat-subtext" id="stat-sub-saud">—</div></div>
+        <div class="stat-spark" id="spark-saud"></div>
+      </div>
+      <div class="card-body-flush"><div class="progress-thin"><div class="bar" id="bar-saud" style="width:0%;background:var(--red)"></div></div></div>
+    </div>
+  </div>
+
+  <!-- EXPIRY REPORT — percentages -->
+  <div class="card" id="expiry-report" style="margin-bottom:12px;padding:10px 14px;display:flex;gap:16px;flex-wrap:wrap;align-items:center;font-size:12.5px"></div>
+
+  <!-- TOOLBAR — single rail -->
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-body" style="display:flex;gap:8px;align-items:center;overflow-x:auto;padding:12px;flex-wrap:nowrap">
+      <input type="date" class="form-control" id="emp-date" style="min-width:140px" aria-label="Join date">
+      <select class="form-control" id="emp-sponsor" style="min-width:130px" aria-label="Sponsor"><option value="">All sponsors</option></select>
+      <select class="form-control" id="emp-dept" style="min-width:130px" aria-label="Department"><option value="">All departments</option></select>
+      <select class="form-control" id="emp-prof" style="min-width:130px" aria-label="Profession"><option value="">All professions</option></select>
+      <select class="form-control" id="emp-status" style="min-width:120px" aria-label="Status"><option value="">All statuses</option><option value="active">Active</option><option value="probation">Probation</option><option value="on-leave">On leave</option><option value="huroob">Huroob</option><option value="exited">Exited</option></select>
+      <select class="form-control" id="emp-group" style="min-width:110px" aria-label="Group"><option value="">All groups</option><option value="saudi">Saudi</option><option value="expat">Expat</option></select>
+      <select class="form-control" id="emp-nat" style="min-width:130px" aria-label="Nationality"><option value="">All nationalities</option></select>
+      <select class="form-control" id="emp-qiwa" style="min-width:110px" aria-label="Qiwa"><option value="">All Qiwa</option><option value="authenticated">Authenticated</option><option value="sent">Sent</option><option value="draft">Draft</option></select>
+      <select class="form-control" id="emp-iqama" style="min-width:110px" aria-label="Iqama"><option value="">All Iqama</option><option value="ok">OK</option><option value="le30">≤30d</option><option value="le90">≤90d</option><option value="expired">Expired</option></select>
+      <select class="form-control" id="emp-sort" style="min-width:130px" aria-label="Sort"><option value="Code">Code</option><option value="name">Name A-Z</option><option value="join">Join date</option><option value="basic">Salary</option><option value="iqamaExp">Iqama expiry</option></select>
+      <span class="caption-muted" id="emp-count" style="margin-inline-start:auto;font-size:12px;white-space:nowrap"></span>
+    </div>
+  </div>
+  <style>#emp-advanced[hidden]{display:none !important} div.dataTables_wrapper div.dataTables_filter, div.dataTables_wrapper div.dataTables_length{display:none !important}</style>
+
+  <!-- TABLE — half screen from here -->
+  <div class="card" style="min-height:50vh;display:flex;flex-direction:column">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table" data-datatable data-page-length="10" data-orderable="true">
+          <thead style="background:var(--primary-lt)">
+            <tr>
+              <th class="cb-col"><input type="checkbox" id="emp-select-all" aria-label="Select all"></th>
+              <th data-sort="code" style="min-width:110px">Employee ID</th>
+              <th style="min-width:40px">Edit</th>
+              <th data-sort="name" style="min-width:170px">Employee</th>
+              <th data-sort="nat">Nationality</th>
+              <th>Sponsor</th>
+              <th>Iqama Status</th>
+              <th data-sort="iqamaExp">Expiry Date</th>
+              <th>Iqama Profession</th>
+              <th>Employment Type</th>
+              <th>Work Status</th>
+              <th>Site / City</th>
+              <th>Hired By</th>
+              <th>Reference</th>
+              <th>Document Status</th>
+              <th>Vacation Eligible</th>
+              <th>Transfers</th>
+              <th>Insurance</th>
+            </tr>
+          </thead>
+          <tbody id="emp-rows"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+</main>
+
+<script type="module">
+import { initEmployees } from '/src/v4/employees.js';
+initEmployees();
+</script>
+
+</body>
+</html>

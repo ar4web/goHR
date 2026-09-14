@@ -1,4 +1,4 @@
-// HR + Operations — audit log (hr_audit.html).
+// HR + Operations — audit log (audit.html).
 // Seed history plus live entries appended by P6 mutations; newest first,
 // read-only feed. Exportable for auditors.
 

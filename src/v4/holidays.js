@@ -1,4 +1,4 @@
-// HR + Operations — Hijri holidays (hr_holidays.html).
+// HR + Operations — Hijri holidays (holidays.html).
 // Register + weekend-shifted observance + custom days. Idempotent.
 
 import { showToast } from './toast.js';

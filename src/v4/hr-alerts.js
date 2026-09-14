@@ -26,7 +26,7 @@ export function hrAlerts() {
           sticky: true,
           from: L('Iqama expiring', 'الإقامة تنتهي'),
           text: `${e.code} · ${empName(e)}`,
-          href: 'hr_residency.html'
+          href: 'residency.html'
         });
       }
     }
@@ -39,7 +39,7 @@ export function hrAlerts() {
           sticky: true,
           from: L('Contract expiring', 'العقد ينتهي'),
           text: `${c.id} · ${c.party}`,
-          href: `hr_contract.html?id=${c.id}`
+          href: `contract.html?id=${c.id}`
         });
       }
     }
@@ -52,7 +52,7 @@ export function hrAlerts() {
           sticky: true,
           from: L('Ajeer expiring', 'تصريح أجير ينتهي'),
           text: `${p.no} · ${p.emp}`,
-          href: 'hr_ajeer.html'
+          href: 'ajeer.html'
         });
       }
     }

@@ -1,4 +1,4 @@
-// HR + Operations — leave (hr_leave.html).
+// HR + Operations — leave (leave.html).
 // Balances + request modal with KSA guards + my-requests. Idempotent.
 
 import { showToast } from './toast.js';

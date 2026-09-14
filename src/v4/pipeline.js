@@ -1,4 +1,4 @@
-// HR + Operations — hiring pipeline board (hr_pipeline.html).
+// HR + Operations — hiring pipeline board (pipeline.html).
 // Stage columns with explicit move buttons (mobile-first; no drag-drop).
 // Moves share candidates.js rules — hired needs an accepted offer.
 

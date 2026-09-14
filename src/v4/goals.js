@@ -1,4 +1,4 @@
-// HR + Operations — goals / OKRs (hr_goals.html).
+// HR + Operations — goals / OKRs (goals.html).
 // Owner + metric + target/current + due + status; progress bars derive from
 // current/target.
 

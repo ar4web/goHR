@@ -1,4 +1,4 @@
-// HR + Operations — job requisitions (hr_jobs.html).
+// HR + Operations — job requisitions (jobs.html).
 // Housing + transport are mandatory benefit-or-allowance (§0.4): a requisition
 // with either at zero cannot be saved.
 
@@ -66,7 +66,7 @@ function renderAll() {
       .map(j => {
         const acts = [
           `<button class="btn btn-outline btn-sm" data-edit="${j.id}">${L('Edit', 'تحرير')}</button>`,
-          `<a class="btn btn-outline btn-sm" href="hr_candidates.html?job=${j.id}">${L('Candidates', 'المرشحون')}</a>`
+          `<a class="btn btn-outline btn-sm" href="candidates.html?job=${j.id}">${L('Candidates', 'المرشحون')}</a>`
         ];
         if (j.status === 'open' || j.status === 'draft') {
           acts.push(

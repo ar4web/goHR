@@ -1,4 +1,4 @@
-// HR + Operations — bilingual payslip (hr_payslip.html).
+// HR + Operations — bilingual payslip (payslip.html).
 // Rendered from the pay-run line (calcPayLine); GOSI-only deductions —
 // KSA has no personal income tax and no wage withholding (§0.9).
 

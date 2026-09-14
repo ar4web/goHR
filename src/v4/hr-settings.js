@@ -1,4 +1,4 @@
-// HR + Operations — customization center (hr_settings.html).
+// HR + Operations — customization center (settings.html).
 // Brand · Nitaqat · Licence · Language · Departments · Professions · Reset.
 
 import { showToast } from './toast.js';
@@ -704,10 +704,10 @@ function renderLinks() {
     return;
   }
   el.innerHTML = `<div style="display:flex;gap:8px;flex-wrap:wrap">
-    <a class="btn btn-outline btn-sm" href="hr_roles.html">${L('Roles & access', 'الأدوار والصلاحيات')}</a>
-    <a class="btn btn-outline btn-sm" href="hr_departments.html">${L('Departments', 'الإدارات')}</a>
-    <a class="btn btn-outline btn-sm" href="hr_audit.html">${L('Audit log', 'سجل التدقيق')}</a>
-    <a class="btn btn-outline btn-sm" href="hr_reports.html">${L('Reports', 'التقارير')}</a>
+    <a class="btn btn-outline btn-sm" href="roles.html">${L('Roles & access', 'الأدوار والصلاحيات')}</a>
+    <a class="btn btn-outline btn-sm" href="departments.html">${L('Departments', 'الإدارات')}</a>
+    <a class="btn btn-outline btn-sm" href="audit.html">${L('Audit log', 'سجل التدقيق')}</a>
+    <a class="btn btn-outline btn-sm" href="reports.html">${L('Reports', 'التقارير')}</a>
   </div>`;
 }
 

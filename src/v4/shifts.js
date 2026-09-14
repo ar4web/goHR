@@ -1,4 +1,4 @@
-// HR + Operations — shifts & Ramadan (hr_shifts.html).
+// HR + Operations — shifts & Ramadan (shifts.html).
 // Shift templates + site mapping + Ramadan periods. Idempotent.
 
 import { showToast } from './toast.js';

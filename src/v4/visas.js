@@ -1,4 +1,4 @@
-// HR + Operations — visa register (hr_visas.html).
+// HR + Operations — visa register (visas.html).
 // Blocks + per-worker visas + arrival recording + agent costing. Idempotent.
 
 import { showToast } from './toast.js';
@@ -116,9 +116,9 @@ function renderRegister() {
     visibleVisas()
       .map(v => {
         const who = v.emp
-          ? `<a href="hr_employee.html?code=${encodeURIComponent(v.emp)}">${esc(empName(v.emp))}</a>`
+          ? `<a href="employee.html?code=${encodeURIComponent(v.emp)}">${esc(empName(v.emp))}</a>`
           : v.ob
-            ? `<a href="hr_onboarding.html?case=${encodeURIComponent(v.ob)}">${esc(obName(v.ob))}</a>`
+            ? `<a href="onboarding.html?case=${encodeURIComponent(v.ob)}">${esc(obName(v.ob))}</a>`
             : '<span style="color:var(--text-muted)">—</span>';
         const blk = VISA_BLOCKS.find(b => b.id === v.block);
         return `<tr>

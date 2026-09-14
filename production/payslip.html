@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="nav.hr-payroll">Payslip | HRGO</title>
+<link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
+<script type="module" src="/src/main-v4.js"></script>
+</head>
+<body data-shell="admin" data-page="payroll" data-breadcrumb="Home > Pay runs > Payslip">
+
+<main class="main">
+<div class="page-wrapper" data-hr-payslip>
+
+  <div class="page-header">
+    <div class="page-header-row">
+      <div>
+        <div class="page-pretitle" data-i18n="hr.ui.pretitle">HR &amp; Operations</div>
+        <h1 class="page-title" data-i18n="hr.p4.payslip">Payslip</h1>
+      </div>
+      <div class="page-actions">
+        <a class="btn btn-outline" href="payroll.html" data-i18n="hr.p4.back">Back</a>
+        <button class="btn btn-primary" id="ps-print" data-i18n="common.print">Print</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <div class="hr-form-2col">
+        <div class="form-group"><label class="form-label" for="ps-run" data-i18n="hr.p4.run">Pay run</label>
+          <select class="form-control" id="ps-run" dir="ltr"></select></div>
+        <div class="form-group"><label class="form-label" for="ps-emp" data-i18n="hr.p4.employee">Employee</label>
+          <select class="form-control" id="ps-emp"></select></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body" id="ps-doc"></div>
+  </div>
+
+</div>
+</main>
+
+<script type="module">
+import { initPayslip } from '/src/v4/payslip.js';
+initPayslip();
+</script>
+
+</body>
+</html>

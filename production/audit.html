@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="nav.hr-audit">Audit log | HRGO</title>
+<link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
+<script type="module" src="/src/main-v4.js"></script>
+</head>
+<body data-shell="admin" data-page="audit" data-breadcrumb="Home > Audit log">
+
+<main class="main">
+<div class="page-wrapper" data-hr-audit>
+
+  <div class="page-header">
+    <div class="page-header-row">
+      <div>
+        <div class="page-pretitle" data-i18n="hr.ui.pretitle">HR &amp; Operations</div>
+        <h1 class="page-title" data-i18n="nav.hr-audit">Audit log</h1>
+      </div>
+      <div class="page-actions">
+        <button class="btn btn-outline" id="au-export-xlsx">Excel</button>
+        <button class="btn btn-outline" id="au-export-csv">CSV</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="hr-stat-cards">
+    <div class="hr-stat"><div class="k" data-i18n="hr.p6.entries">Entries</div><div class="v" id="au-stat-total">0</div></div>
+    <div class="hr-stat"><div class="k" data-i18n="hr.p6.todayEntries">Today</div><div class="v" id="au-stat-today">0</div></div>
+    <div class="hr-stat"><div class="k" data-i18n="hr.p6.actors">Actors</div><div class="v" id="au-stat-actors">0</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <div class="hr-form-2col">
+        <div class="form-group">
+          <label class="form-label" for="au-q" data-i18n="hr.p6.search">Search actor / action / detail…</label>
+          <input class="form-control" id="au-q">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="au-from" data-i18n="hr.p6.date">Date</label>
+          <input class="form-control" id="au-from" type="date" dir="ltr">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table hr-table">
+          <thead><tr>
+            <th>#</th>
+            <th data-i18n="hr.p6.at">At</th>
+            <th data-i18n="hr.p6.actor">Actor</th>
+            <th data-i18n="hr.p6.action">Action</th>
+            <th data-i18n="hr.p6.entity">Entity</th>
+            <th data-i18n="hr.p6.detail">Detail</th>
+          </tr></thead>
+          <tbody id="au-rows"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+</main>
+
+<script type="module">
+import { initAudit } from '/src/v4/audit.js';
+initAudit();
+</script>
+
+</body>
+</html>

@@ -1,4 +1,4 @@
-// HR + Operations — site attendance (hr_attendance.html).
+// HR + Operations — site attendance (attendance.html).
 // Day board + check-in/out + 14-day history. Idempotent.
 
 import { showToast } from './toast.js';
@@ -76,7 +76,7 @@ function renderRows() {
     rows
       .map(
         r => `<tr>
-      <td data-label="${L('Worker', 'العامل')}"><a href="hr_employee.html?code=${r.emp}">${empName(r.emp)}</a>
+      <td data-label="${L('Worker', 'العامل')}"><a href="employee.html?code=${r.emp}">${empName(r.emp)}</a>
         <div style="font-size:11.5px;color:var(--text-muted)" dir="ltr">${r.emp}</div></td>
       <td data-label="${L('Site', 'الموقع')}" style="font-size:12.5px">${siteName(r.site)}</td>
       <td data-label="${L('In', 'حضور')}" dir="ltr">${r.in || '—'}</td>
