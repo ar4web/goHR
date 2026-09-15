@@ -1,23 +1,15 @@
-// Dash — service worker
+// goHR — service worker
 // Strategy: cache-first for hashed assets (Vite emits content-hashed URLs),
-// network-first for HTML so navigations always pull the freshest shell, with
-// a fallback to the offline page when the network is unavailable.
+// network-first for HTML so navigations always pull the freshest shell.
 
-// Bump the suffix on every release to bust users' caches when CSS/JS hashes
-// change but the same URL is requested. Activate handler clears old caches.
-const CACHE = 'dash-v1-r1';
+// Bump the suffix on every release to bust users' caches when CSS/JS hashes change.
+const CACHE = 'gohr-v1';
 
-// Subpath-aware: scope is the directory the SW is registered against. Under
-// `/` it's `https://example.com/`; under `/Dash/` it's that
-// path. Resolving relative URLs against the scope makes the SW work in both.
 const SCOPE = self.registration?.scope || self.location.origin + '/';
-const OFFLINE_URL = new URL('production/offline.html', SCOPE).href;
-const PRECACHE = [OFFLINE_URL];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE)
-      .then((c) => c.addAll(PRECACHE).catch(() => {}))
       .then(() => self.skipWaiting())
   );
 });
@@ -38,7 +30,7 @@ self.addEventListener('fetch', (event) => {
   // Only handle same-origin requests; pass through cross-origin (Google Fonts, CDNs, etc.).
   if (url.origin !== self.location.origin) return;
 
-  // HTML — network first, fallback to cache, then offline page.
+  // HTML — network first, fallback to cache.
   if (req.mode === 'navigate' || req.headers.get('accept')?.includes('text/html')) {
     event.respondWith(
       fetch(req)
@@ -47,7 +39,7 @@ self.addEventListener('fetch', (event) => {
           caches.open(CACHE).then((c) => c.put(req, copy)).catch(() => {});
           return res;
         })
-        .catch(async () => (await caches.match(req)) || (await caches.match(OFFLINE_URL)) || Response.error())
+        .catch(async () => (await caches.match(req)) || Response.error())
     );
     return;
   }
