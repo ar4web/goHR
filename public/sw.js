@@ -3,7 +3,7 @@
 // network-first for HTML so navigations always pull the freshest shell.
 
 // Bump the suffix on every release to bust users' caches when CSS/JS hashes change.
-const CACHE = 'gohr-v1';
+const CACHE = 'gohr-v2';
 
 const SCOPE = self.registration?.scope || self.location.origin + '/';
 

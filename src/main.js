@@ -39,6 +39,21 @@ if ('serviceWorker' in navigator && import.meta.env.PROD) {
   });
 }
 
+// DEV self-heal: an older build may have registered a service worker on this
+// origin. A stale SW (or its pre-cached assets) can make the dev server look
+// like it is "not loading" even though the server responds fine. Remove any
+// registered SW and stale caches whenever we run in development.
+if (import.meta.env.DEV && 'serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.getRegistrations().then(regs => {
+      regs.forEach(r => r.unregister());
+    }).catch(() => { /* ignore */ });
+    if (window.caches && window.caches.keys) {
+      window.caches.keys().then(keys => keys.forEach(k => window.caches.delete(k))).catch(() => {});
+    }
+  });
+}
+
 // goHR main dashboard (index.html)
 if (document.querySelector('[data-page="dashboard"]')) {
   import('./components/index-dashboard.js').then(m => m.initIndexDashboard());
