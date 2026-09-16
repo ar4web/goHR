@@ -564,12 +564,8 @@ export function applyShellI18n() {
   if (settingsToggle) {
     settingsToggle.textContent = t('hr.navgroup.settings');
   }
-  // Topbar language toggle shows a compact single letter of the active
-  // language: E (English) or ع (Arabic).
-  const langLabel = document.getElementById('topbar-lang-label');
-  if (langLabel) {
-    langLabel.textContent = currentLang() === 'ar' ? 'ع' : 'E';
-  }
+  // The language toggle is a plain icon; its accessible name is refreshed
+  // by the shell-chrome module when the language changes.
 }
 
 /** Apply owner brand (name + logo) to the sidebar. Only when saved in Settings. */

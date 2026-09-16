@@ -279,8 +279,12 @@ function updateChromeStrings() {
   setLabel('lang-toggle', 'common.language');
   setLabel('topbar-user', 'nav.profile');
   setLabel('sidebar-settings', 'nav.settings');
-  const langLabel = document.getElementById('topbar-lang-label');
-  if (langLabel) {langLabel.textContent = ar ? 'ع' : 'E';}
+  const langBtn = document.getElementById('lang-toggle');
+  if (langBtn) {
+    langBtn.setAttribute('title', t('common.language'));
+    // Announce the active language while keeping the icon identical.
+    langBtn.setAttribute('aria-label', ar ? 'اللغة · العربية' : 'Language · English');
+  }
 }
 
 // ── Boot ──────────────────────────────────────────────────────────────────

@@ -272,7 +272,12 @@ body.page-leave { opacity: 0; }
   outline: 2px solid var(--primary-dk);
   outline-offset: 1px;
 }
-.topbar-icon-btn svg { width: 19px; height: 19px; }
+.topbar-icon-btn svg { width: 21px; height: 21px; }
+// The bell and envelope glyphs read slightly small at equal size — nudge
+// them up so the whole topbar icon set looks optically balanced.
+#topbar-notifications svg,
+#topbar-messages svg { width: 22px; height: 22px; }
+#theme-toggle svg { width: 21px; height: 21px; }
 :root[data-theme='light'] .theme-icon-sun { display: none; }
 :root[data-theme='dark'] .theme-icon-moon { display: none; }
 :root[data-theme='dark'] .theme-icon-sun { color: var(--yellow); }
@@ -299,17 +304,6 @@ body.page-leave { opacity: 0; }
   pointer-events: none;
 }
 .topbar-btn-dot-blue { background: var(--blue); }
-
-// Language toggle — compact single letter (E / ع), same ghost treatment
-// as the icon buttons.
-.topbar-lang { color: var(--text-secondary); font-weight: 700; }
-.topbar-lang #topbar-lang-label {
-  font-size: 13px;
-  line-height: 1;
-  font-weight: 700;
-}
-:root[dir='rtl'] .topbar-lang #topbar-lang-label { font-size: 15px; }
-.topbar-lang:hover #topbar-lang-label { color: var(--primary); }
 
 // Profile trigger — avatar only, no chip border/name/chevron.
 .topbar-user {
