@@ -68,7 +68,28 @@ const STR = {
     'common.markAllRead': 'Mark all read',
     'common.allMarkedRead': 'All notifications marked read',
     'common.viewAllNotif': 'View all notifications',
-    'common.searchPh': 'Search pages or run a commandΓÇª',
+    'common.searchPh': 'Search pages or run a command…',
+    'common.messages': 'Messages',
+    'common.language': 'Language',
+    'common.appearance': 'Appearance',
+    'common.signOut': 'Sign out',
+    'common.signedOut': 'Signed out (demo)',
+    'common.preferences': 'Preferences',
+    'common.employeeDirectory': 'Employee directory',
+    'common.emptyInbox': 'You’re all caught up',
+    'notif.huroob': 'Huroob case',
+    'notif.iqamaExpired': 'Iqama expired',
+    'notif.iqamaExpiring': 'Iqama expiring',
+    'notif.qiwaDraft': 'Qiwa contract draft',
+    'notif.dayShort': 'd',
+    'notif.today': 'Today',
+    'profile.role': 'HR Manager',
+    'msg.rec': 'Recruitment',
+    'msg.recBody': '3 new candidates for Site Engineer',
+    'msg.pay': 'Payroll',
+    'msg.payBody': 'September payroll is ready for review',
+    'msg.gosi': 'GOSI',
+    'msg.gosiBody': 'Monthly GOSI submission completed',
     'status.active': 'Active',
     'status.probation': 'Probation',
     'status.on-leave': 'On leave',
@@ -269,6 +290,27 @@ const STR = {
     'common.allMarkedRead': '╪¬┘à ╪¬╪╣┘è┘è┘å ┘â┘ä ╪º┘ä╪¬┘å╪¿┘è┘ç╪º╪¬ ┘â┘à┘é╪▒┘ê╪í╪⌐',
     'common.viewAllNotif': '╪╣╪▒╪╢ ┘â┘ä ╪º┘ä╪¬┘å╪¿┘è┘ç╪º╪¬',
     'common.searchPh': '╪º╪¿╪¡╪½ ┘ü┘è ╪º┘ä╪╡┘ü╪¡╪º╪¬ ╪ú┘ê ┘å┘ü┘æ╪░ ╪ú┘à╪▒┘ï╪ºΓÇª',
+    'common.messages': 'الرسائل',
+    'common.language': 'اللغة',
+    'common.appearance': 'المظهر',
+    'common.signOut': 'تسجيل الخروج',
+    'common.signedOut': 'تم تسجيل الخروج (نسخة تجريبية)',
+    'common.preferences': 'التفضيلات',
+    'common.employeeDirectory': 'دليل الموظفين',
+    'common.emptyInbox': 'لا تنبيهات جديدة',
+    'notif.huroob': 'بلاغ هروب',
+    'notif.iqamaExpired': 'انتهت الإقامة',
+    'notif.iqamaExpiring': 'الإقامة على وشك الانتهاء',
+    'notif.qiwaDraft': 'مسودة عقد قوى',
+    'notif.dayShort': 'يوم',
+    'notif.today': 'اليوم',
+    'profile.role': 'مدير الموارد البشرية',
+    'msg.rec': 'التوظيف',
+    'msg.recBody': '٣ مرشحين جدد لوظيفة مهندس موقع',
+    'msg.pay': 'الرواتب',
+    'msg.payBody': 'رواتب سبتمبر جاهزة للمراجعة',
+    'msg.gosi': 'التأمينات',
+    'msg.gosiBody': 'اكتمل تقديم التأمينات الشهري',
     'status.active': '┘å╪┤╪╖',
     'status.probation': '┘ü╪¬╪▒╪⌐ ╪¬╪¼╪▒╪¿╪⌐',
     'status.on-leave': '┘ü┘è ╪Ñ╪¼╪º╪▓╪⌐',
@@ -516,13 +558,14 @@ export function applyShellI18n() {
   if (settingsToggle) {
     settingsToggle.textContent = t('hr.navgroup.settings');
   }
-  const search = document.querySelector('.topbar .search-box input');
-  if (search) {
-    search.setAttribute('placeholder', t('common.searchPh'));
+  // Topbar language pill shows the language currently in use.
+  const langLabel = document.getElementById('topbar-lang-label');
+  if (langLabel) {
+    langLabel.textContent = currentLang() === 'ar' ? 'ع' : 'EN';
   }
-  const toggle = document.getElementById('lang-toggle');
-  if (toggle) {
-    toggle.textContent = currentLang() === 'ar' ? 'EN' : '╪╣╪▒╪¿┘è';
+  const userRole = document.getElementById('topbar-user-role');
+  if (userRole) {
+    userRole.textContent = t('profile.role');
   }
 }
 

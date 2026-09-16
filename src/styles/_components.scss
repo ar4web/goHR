@@ -466,6 +466,60 @@ table.hr-table td:last-child .card-opt-btn {
 .menu-panel .panel-icon-info  { background: var(--blue-lt);   color: var(--blue); }
 .menu-panel .panel-icon-task  { background: var(--primary-lt); color: var(--primary); }
 .menu-panel .panel-icon-alert { background: var(--red-lt);    color: var(--red); }
+.menu-panel .panel-icon-warn  { background: var(--yellow-lt); color: var(--yellow); }
+.menu-panel .panel-icon-ok    { background: var(--green-lt);  color: var(--green); }
+.menu-panel .panel-empty {
+  padding: 30px 16px;
+  text-align: center;
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+// menu-item works as an <a> (full-width) and supports a danger tone.
+a.menu-item {
+  width: 100%;
+  color: inherit;
+  text-decoration: none;
+}
+.menu-item-danger { color: var(--red); }
+.menu-item-danger:hover { background: var(--red-lt); }
+// User chip popover head.
+.user-panel-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border-bottom: 1px solid var(--border-color-light);
+}
+.user-panel-avatar {
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dk));
+  color: var(--on-primary);
+  font-size: 15px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.user-panel-id {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+.user-panel-id strong { font-size: 13.5px; color: var(--text); }
+.user-panel-id span { font-size: 11.5px; color: var(--text-muted); }
+.user-panel-role { margin-top: 2px; }
+// Settings rows show their current value at the far end.
+.panel-row .settings-state {
+  align-self: center;
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--primary);
+}
 .menu-panel .panel-avatar {
   width: 28px; height: 28px;
   border-radius: 50%;

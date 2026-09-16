@@ -10,9 +10,11 @@ import { initCommandPalette } from './components/command-palette.js';
 import { initPageActions } from './components/page-actions.js';
 import { initI18n } from './components/i18n.js';
 import { initTheme } from './components/theme.js';
+import { initShellChrome } from './components/shell-chrome.js';
 
 mountShell();
 initTheme();
+initShellChrome();
 initI18n();
 // Heavy last: charts (echarts) + grids (datatables) mount after first paint
 // so shell, text and LCP settle first. Skeletons cover the wait; idle fires
