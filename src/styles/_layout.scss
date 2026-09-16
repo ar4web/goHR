@@ -272,12 +272,14 @@ body.page-leave { opacity: 0; }
   outline: 2px solid var(--primary-dk);
   outline-offset: 1px;
 }
-.topbar-icon-btn svg { width: 21px; height: 21px; }
-// The bell and envelope glyphs read slightly small at equal size — nudge
-// them up so the whole topbar icon set looks optically balanced.
-#topbar-notifications svg,
-#topbar-messages svg { width: 22px; height: 22px; }
-#theme-toggle svg { width: 21px; height: 21px; }
+// Every topbar glyph shares one size, stroke and round caps so the set
+// reads as a single icon pack.
+.topbar-icon-btn svg {
+  width: 20px;
+  height: 20px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
 :root[data-theme='light'] .theme-icon-sun { display: none; }
 :root[data-theme='dark'] .theme-icon-moon { display: none; }
 :root[data-theme='dark'] .theme-icon-sun { color: var(--yellow); }
