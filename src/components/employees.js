@@ -456,11 +456,11 @@ async function mountDataTable() {
     ordering: false,
     order: [],
     language: {
-      info: 'Showing _START_–_END_ of _TOTAL_',
-      infoEmpty: 'No matching records',
-      infoFiltered: '(of _MAX_ total)',
-      zeroRecords: 'No matches found',
-      paginate: { previous: '←', next: '→' }
+      info: t('dt.info'),
+      infoEmpty: t('dt.infoEmpty'),
+      infoFiltered: t('dt.infoFiltered'),
+      zeroRecords: t('dt.zero'),
+      paginate: { previous: t('dt.previous'), next: t('dt.next') }
     }
   });
 }

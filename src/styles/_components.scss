@@ -328,6 +328,8 @@ table.hr-table td:last-child .card-opt-btn {
   transition: transform 150ms;
 }
 .toggle.on::after { transform: translateX(16px); }
+// In RTL the knob travels toward the inline end (left).
+[dir='rtl'] .toggle.on::after { transform: translateX(-16px); }
 
 // ────────────────────────
 //  TOAST

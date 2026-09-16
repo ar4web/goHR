@@ -3,6 +3,57 @@
 
 import { showToast } from './toast.js';
 import { download, csvCell } from './import-export.js';
+import { t, currentLang, LANG_EVENT } from './i18n.js';
+
+const instances = [];
+let DataTableCtor = null;
+
+function tableLanguage() {
+  return {
+    search: '',
+    searchPlaceholder: t('common.searchPh'),
+    info: t('dt.info'),
+    infoEmpty: t('dt.infoEmpty'),
+    infoFiltered: t('dt.infoFiltered'),
+    zeroRecords: t('dt.zero'),
+    paginate: { previous: t('dt.previous'), next: t('dt.next') }
+  };
+}
+
+function initOneTable(table) {
+  if (table.dataset.dtInit === '1') {return null;}
+  const columnDefs = [];
+  table.querySelectorAll('thead th').forEach((th, i) => {
+    if (th.dataset.orderable === 'false') {
+      columnDefs.push({ targets: i, orderable: false });
+    }
+  });
+
+  table.dataset.dtInit = '1';
+  const dt = new DataTableCtor(table, {
+    pageLength: parseInt(table.dataset.pageLength || '10', 10),
+    lengthChange: false,
+    searching: false,
+    order: [],
+    columnDefs,
+    language: tableLanguage()
+  });
+  instances.push({ table, dt });
+
+  if (table.hasAttribute('data-selectable') || hasRowCheckboxes(table)) {
+    wireRowSelection(table);
+  }
+  if (table.hasAttribute('data-export')) {
+    wireCsvExport(table, dt);
+  }
+
+  // DataTables emits its search input without an accessible name.
+  const searchInput = table.closest('.dt-container')?.querySelector('.dt-search input');
+  if (searchInput && !searchInput.hasAttribute('aria-label')) {
+    searchInput.setAttribute('aria-label', t('dt.searchTable'));
+  }
+  return dt;
+}
 
 /**
  * Initialize DataTables on every `<table data-datatable>` on the page.
@@ -18,49 +69,28 @@ import { download, csvCell } from './import-export.js';
  * @returns {Promise<void>}
  */
 export async function initTables() {
-  const tables = document.querySelectorAll('table[data-datatable]');
-  if (!tables.length) {return;}
+  let tables = document.querySelectorAll('table[data-datatable]:not([data-dt-init="1"])');
+  if (!tables.length && !DataTableCtor) {return;}
 
-  const { default: DataTable } = await import('datatables.net');
-
-  tables.forEach((table) => {
-    const columnDefs = [];
-    table.querySelectorAll('thead th').forEach((th, i) => {
-      if (th.dataset.orderable === 'false') {
-        columnDefs.push({ targets: i, orderable: false });
+  if (!DataTableCtor) {
+    const mod = await import('datatables.net');
+    DataTableCtor = mod.default;
+    // Re-localize every table when the UI language flips (DataTables has no
+    // runtime language setter — destroy and re-init, preserving no state).
+    window.addEventListener(LANG_EVENT, () => {
+      [...instances].forEach(({ table, dt }) => {
+        if (!document.contains(table)) {return;}
+        try { dt.destroy(false); } catch (_e) { /* already gone */ }
+        delete table.dataset.dtInit;
+      });
+      for (let i = instances.length - 1; i >= 0; i--) {
+        if (!document.contains(instances[i].table)) {instances.splice(i, 1);}
       }
+      document.querySelectorAll('table[data-datatable]:not([data-dt-init="1"])').forEach(initOneTable);
     });
+  }
 
-    const dt = new DataTable(table, {
-      pageLength: parseInt(table.dataset.pageLength || '10', 10),
-      lengthChange: false,
-      searching: false,
-      order: [],
-      columnDefs,
-      language: {
-        search: '',
-        searchPlaceholder: 'Search…',
-        info: 'Showing _START_–_END_ of _TOTAL_',
-        infoEmpty: 'No matching records',
-        infoFiltered: '(of _MAX_ total)',
-        zeroRecords: 'No matches found',
-        paginate: { previous: '←', next: '→' }
-      }
-    });
-
-    if (table.hasAttribute('data-selectable') || hasRowCheckboxes(table)) {
-      wireRowSelection(table);
-    }
-    if (table.hasAttribute('data-export')) {
-      wireCsvExport(table, dt);
-    }
-
-    // DataTables emits its search input without an accessible name.
-    const searchInput = table.closest('.dt-container')?.querySelector('.dt-search input');
-    if (searchInput && !searchInput.hasAttribute('aria-label')) {
-      searchInput.setAttribute('aria-label', 'Search table');
-    }
-  });
+  tables.forEach(initOneTable);
 }
 
 function hasRowCheckboxes(table) {
@@ -78,7 +108,7 @@ function wireRowSelection(table) {
     headerCb.indeterminate = checked > 0 && checked < rowCbs.length;
     table.classList.toggle('has-selection', checked > 0);
     const counter = table.closest('.card')?.querySelector('.bulk-selection-count');
-    if (counter) {counter.textContent = checked ? `${checked} selected` : '';}
+    if (counter) {counter.textContent = checked ? t('dt.selected').replace('{n}', String(checked)) : '';}
   };
 
   if (headerCb) {
@@ -108,12 +138,12 @@ function wireCsvExport(table, dt) {
     btn.type = 'button';
     btn.className = 'btn btn-outline btn-sm';
     btn.setAttribute('data-export-btn', '');
-    btn.textContent = 'Export CSV';
+    btn.textContent = t('an.exportCsv');
     let actions = header.querySelector('.card-actions');
     if (!actions) {
       actions = document.createElement('div');
       actions.className = 'card-actions';
-      actions.style.marginLeft = 'auto';
+      actions.style.setProperty('margin-inline-start', 'auto');
       header.appendChild(actions);
     }
     actions.appendChild(btn);
@@ -147,6 +177,6 @@ function wireCsvExport(table, dt) {
     }
 
     download(filename, rows.join('\n'), 'text/csv;charset=utf-8;');
-    showToast(`Exported ${filename}`, { variant: 'success' });
+    showToast(t('dt.exported').replace('{file}', filename), { variant: 'success' });
   });
 }

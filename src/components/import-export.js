@@ -1,6 +1,6 @@
-// HR + Operations ΓÇö universal import/export engine.
-// Lists ΓåÆ CSV / Excel (.xlsx, lazy SheetJS chunk) ┬╖ Documents ΓåÆ Print/PDF ┬╖
-// Settings ΓåÆ JSON. Imports validate against a schema before anything is saved.
+// HR + Operations — universal import/export engine.
+// Lists → CSV / Excel (.xlsx, lazy SheetJS chunk) · Documents → Print/PDF ·
+// Settings → JSON. Imports validate against a schema before anything is saved.
 
 import { showToast } from './toast.js';
 import { L } from './hr-locale.js';
@@ -26,18 +26,18 @@ export function csvCell(v) {
   return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 }
 
-/** columns: [{ key, label }] ΓÇö labels become the header row (bilingual-safe). */
+/** columns: [{ key, label }] — labels become the header row (bilingual-safe). */
 export function toCSV(columns, rows) {
   const head = columns.map(c => csvCell(c.label)).join(',');
   const body = (rows || []).map(r => columns.map(c => csvCell(r[c.key])).join(','));
-  return ['\uFEFF' + head, ...body].join('\r\n'); // BOM ΓåÆ Excel opens Arabic correctly
+  return ['\uFEFF' + head, ...body].join('\r\n'); // BOM → Excel opens Arabic correctly
 }
 
 export function exportCSV(filename, columns, rows) {
   const base = String(filename).replace(/\.csv$/i, '');
   download(`${base}-${stamp()}.csv`, toCSV(columns, rows), 'text/csv;charset=utf-8');
   showToast(
-    L(`Exported ${(rows || []).length} rows (CSV)`, `╪╡┘Å╪»┘æ╪▒ ${(rows || []).length} ╪╡┘ü (CSV)`),
+    L(`Exported ${(rows || []).length} rows (CSV)`, `صُدّر ${(rows || []).length} صف (CSV)`),
     { variant: 'success' }
   );
 }
@@ -57,7 +57,7 @@ export async function exportXLSX(filename, columns, rows, sheetName = 'Sheet1') 
   XLSX.utils.book_append_sheet(wb, ws, sheetName);
   XLSX.writeFile(wb, `${filename}-${stamp()}.xlsx`);
   showToast(
-    L(`Exported ${(rows || []).length} rows (Excel)`, `╪╡┘Å╪»┘æ╪▒ ${(rows || []).length} ╪╡┘ü (Excel)`),
+    L(`Exported ${(rows || []).length} rows (Excel)`, `صُدّر ${(rows || []).length} صف (Excel)`),
     { variant: 'success' }
   );
 }
@@ -67,7 +67,7 @@ export function exportData(format, filename, columns, rows, sheetName) {
     return exportXLSX(filename, columns, rows, sheetName);
   }
   if (format === 'pdf') {
-    showToast(L('Use Print ΓåÆ Save as PDF for documents', '╪º╪│╪¬╪«╪»┘à ╪º┘ä╪╖╪¿╪º╪╣╪⌐ ΓåÉ ╪¡┘ü╪╕ PDF ┘ä┘ä┘à╪│╪¬┘å╪»╪º╪¬'), {
+    showToast(L('Use Print → Save as PDF for documents', 'استخدم الطباعة ← حفظ PDF للمستندات'), {
       variant: 'info'
     });
     window.print();
@@ -101,7 +101,7 @@ export async function templateXLSX(filename, columns, exampleRow) {
   XLSX.writeFile(wb, `${filename}-template.xlsx`);
 }
 
-// ΓÇö Parsing ΓÇö
+// — Parsing —
 
 function parseCSVText(text) {
   const rows = [];

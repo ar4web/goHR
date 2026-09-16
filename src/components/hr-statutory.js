@@ -1,4 +1,4 @@
-// HR + Operations ΓÇö KSA statutory engine (single versioned source).
+// HR + Operations — KSA statutory engine (single versioned source).
 // ONLY this module may contain KSA rates/rules. Everything else imports from here.
 // Overrides (Nitaqat/licence/levy) merge from Settings store (localStorage in seed mode).
 
@@ -19,7 +19,7 @@ import {
 
 export const SETTINGS_KEY = 'hr:settings:v1';
 
-// ΓöÇΓöÇ Customization store (Settings page reads/writes this shape) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+// ── Customization store (Settings page reads/writes this shape) ──────────
 // company: brand placeholders the owner completes in Settings.
 // nitaqat: activity category / size band / target % (owner sets later).
 // licence: service vs labour outsourcing scope (owner/counsel sets later).
@@ -92,7 +92,7 @@ function asCompanyList(v) {
   return Array.isArray(v) ? v : [];
 }
 
-// Legacy single-company shape ΓåÆ companies array (one-time, on read).
+// Legacy single-company shape → companies array (one-time, on read).
 function migrateCompanies(stored) {
   if (asCompanyList(stored.companies).length) {
     return stored;
@@ -133,7 +133,7 @@ export function getSettings() {
   const base = JSON.parse(JSON.stringify(DEFAULT_SETTINGS));
   const merged = mergeDeep(base, migrateCompanies(storedSettings()));
   // Derived view: every existing `s.company.*` reader keeps working and
-  // always sees the ACTIVE company (2ΓÇô3 companies supported).
+  // always sees the ACTIVE company (2–3 companies supported).
   merged.company = getActiveCompany(merged);
   return merged;
 }
@@ -141,7 +141,7 @@ export function getSettings() {
 /** Persist full or partial settings; returns the merged result. */
 export function saveSettings(next) {
   const merged = mergeDeep(getSettings(), next || {});
-  delete merged.company; // derived view only ΓÇö companies[] is the source
+  delete merged.company; // derived view only — companies[] is the source
   try {
     localStorage.setItem(SETTINGS_KEY, JSON.stringify(merged));
   } catch (_e) {
@@ -150,7 +150,7 @@ export function saveSettings(next) {
   return getSettings();
 }
 
-// ΓöÇΓöÇ Multi-company + letters API ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+// ── Multi-company + letters API ────────────────────────────────────────────
 export function getCompanies() {
   return asCompanyList(getSettings().companies);
 }
@@ -278,7 +278,7 @@ export function getEosbConfig() {
   return { ...SEED_EOSB, ...(s.eosb || {}) };
 }
 
-// ΓöÇΓöÇ Dates ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+// ── Dates ────────────────────────────────────────────────────────────────
 
 export function daysUntil(iso, fromIso) {
   const from = fromIso ? new Date(fromIso) : new Date();
@@ -294,7 +294,7 @@ export function yearsBetween(fromIso, toIso) {
   return Math.max(0, y);
 }
 
-// ΓöÇΓöÇ GOSI ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+// ── GOSI ─────────────────────────────────────────────────────────────────
 
 export function gosiPensionRate(atIso) {
   const at = atIso || new Date().toISOString().slice(0, 10);
@@ -345,7 +345,7 @@ function round2(n) {
   return Math.round(n * 100) / 100;
 }
 
-// ΓöÇΓöÇ EOSB (Art. 84/85) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+// ── EOSB (Art. 84/85) ────────────────────────────────────────────────────
 // endReason: termination | resignation | resignation-fixed | art80 | art81
 
 export function calcEOSB({ basic = 0, joinDate, endDate = null, endReason = 'termination' } = {}) {
@@ -385,11 +385,11 @@ export function calcEOSB({ basic = 0, joinDate, endDate = null, endReason = 'ter
   };
 }
 
-// ΓöÇΓöÇ Payroll line (P4) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+// ── Payroll line (P4) ────────────────────────────────────────────────────
 // Contract monthly wage = basic + housing + transport (seed shape; no `rate`
 // field on employees). Gross = wage + OT (hourly slice of wage/30 @1.5x) +
 // extras. Deductions carry a category; Art. 40 employer-borne cats are
-// flagged, never silently applied ΓÇö the payroll UI must refuse to save them.
+// flagged, never silently applied — the payroll UI must refuse to save them.
 
 export function calcPayLine(emp, { otH = 0, extras = 0, deductions = [], at = null } = {}) {
   const rate = (Number(emp.basic) || 0) + (Number(emp.housing) || 0) + (Number(emp.transport) || 0);
@@ -425,18 +425,18 @@ export function calcPayLine(emp, { otH = 0, extras = 0, deductions = [], at = nu
   };
 }
 
-// ΓöÇΓöÇ WPS / SIF (P4) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+// ── WPS / SIF (P4) ───────────────────────────────────────────────────────
 // Pay within the first 10 days of the following month (┬º0.7).
 
 export function wpsDeadline(month) {
   const [y, m] = String(month).split('-').map(Number);
-  const d = new Date(y, m, 10); // m is 1-based month ΓåÆ 0-based next month
+  const d = new Date(y, m, 10); // m is 1-based month → 0-based next month
   const p = n => String(n).padStart(2, '0');
   return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
 }
 
 // SIF working format v1 (pipe-delimited). Confirm the final fixed-width Mudad
-// layout with the bank/finance before first live filing ΓÇö the backend emits it.
+// layout with the bank/finance before first live filing — the backend emits it.
 export function sifBuild(month, lines) {
   const errors = [];
   const rows = (lines || []).map(l => {
@@ -460,7 +460,7 @@ export function sifBuild(month, lines) {
   return { text: [head, ...rows].join('\n') + '\n', errors, total, count: rows.length };
 }
 
-// ΓöÇΓöÇ Leave ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+// ── Leave ────────────────────────────────────────────────────────────────
 
 export function annualEntitlement(joinDate, atIso) {
   const t = LEAVE_TYPES.find(l => l.code === 'annual');
@@ -471,8 +471,8 @@ export function leaveTypes() {
   return LEAVE_TYPES;
 }
 
-// ΓöÇΓöÇ Nitaqat estimate ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
-// Weighted: full-time Saudi = 1, part-time Saudi ΓëÑ 3000 = 1/3.
+// ── Nitaqat estimate ─────────────────────────────────────────────────────
+// Weighted: full-time Saudi = 1, part-time Saudi ≥ 3000 = 1/3.
 
 export function nitaqatEstimate(employees, targetPct = 0) {
   const list = (employees || []).filter(e => e.st !== 'exited' && e.st !== 'huroob');
@@ -512,7 +512,7 @@ export function nitaqatEstimate(employees, targetPct = 0) {
   };
 }
 
-// ΓöÇΓöÇ Ajeer activation gates (┬º0.11) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+// ── Ajeer activation gates (§0.11) ───────────────────────────────────────
 
 export function ajeerCheck(assignment, employee, client, todayIso) {
   const reasons = [];
@@ -557,7 +557,7 @@ export function ajeerCheck(assignment, employee, client, todayIso) {
   return { ok: reasons.length === 0, reasons };
 }
 
-// ΓöÇΓöÇ Payroll guards ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+// ── Payroll guards ───────────────────────────────────────────────────────
 
 export function isBlockedDeduction(category) {
   return BLOCKED_DEDUCTIONS.includes((category || '').toLowerCase());
@@ -568,7 +568,7 @@ export function levyFor(bandOk = true) {
   return bandOk ? cfg.levy.reduced : cfg.levy.standard;
 }
 
-// ΓöÇΓöÇ Expiry bands + pre-renewal checklist (P1) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+// ── Expiry bands + pre-renewal checklist (P1) ─────────────────────────────
 // Renewal alert schedule: 90 / 60 / 30 / 7 days before expiry.
 
 export const EXPIRY_ALERTS = [90, 60, 30, 7];
@@ -616,7 +616,7 @@ export function renewalChecklist(emp, docs = {}) {
   ];
 }
 
-// ΓöÇΓöÇ Time & leave engine (P2) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+// ── Time & leave engine (P2) ─────────────────────────────────────────────
 // Weekend: Fri(5)+Sat(6). days param: JS getDay() numbers to skip.
 
 export const OT_RATE = 1.5;
@@ -713,7 +713,7 @@ export function timesheetDay(totalMin, { ramadan = false, weekendDay = false } =
   return { regMin, otMin, violation: totalMin > MAX_DAY_HOURS * 60 };
 }
 
-// ΓÇö P3: billing + Ajeer ΓÇö
+// — P3: billing + Ajeer —
 export const VAT_RATE = 0.15;
 
 const r2 = n => Math.round((n + Number.EPSILON) * 100) / 100;
@@ -757,7 +757,7 @@ export function professionMatch(permitProf, empProf) {
   return !!permitProf && permitProf === empProf;
 }
 
-// Licence scope guard (D11ΓÇôD12): service vs labour vs both.
+// Licence scope guard (D11–D12): service vs labour vs both.
 export function licenceScopeOk(scope, service) {
   return scope === 'both' || scope === service;
 }
@@ -771,7 +771,7 @@ export function invoiceDue(month, billingDay) {
   return d.toISOString().slice(0, 10);
 }
 
-// ΓöÇΓöÇ Contracts: placeholders + lint + dates (P5) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+// ── Contracts: placeholders + lint + dates (P5) ────────────────────────────
 // Template bodies use {{name}} placeholders drawn from records (no retyping).
 // lintTemplate blocks saves with unbalanced braces or unknown names.
 
@@ -848,7 +848,7 @@ export function lintTemplate(text) {
 export function renderTemplate(body, values = {}) {
   return String(body || '').replace(/\{\{\s*([A-Za-z0-9_]+)\s*\}\}/g, (m, k) => {
     const v = values[k];
-    return v === undefined || v === null || v === '' ? 'ΓÇªΓÇª' : String(v);
+    return v === undefined || v === null || v === '' ? '……' : String(v);
   });
 }
 
@@ -893,7 +893,7 @@ export function nitaqatWageOk(isSaudi, basic) {
   return (Number(basic) || 0) >= nitaqatWageFloor();
 }
 
-// ΓöÇΓöÇ T2 dashboard windows (pure; todayIso injectable so tests never rot) ΓöÇΓöÇΓöÇ
+// ── T2 dashboard windows (pure; todayIso injectable so tests never rot) ───
 
 // Vacation pipeline buckets for approved annual leaves. returning = anyone
 // whose last day off falls within the next 14 days (regardless of start).
@@ -956,8 +956,8 @@ export function tenureBuckets(employees, todayIso) {
   return out;
 }
 
-// ΓöÇΓöÇ T2 executive money (Zone A). Pure; formula documented in UI footnote ΓöÇΓöÇΓöÇ
-// margin = deployment billing ΓêÆ (payroll + expat levy + GOSI employer share)
+// ── T2 executive money (Zone A). Pure; formula documented in UI footnote ───
+// margin = deployment billing − (payroll + expat levy + GOSI employer share)
 // Payroll/levy/GOSI cover payable headcount only (exited + huroob excluded).
 // Levy uses the reduced band only when a Nitaqat target is configured AND met;
 // otherwise the standard band (conservative, flagged in the footnote).
@@ -1071,7 +1071,7 @@ export function execMoney({ employees, assignments, invoices, targetPct, todayIs
   };
 }
 
-// ΓöÇΓöÇ T2 ┬º1 separation series (pure; fixed window for tests) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+// ── T2 §1 separation series (pure; fixed window for tests) ─────────────────
 // Hired = joins in month (any current status). Boarded = onboarding cases
 // reaching final stage 10 that month. Exited = exitDate in month.
 export function separationSeries(employees, onboarding, todayIso, windowMo = 6) {
@@ -1094,9 +1094,9 @@ export function separationSeries(employees, onboarding, todayIso, windowMo = 6) 
   };
 }
 
-// ΓöÇΓöÇ T2 ┬º2 vacation eligibility (pure) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+// ── T2 §2 vacation eligibility (pure) ──────────────────────────────────────
 // Eligible now = payable (no exited/huroob) + probation done + annual
-// balance left + no active request (pending, or approved ending ΓëÑ today).
+// balance left + no active request (pending, or approved ending ≥ today).
 export function eligibleForVacation(employees, requests, todayIso) {
   const today = todayIso || new Date().toISOString().slice(0, 10);
   const reqs = requests || [];
@@ -1128,9 +1128,9 @@ export function eligibleForVacation(employees, requests, todayIso) {
   return out.sort((a, b) => b.left - a.left || (a.code < b.code ? -1 : 1));
 }
 
-// ΓöÇΓöÇ T2 ┬º4 expiry deck (pure) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+// ── T2 §4 expiry deck (pure) ───────────────────────────────────────────────
 // Per-doc-type bands over payable expats. Missing = no date on file (data
-// gap, shown ΓÇö never folded into another band).
+// gap, shown — never folded into another band).
 export function expiryDeck(employees, docs, todayIso) {
   const today = todayIso || new Date().toISOString().slice(0, 10);
   const docByEmp = {};
@@ -1164,7 +1164,7 @@ export function expiryDeck(employees, docs, todayIso) {
   return out;
 }
 
-// Iqama countdown bands (days until expiry): 0ΓÇô30 / 31ΓÇô60 / 61ΓÇô90.
+// Iqama countdown bands (days until expiry): 0–30 / 31–60 / 61–90.
 export function iqamaBuckets(employees, todayIso) {
   const today = todayIso || new Date().toISOString().slice(0, 10);
   const out = { le30: 0, le60: 0, le90: 0 };
@@ -1194,7 +1194,7 @@ export function contractsEnding(contracts, withinDays, todayIso) {
     .sort((a, b) => (a.end < b.end ? -1 : 1));
 }
 
-// ΓöÇΓöÇ T2 ┬º5 performance index (pure) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+// ── T2 §5 performance index (pure) ─────────────────────────────────────────
 // index = attendance 40% + goal progress 30% + praise share 20% + OT
 // discipline 10%. Signals missing for an employee are EXCLUDED and the
 // weights renormalized (documented in the UI footnote); coverage = how many
@@ -1275,7 +1275,7 @@ export function cohortTrend(codes, attendance = []) {
     }));
 }
 
-// ΓöÇΓöÇ T2 ┬º6 action-center ticker (pure) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+// ── T2 §6 action-center ticker (pure) ──────────────────────────────────────
 // Stale return = beneficiary returned the worker, 1 working day passed, and
 // the employee still sits on an active assignment (needs PRO follow-up).
 export function tickerAlerts(data = {}, settings = {}, todayIso) {

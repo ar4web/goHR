@@ -1,6 +1,6 @@
-// HR + Operations ΓÇö bilingual engine (English Γçä Arabic).
+// HR + Operations — bilingual engine (English ⇄ Arabic).
 // Pages hardcode English + data-i18n attributes; this module translates at runtime.
-// Shell (sidebar/topbar) is translated by href/label lookup ΓÇö no build-time coupling.
+// Shell (sidebar/topbar) is translated by href/label lookup — no build-time coupling.
 // Persisted per browser (hr:lang); default comes from Settings (language).
 
 import { NAV } from './shell-render.js';
@@ -40,7 +40,7 @@ const STR = {
     'nav.hr-my-team': 'My team',
     'nav.hr-departments': 'Departments',
     'nav.hr-roles': 'Roles',
-    'common.settingsSearch': 'Search settingsΓÇª',
+    'common.settingsSearch': 'Search settings…',
     'common.noMatch': 'No matching settings',
     'common.export': 'Export',
     'common.import': 'Import',
@@ -55,7 +55,7 @@ const STR = {
     'common.chooseFile': 'Choose file',
     'common.gatewayTitle': 'Who is signing in?',
     'common.gatewaySub':
-      'Pick your role to enter. No passwords on this device ΓÇö access is granted by your administrator.',
+      'Pick your role to enter. No passwords on this device — access is granted by your administrator.',
     'common.gatewayModules': 'modules',
     'common.gatewayHint': 'You can switch roles anytime from Roles & access.',
     'common.gatewayFoot': 'Internal tool ┬╖ Single-device preview',
@@ -141,7 +141,7 @@ const STR = {
     'hr.dashboard.separation': 'Hired / boarded / exited ┬╖ 6 mo',
     'hr.dashboard.hired': 'Hired',
     'hr.dashboard.exitedW': 'Exited',
-    'hr.dashboard.huroobTitle': 'Huroob ΓÇö needs legal attention',
+    'hr.dashboard.huroobTitle': 'Huroob — needs legal attention',
     'hr.dashboard.setupSteps': 'steps to go live',
     'hr.dashboard.nitaqat': 'Nitaqat',
     'hr.dashboard.heads': 'heads',
@@ -165,7 +165,7 @@ const STR = {
     'hr.dashboard.expiryDeck': 'Expiration alert deck',
     'hr.employees.saudi': 'Saudi',
     'hr.employees.expat': 'Expat',
-    'hr.company.manage': 'Manage companiesΓÇª',
+    'hr.company.manage': 'Manage companies…',
     'hr.myspace.profile': 'Profile',
     'hr.myspace.pay': "This month's pay",
     'hr.myspace.deploy': 'My deployment',
@@ -191,7 +191,7 @@ const STR = {
     'hr.p6.previewAs': 'Preview sidebar as',
     'hr.p6.savePerms': 'Save permissions',
     'hr.p6.role': 'Role',
-    'hr.p6.uxOnly': 'Display only ΓÇö the server always re-checks permissions.',
+    'hr.p6.uxOnly': 'Display only — the server always re-checks permissions.',
     'hr.ui.pretitle': 'HR & Operations',
     'hr.navgroup.settings': 'Settings',
     'hr.navgroup.system': 'System',
@@ -294,6 +294,16 @@ const STR = {
     'an.flowTitle': 'Hired / exited flow',
     'an.flowRange': '{n}-month view',
     'an.refreshed': 'Analytics refreshed',
+    // DataTables (components/tables.js)
+    'dt.info': 'Showing _START_–_END_ of _TOTAL_',
+    'dt.infoEmpty': 'No matching records',
+    'dt.infoFiltered': '(of _MAX_ total)',
+    'dt.zero': 'No matches found',
+    'dt.previous': '←',
+    'dt.next': '→',
+    'dt.selected': '{n} selected',
+    'dt.searchTable': 'Search table',
+    'dt.exported': 'Exported {file}',
     'st.reset': 'Reset workspace data',
     'st.resetD': 'Clears companies, role preview and imported rows on this device.',
     'st.saved': 'Saved'
@@ -343,7 +353,7 @@ const STR = {
     'common.chooseFile': 'اختر ملفًا',
     'common.gatewayTitle': 'من الذي يسجّل الدخول؟',
     'common.gatewaySub':
-      '╪º╪«╪¬╪▒ ╪»┘ê╪▒┘â ┘ä┘ä╪»╪«┘ê┘ä. ┘ä╪º ╪¬┘ê╪¼╪» ┘â┘ä┘à╪º╪¬ ┘à╪▒┘ê╪▒ ╪╣┘ä┘ë ┘ç╪░╪º ╪º┘ä╪¼┘ç╪º╪▓ ΓÇö ╪º┘ä╪╡┘ä╪º╪¡┘è╪º╪¬ ╪¬┘Å┘à┘å╪¡ ┘à┘å ╪º┘ä┘à╪»┘è╪▒.',
+      'اختر دورك للدخول. لا توجد كلمات مرور على هذا الجهاز — الصلاحيات تُمنح من المدير.',
     'common.gatewayModules': 'وحدة',
     'common.gatewayHint': 'يمكنك تبديل الدور في أي وقت من الأدوار والصلاحيات.',
     'common.gatewayFoot': 'أداة داخلية · معاينة لجهاز واحد',
@@ -582,6 +592,16 @@ const STR = {
     'an.flowTitle': 'تدفق التعيينات والمغادرين',
     'an.flowRange': 'عرض {n} شهرًا',
     'an.refreshed': 'تم تحديث التحليلات',
+    // DataTables (components/tables.js)
+    'dt.info': 'عرض _START_–_END_ من _TOTAL_',
+    'dt.infoEmpty': 'لا توجد سجلات مطابقة',
+    'dt.infoFiltered': '(من إجمالي _MAX_)',
+    'dt.zero': 'لا توجد نتائج مطابقة',
+    'dt.previous': '→',
+    'dt.next': '←',
+    'dt.selected': 'تم اختيار {n}',
+    'dt.searchTable': 'البحث في الجدول',
+    'dt.exported': 'تم تصدير {file}',
     'st.reset': 'إعادة تعيين بيانات مساحة العمل',
     'st.resetD': 'يمسح الشركات ومعاينة الأدوار والصفوف المستوردة على هذا الجهاز.',
     'st.saved': 'تم الحفظ'

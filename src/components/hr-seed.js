@@ -1,6 +1,6 @@
-// HR + Operations ΓÇö shared demo seed (goHR, Riyadh).
+// HR + Operations — shared demo seed (goHR, Riyadh).
 // Fictional data only (sequential fake IDs). Company profile / Nitaqat / licence
-// are placeholders ΓÇö the owner edits them in Settings (settings.html).
+// are placeholders — the owner edits them in Settings (settings.html).
 // In API mode (?api=1) these are replaced by /api/hr/* via hr-api.js.
 
 export const SEED_COMPANY = {
@@ -15,114 +15,114 @@ export const SEED_COMPANY = {
 };
 
 export const SEED_NITAQAT = {
-  activity: '', // set in Settings, e.g. "Construction ΓÇö Alexandria, VA 22302"
-  sizeClass: '', // set in Settings, e.g. "Medium (50ΓÇô499)"
+  activity: '', // set in Settings, e.g. "Construction — Alexandria, VA 22302"
+  sizeClass: '', // set in Settings, e.g. "Medium (50–499)"
   targetPct: 0, // Saudization target % for the band math
   notes: ''
 };
 
 export const SEED_LICENCE = {
-  scope: 'both', // service | labour | both ΓÇö confirm with counsel (D11)
+  scope: 'both', // service | labour | both — confirm with counsel (D11)
   licenceNo: '',
   notes: '',
   strictAjeerGuards: true // pre-2026 secondment guardrails ON until counsel relaxes
 };
 
 export const DEPARTMENTS = [
-  { code: 'OPS', en: 'Operations', ar: '╪º┘ä╪¬╪┤╪║┘è┘ä', head: 'EMP-0004', costCenter: 'CC-100' },
+  { code: 'OPS', en: 'Operations', ar: 'التشغيل', head: 'EMP-0004', costCenter: 'CC-100' },
   {
     code: 'HR',
     en: 'Human Resources',
-    ar: '╪º┘ä┘à┘ê╪º╪▒╪» ╪º┘ä╪¿╪┤╪▒┘è╪⌐',
+    ar: 'الموارد البشرية',
     head: 'EMP-0001',
     costCenter: 'CC-200'
   },
-  { code: 'FIN', en: 'Finance', ar: '╪º┘ä┘à╪º┘ä┘è╪⌐', head: 'EMP-0002', costCenter: 'CC-300' },
+  { code: 'FIN', en: 'Finance', ar: 'المالية', head: 'EMP-0002', costCenter: 'CC-300' },
   {
     code: 'PRO',
     en: 'Government Relations',
-    ar: '╪º┘ä╪╣┘ä╪º┘é╪º╪¬ ╪º┘ä╪¡┘â┘ê┘à┘è╪⌐',
+    ar: 'العلاقات الحكومية',
     head: 'EMP-0003',
     costCenter: 'CC-400'
   },
-  { code: 'REC', en: 'Recruitment', ar: '╪º┘ä╪¬┘ê╪╕┘è┘ü', head: 'EMP-0005', costCenter: 'CC-500' }
+  { code: 'REC', en: 'Recruitment', ar: 'التوظيف', head: 'EMP-0005', costCenter: 'CC-500' }
 ];
 
 export const PROFESSIONS = [
-  { code: 'driver', en: 'Driver', ar: '╪│╪º╪ª┘é' },
-  { code: 'cleaner', en: 'Cleaner', ar: '╪╣╪º┘à┘ä ┘å╪╕╪º┘ü╪⌐' },
-  { code: 'construction', en: 'Construction worker', ar: '╪╣╪º┘à┘ä ╪Ñ┘å╪┤╪º╪í╪º╪¬' },
-  { code: 'mason', en: 'Mason', ar: '╪¿┘å╪º╪í' },
-  { code: 'electrician', en: 'Electrician', ar: '┘â┘ç╪▒╪¿╪º╪ª┘è' },
-  { code: 'plumber', en: 'Plumber', ar: '╪│╪¿╪º┘â' },
-  { code: 'guard', en: 'Security guard', ar: '╪¡╪º╪▒╪│ ╪ú┘à┘å' },
-  { code: 'foreman', en: 'Foreman', ar: '┘à╪┤╪▒┘ü ╪╣┘à╪º┘ä' },
-  { code: 'office', en: 'Office assistant', ar: '┘à╪│╪º╪╣╪» ╪Ñ╪»╪º╪▒┘è' },
-  { code: 'specialist', en: 'Specialist', ar: '╪ú╪«╪╡╪º╪ª┘è' }
+  { code: 'driver', en: 'Driver', ar: 'سائق' },
+  { code: 'cleaner', en: 'Cleaner', ar: 'عامل نظافة' },
+  { code: 'construction', en: 'Construction worker', ar: 'عامل إنشاءات' },
+  { code: 'mason', en: 'Mason', ar: 'بناء' },
+  { code: 'electrician', en: 'Electrician', ar: 'كهربائي' },
+  { code: 'plumber', en: 'Plumber', ar: 'سباك' },
+  { code: 'guard', en: 'Security guard', ar: 'حارس أمن' },
+  { code: 'foreman', en: 'Foreman', ar: 'مشرف عمال' },
+  { code: 'office', en: 'Office assistant', ar: 'مساعد إداري' },
+  { code: 'specialist', en: 'Specialist', ar: 'أخصائي' }
 ];
 
 export const COMPANIES = [
-  { code: 'co-1', nameEn: 'goHR', nameAr: 'goHR', crNo: '1010XXXXXX', taxNo: '310XXXXXX', addressEn: 'Riyadh, Saudi Arabia', addressAr: '╪º┘ä╪▒┘è╪º╪╢╪î ╪º┘ä┘à┘à┘ä┘â╪⌐ ╪º┘ä╪╣╪▒╪¿┘è╪⌐ ╪º┘ä╪│╪╣┘ê╪»┘è╪⌐', phone: '+966 11 000 0000', email: 'info@example.com', website: '', isActive: true },
-  { code: 'co-2', nameEn: 'GOSI', nameAr: '╪º┘ä╪¬╪ú┘à┘è┘å╪º╪¬ ╪º┘ä╪º╪¼╪¬┘à╪º╪╣┘è╪⌐', crNo: '', taxNo: '', addressEn: 'Riyadh, Saudi Arabia', addressAr: '╪º┘ä╪▒┘è╪º╪╢╪î ╪º┘ä┘à┘à┘ä┘â╪⌐ ╪º┘ä╪╣╪▒╪¿┘è╪⌐ ╪º┘ä╪│╪╣┘ê╪»┘è╪⌐', phone: '+966 11 000 0001', email: 'info@gosi.sa', website: 'www.gosi.sa', isActive: true }
+  { code: 'co-1', nameEn: 'goHR', nameAr: 'goHR', crNo: '1010XXXXXX', taxNo: '310XXXXXX', addressEn: 'Riyadh, Saudi Arabia', addressAr: 'الرياض، المملكة العربية السعودية', phone: '+966 11 000 0000', email: 'info@example.com', website: '', isActive: true },
+  { code: 'co-2', nameEn: 'GOSI', nameAr: 'التأمينات الاجتماعية', crNo: '', taxNo: '', addressEn: 'Riyadh, Saudi Arabia', addressAr: 'الرياض، المملكة العربية السعودية', phone: '+966 11 000 0001', email: 'info@gosi.sa', website: 'www.gosi.sa', isActive: true }
 ];
 
 export const SALUTATIONS = [
-  { code: 'mr', en: 'Mr.', ar: '╪º┘ä╪│┘è╪»' },
-  { code: 'mrs', en: 'Mrs.', ar: '╪º┘ä╪│┘è╪»╪⌐' },
-  { code: 'ms', en: 'Ms.', ar: '╪º┘ä╪│┘è╪»╪⌐' },
-  { code: 'dr', en: 'Dr.', ar: '╪»┘â╪¬┘ê╪▒' },
-  { code: 'eng', en: 'Eng.', ar: '┘à┘ç┘å╪»╪│' },
-  { code: 'prof', en: 'Prof.', ar: '╪ú╪│╪¬╪º╪░' }
+  { code: 'mr', en: 'Mr.', ar: 'السيد' },
+  { code: 'mrs', en: 'Mrs.', ar: 'السيدة' },
+  { code: 'ms', en: 'Ms.', ar: 'السيدة' },
+  { code: 'dr', en: 'Dr.', ar: 'دكتور' },
+  { code: 'eng', en: 'Eng.', ar: 'مهندس' },
+  { code: 'prof', en: 'Prof.', ar: 'أستاذ' }
 ];
 
-// ΓÇö T2 Command Center seed extensions (v3 ┬º2ΓÇô┬º3, ┬º6) ΓÇö
+// — T2 Command Center seed extensions (v3 §2–§3, §6) —
 export const SKILLS = [
-  { code: 'heavy-driving', en: 'Heavy-vehicle driving', ar: '┘é┘è╪º╪»╪⌐ ╪º┘ä┘à╪╣╪»╪º╪¬ ╪º┘ä╪½┘é┘è┘ä╪⌐' },
-  { code: 'light-driving', en: 'Light-vehicle driving', ar: '┘é┘è╪º╪»╪⌐ ╪º┘ä┘à╪▒┘â╪¿╪º╪¬ ╪º┘ä╪«┘ü┘è┘ü╪⌐' },
-  { code: 'route-planning', en: 'Route planning', ar: '╪¬╪«╪╖┘è╪╖ ╪º┘ä┘à╪│╪º╪▒╪º╪¬' },
-  { code: 'deep-cleaning', en: 'Deep cleaning', ar: '╪º┘ä╪¬┘å╪╕┘è┘ü ╪º┘ä╪╣┘à┘è┘é' },
-  { code: 'waste-handling', en: 'Waste handling', ar: '╪º┘ä╪¬╪╣╪º┘à┘ä ┘à╪╣ ╪º┘ä┘å┘ü╪º┘è╪º╪¬' },
-  { code: 'housekeeping', en: 'Housekeeping', ar: '╪º┘ä╪¬╪»╪¿┘è╪▒ ╪º┘ä┘à┘å╪▓┘ä┘è' },
-  { code: 'scaffolding', en: 'Scaffolding', ar: '╪º┘ä╪│┘é╪º┘ä╪º╪¬' },
-  { code: 'concrete-work', en: 'Concrete work', ar: '╪ú╪╣┘à╪º┘ä ╪º┘ä╪«╪▒╪│╪º┘å╪⌐' },
-  { code: 'site-safety', en: 'Site safety', ar: '╪º┘ä╪│┘ä╪º┘à╪⌐ ╪º┘ä┘à┘ê┘é╪╣┘è╪⌐' },
-  { code: 'blockwork', en: 'Blockwork', ar: '╪º┘ä╪¿┘å╪º╪í ╪¿╪º┘ä╪╖┘ê╪¿' },
-  { code: 'tiling', en: 'Tiling', ar: '╪º┘ä╪¬╪¿┘ä┘è╪╖' },
-  { code: 'plastering', en: 'Plastering', ar: '╪º┘ä┘ä┘è╪º╪│╪⌐' },
-  { code: 'wiring', en: 'Electrical wiring', ar: '╪º┘ä╪¬┘à╪»┘è╪»╪º╪¬ ╪º┘ä┘â┘ç╪▒╪¿╪º╪ª┘è╪⌐' },
-  { code: 'panel-maintenance', en: 'Panel maintenance', ar: '╪╡┘è╪º┘å╪⌐ ╪º┘ä┘ä┘ê╪¡╪º╪¬' },
-  { code: 'troubleshooting', en: 'Fault troubleshooting', ar: '┘â╪┤┘ü ╪º┘ä╪ú╪╣╪╖╪º┘ä' },
-  { code: 'pipefitting', en: 'Pipefitting', ar: '╪¬╪▒┘â┘è╪¿ ╪º┘ä╪ú┘å╪º╪¿┘è╪¿' },
-  { code: 'drainage', en: 'Drainage works', ar: '╪ú╪╣┘à╪º┘ä ╪º┘ä╪╡╪▒┘ü' },
-  { code: 'fixture-install', en: 'Fixture installation', ar: '╪¬╪▒┘â┘è╪¿ ╪º┘ä╪ú╪»┘ê╪º╪¬ ╪º┘ä╪╡╪¡┘è╪⌐' },
-  { code: 'supervision', en: 'Team supervision', ar: '╪º┘ä╪Ñ╪┤╪▒╪º┘ü ╪╣┘ä┘ë ╪º┘ä┘ü╪▒┘è┘é' },
-  { code: 'reporting', en: 'Site reporting', ar: '╪¬┘é╪º╪▒┘è╪▒ ╪º┘ä┘à┘ê┘é╪╣' },
-  { code: 'data-entry', en: 'Data entry', ar: '╪Ñ╪»╪«╪º┘ä ╪º┘ä╪¿┘è╪º┘å╪º╪¬' },
-  { code: 'filing', en: 'Filing & records', ar: '╪º┘ä╪ú╪▒╪┤┘ü╪⌐' },
-  { code: 'reception', en: 'Reception', ar: '╪º┘ä╪º╪│╪¬┘é╪¿╪º┘ä' },
-  { code: 'recruitment', en: 'Recruitment', ar: '╪º┘ä╪º╪│╪¬┘é╪╖╪º╪¿' },
-  { code: 'employee-relations', en: 'Employee relations', ar: '╪╣┘ä╪º┘é╪º╪¬ ╪º┘ä┘à┘ê╪╕┘ü┘è┘å' },
-  { code: 'scheduling', en: 'Shift scheduling', ar: '╪¼╪»┘ê┘ä╪⌐ ╪º┘ä┘ê╪▒╪»┘è╪º╪¬' },
-  { code: 'logistics', en: 'Logistics coordination', ar: '╪¬┘å╪│┘è┘é ╪º┘ä┘ä┘ê╪¼╪│╪¬┘è╪º╪¬' },
-  { code: 'government-relations', en: 'Government relations', ar: '╪º┘ä╪╣┘ä╪º┘é╪º╪¬ ╪º┘ä╪¡┘â┘ê┘à┘è╪⌐' },
-  { code: 'documentation', en: 'Documentation', ar: '╪º┘ä╪¬┘ê╪½┘è┘é' },
-  { code: 'payroll', en: 'Payroll processing', ar: '┘à╪╣╪º┘ä╪¼╪⌐ ╪º┘ä╪▒┘ê╪º╪¬╪¿' },
-  { code: 'accounting', en: 'Accounting', ar: '╪º┘ä┘à╪¡╪º╪│╪¿╪⌐' },
-  { code: 'interviewing', en: 'Interviewing', ar: '╪º┘ä┘à┘é╪º╪¿┘ä╪º╪¬' }
+  { code: 'heavy-driving', en: 'Heavy-vehicle driving', ar: 'قيادة المعدات الثقيلة' },
+  { code: 'light-driving', en: 'Light-vehicle driving', ar: 'قيادة المركبات الخفيفة' },
+  { code: 'route-planning', en: 'Route planning', ar: 'تخطيط المسارات' },
+  { code: 'deep-cleaning', en: 'Deep cleaning', ar: 'التنظيف العميق' },
+  { code: 'waste-handling', en: 'Waste handling', ar: 'التعامل مع النفايات' },
+  { code: 'housekeeping', en: 'Housekeeping', ar: 'التدبير المنزلي' },
+  { code: 'scaffolding', en: 'Scaffolding', ar: 'السقالات' },
+  { code: 'concrete-work', en: 'Concrete work', ar: 'أعمال الخرسانة' },
+  { code: 'site-safety', en: 'Site safety', ar: 'السلامة الموقعية' },
+  { code: 'blockwork', en: 'Blockwork', ar: 'البناء بالطوب' },
+  { code: 'tiling', en: 'Tiling', ar: 'التبليط' },
+  { code: 'plastering', en: 'Plastering', ar: 'اللياسة' },
+  { code: 'wiring', en: 'Electrical wiring', ar: 'التمديدات الكهربائية' },
+  { code: 'panel-maintenance', en: 'Panel maintenance', ar: 'صيانة اللوحات' },
+  { code: 'troubleshooting', en: 'Fault troubleshooting', ar: 'كشف الأعطال' },
+  { code: 'pipefitting', en: 'Pipefitting', ar: 'تركيب الأنابيب' },
+  { code: 'drainage', en: 'Drainage works', ar: 'أعمال الصرف' },
+  { code: 'fixture-install', en: 'Fixture installation', ar: 'تركيب الأدوات الصحية' },
+  { code: 'supervision', en: 'Team supervision', ar: 'الإشراف على الفريق' },
+  { code: 'reporting', en: 'Site reporting', ar: 'تقارير الموقع' },
+  { code: 'data-entry', en: 'Data entry', ar: 'إدخال البيانات' },
+  { code: 'filing', en: 'Filing & records', ar: 'الأرشفة' },
+  { code: 'reception', en: 'Reception', ar: 'الاستقبال' },
+  { code: 'recruitment', en: 'Recruitment', ar: 'الاستقطاب' },
+  { code: 'employee-relations', en: 'Employee relations', ar: 'علاقات الموظفين' },
+  { code: 'scheduling', en: 'Shift scheduling', ar: 'جدولة الورديات' },
+  { code: 'logistics', en: 'Logistics coordination', ar: 'تنسيق اللوجستيات' },
+  { code: 'government-relations', en: 'Government relations', ar: 'العلاقات الحكومية' },
+  { code: 'documentation', en: 'Documentation', ar: 'التوثيق' },
+  { code: 'payroll', en: 'Payroll processing', ar: 'معالجة الرواتب' },
+  { code: 'accounting', en: 'Accounting', ar: 'المحاسبة' },
+  { code: 'interviewing', en: 'Interviewing', ar: 'المقابلات' }
 ];
 
 export const SPONSORS = [
   {
     id: 'HQ',
-    nameEn: 'goHR ΓÇö HQ',
-    nameAr: 'goHR ΓÇö ╪º┘ä┘à╪▒┘â╪▓ ╪º┘ä╪▒╪ª┘è╪│┘è',
+    nameEn: 'goHR — HQ',
+    nameAr: 'goHR — المركز الرئيسي',
     cr: '1010XXXXXX',
     city: 'Riyadh'
   },
   {
     id: 'BR-JED',
-    nameEn: 'goHR ΓÇö Jeddah Branch',
-    nameAr: 'goHR ΓÇö ┘ü╪▒╪╣ ╪¼╪»╪⌐',
+    nameEn: 'goHR — Jeddah Branch',
+    nameAr: 'goHR — فرع جدة',
     cr: '4030XXXXXX',
     city: 'Jeddah'
   }
@@ -134,7 +134,7 @@ export const TASKS = [
   {
     id: 'TSK-01',
     titleEn: 'Renew iqamas expiring within 30 days',
-    titleAr: '╪¬╪¼╪»┘è╪» ╪º┘ä╪Ñ┘é╪º┘à╪º╪¬ ╪º┘ä╪¬┘è ╪¬┘å╪¬┘ç┘è ╪«┘ä╪º┘ä ┘ú┘á ┘è┘ê┘à┘ï╪º',
+    titleAr: 'تجديد الإقامات التي تنتهي خلال ٣٠ يومًا',
     owner: 'pro',
     due: '2026-09-15',
     priority: 'high',
@@ -144,7 +144,7 @@ export const TASKS = [
   {
     id: 'TSK-02',
     titleEn: 'Close huroob case file (EMP-0027)',
-    titleAr: '╪Ñ╪║┘ä╪º┘é ┘à┘ä┘ü ╪¿┘ä╪º╪║ ╪º┘ä┘ç╪▒┘ê╪¿ (EMP-0027)',
+    titleAr: 'إغلاق ملف بلاغ الهروب (EMP-0027)',
     owner: 'hr',
     due: '2026-09-14',
     priority: 'high',
@@ -154,7 +154,7 @@ export const TASKS = [
   {
     id: 'TSK-06',
     titleEn: 'Photograph the new Jeddah site roster board',
-    titleAr: '╪¬╪╡┘ê┘è╪▒ ┘ä┘ê╪¡╪⌐ ┘â╪┤┘ü ┘à┘ê┘é╪╣ ╪¼╪»╪⌐ ╪º┘ä╪¼╪»┘è╪»',
+    titleAr: 'تصوير لوحة كشف موقع جدة الجديد',
     owner: 'EMP-0002',
     due: '2026-09-18',
     priority: 'low',
@@ -164,7 +164,7 @@ export const TASKS = [
   {
     id: 'TSK-07',
     titleEn: 'Confirm Nitaqat target with legal counsel',
-    titleAr: '╪¬╪ú┘â┘è╪» ┘à╪│╪¬┘ç╪»┘ü ┘å╪╖╪º┘é╪º╪¬ ┘à╪╣ ╪º┘ä┘à╪│╪¬╪┤╪º╪▒ ╪º┘ä┘é╪º┘å┘ê┘å┘è',
+    titleAr: 'تأكيد مستهدف نطاقات مع المستشار القانوني',
     owner: 'EMP-0001',
     due: '2026-09-20',
     priority: 'medium',
@@ -177,18 +177,18 @@ export const TASKS = [
 // q = Qiwa contract status: authenticated | sent | draft
 // st = active | probation | on-leave | exited | huroob
 export const EMPLOYEES = [
-  // ΓÇö Saudis (internal staff) ΓÇö
+  // — Saudis (internal staff) —
   {
     code: 'EMP-0001',
     nameEn: 'Abdullah Al-Otaibi',
-    nameAr: '╪╣╪¿╪»╪º┘ä┘ä┘ç ╪º┘ä╪╣╪¬┘è╪¿┘è',
+    nameAr: 'عبدالله العتيبي',
     nat: 'Saudi',
     saudi: true,
     nid: '1000000001',
     prof: 'specialist',
     dept: 'HR',
     titleEn: 'HR Manager',
-    titleAr: '┘à╪»┘è╪▒ ╪º┘ä┘à┘ê╪º╪▒╪» ╪º┘ä╪¿╪┤╪▒┘è╪⌐',
+    titleAr: 'مدير الموارد البشرية',
     join: '2022-03-01',
     basic: 9000,
     housing: 2250,
@@ -209,14 +209,14 @@ export const EMPLOYEES = [
   {
     code: 'EMP-0002',
     nameEn: 'Khalid Al-Dossari',
-    nameAr: '╪«╪º┘ä╪» ╪º┘ä╪»┘ê╪│╪▒┘è',
+    nameAr: 'خالد الدوسري',
     nat: 'Saudi',
     saudi: true,
     nid: '1000000002',
     prof: 'specialist',
     dept: 'OPS',
     titleEn: 'Operations Coordinator',
-    titleAr: '┘à┘å╪│┘é ╪º┘ä╪¬╪┤╪║┘è┘ä',
+    titleAr: 'منسق التشغيل',
     join: '2023-01-15',
     basic: 7500,
     housing: 1875,
@@ -237,14 +237,14 @@ export const EMPLOYEES = [
   {
     code: 'EMP-0003',
     nameEn: 'Noura Al-Qahtani',
-    nameAr: '┘å┘ê╪▒╪⌐ ╪º┘ä┘é╪¡╪╖╪º┘å┘è',
+    nameAr: 'نورة القحطاني',
     nat: 'Saudi',
     saudi: true,
     nid: '1000000003',
     prof: 'specialist',
     dept: 'PRO',
     titleEn: 'PRO Officer',
-    titleAr: '┘à╪│╪ñ┘ê┘ä╪⌐ ╪º┘ä╪╣┘ä╪º┘é╪º╪¬ ╪º┘ä╪¡┘â┘ê┘à┘è╪⌐',
+    titleAr: 'مسؤولة العلاقات الحكومية',
     join: '2024-09-01',
     basic: 6000,
     housing: 1500,
@@ -265,14 +265,14 @@ export const EMPLOYEES = [
   {
     code: 'EMP-0004',
     nameEn: 'Fahad Al-Shammari',
-    nameAr: '┘ü┘ç╪» ╪º┘ä╪┤┘à╪▒┘è',
+    nameAr: 'فهد الشمري',
     nat: 'Saudi',
     saudi: true,
     nid: '1000000004',
     prof: 'specialist',
     dept: 'FIN',
     titleEn: 'Accountant',
-    titleAr: '┘à╪¡╪º╪│╪¿',
+    titleAr: 'محاسب',
     join: '2025-02-10',
     basic: 6500,
     housing: 1625,
@@ -293,14 +293,14 @@ export const EMPLOYEES = [
   {
     code: 'EMP-0005',
     nameEn: 'Reem Al-Harbi',
-    nameAr: '╪▒┘è┘à ╪º┘ä╪¡╪▒╪¿┘è',
+    nameAr: 'ريم الحربي',
     nat: 'Saudi',
     saudi: true,
     nid: '1000000005',
     prof: 'specialist',
     dept: 'REC',
     titleEn: 'Recruiter (part-time)',
-    titleAr: '╪ú╪«╪╡╪º╪ª┘è╪⌐ ╪¬┘ê╪╕┘è┘ü (╪»┘ê╪º┘à ╪¼╪▓╪ª┘è)',
+    titleAr: 'أخصائية توظيف (دوام جزئي)',
     join: '2025-06-01',
     basic: 3500,
     housing: 0,
@@ -319,18 +319,18 @@ export const EMPLOYEES = [
     email: 'r.harbi@company.sa',
     av: 'yellow'
   },
-  // ΓÇö Expat workforce (deployed + bench) ΓÇö
+  // — Expat workforce (deployed + bench) —
   {
     code: 'EMP-0006',
     nameEn: 'Rajesh Kumar',
-    nameAr: '╪▒╪º╪¼┘è╪┤ ┘â┘ê┘à╪º╪▒',
+    nameAr: 'راجيش كومار',
     nat: 'India',
     iqama: '2000000006',
     iqamaExp: '2027-03-14',
     prof: 'driver',
     dept: 'OPS',
     titleEn: 'Driver',
-    titleAr: '╪│╪º╪ª┘é',
+    titleAr: 'سائق',
     join: '2021-06-10',
     entry: '2021-06-08',
     basic: 1800,
@@ -352,14 +352,14 @@ export const EMPLOYEES = [
   {
     code: 'EMP-0007',
     nameEn: 'Ahmed Raza',
-    nameAr: '╪ú╪¡┘à╪» ╪▒╪╢╪º',
+    nameAr: 'أحمد رضا',
     nat: 'Pakistan',
     iqama: '2000000007',
     iqamaExp: '2027-01-22',
     prof: 'driver',
     dept: 'OPS',
     titleEn: 'Driver',
-    titleAr: '╪│╪º╪ª┘é',
+    titleAr: 'سائق',
     join: '2022-02-01',
     entry: '2022-01-30',
     basic: 1800,
@@ -381,14 +381,14 @@ export const EMPLOYEES = [
   {
     code: 'EMP-0008',
     nameEn: 'Mohammad Asif',
-    nameAr: '┘à╪¡┘à╪» ╪ó╪╡┘ü',
+    nameAr: 'محمد آصف',
     nat: 'Pakistan',
     iqama: '2000000008',
     iqamaExp: '2026-09-28',
     prof: 'driver',
     dept: 'OPS',
     titleEn: 'Driver',
-    titleAr: '╪│╪º╪ª┘é',
+    titleAr: 'سائق',
     join: '2023-04-12',
     entry: '2023-04-10',
     basic: 1700,
@@ -410,14 +410,14 @@ export const EMPLOYEES = [
   {
     code: 'EMP-0009',
     nameEn: 'Jose Ramos',
-    nameAr: '╪«┘ê╪│┘è┘ç ╪▒╪º┘à┘ê╪│',
+    nameAr: 'خوسيه راموس',
     nat: 'Philippines',
     iqama: '2000000009',
     iqamaExp: '2027-05-30',
     prof: 'cleaner',
     dept: 'OPS',
     titleEn: 'Cleaner',
-    titleAr: '╪╣╪º┘à┘ä ┘å╪╕╪º┘ü╪⌐',
+    titleAr: 'عامل نظافة',
     join: '2021-11-03',
     entry: '2021-11-01',
     basic: 1400,
@@ -439,14 +439,14 @@ export const EMPLOYEES = [
   {
     code: 'EMP-0010',
     nameEn: 'Karim Hassan',
-    nameAr: '┘â╪▒┘è┘à ╪¡╪│┘å',
+    nameAr: 'كريم حسن',
     nat: 'Bangladesh',
     iqama: '2000000010',
     iqamaExp: '2027-02-11',
     prof: 'cleaner',
     dept: 'OPS',
     titleEn: 'Cleaner',
-    titleAr: '╪╣╪º┘à┘ä ┘å╪╕╪º┘ü╪⌐',
+    titleAr: 'عامل نظافة',
     join: '2022-08-20',
     entry: '2022-08-18',
     basic: 1400,
@@ -468,14 +468,14 @@ export const EMPLOYEES = [
   {
     code: 'EMP-0011',
     nameEn: 'Abdul Malek',
-    nameAr: '╪╣╪¿╪» ╪º┘ä┘à╪º┘ä┘â',
+    nameAr: 'عبد المالك',
     nat: 'Bangladesh',
     iqama: '2000000011',
     iqamaExp: '2026-12-05',
     prof: 'cleaner',
     dept: 'OPS',
     titleEn: 'Cleaner',
-    titleAr: '╪╣╪º┘à┘ä ┘å╪╕╪º┘ü╪⌐',
+    titleAr: 'عامل نظافة',
     join: '2023-01-25',
     entry: '2023-01-23',
     basic: 1400,
@@ -497,14 +497,14 @@ export const EMPLOYEES = [
   {
     code: 'EMP-0012',
     nameEn: 'Maria Santos',
-    nameAr: '┘à╪º╪▒┘è╪º ╪│╪º┘å╪¬┘ê╪│',
+    nameAr: 'ماريا سانتوس',
     nat: 'Philippines',
     iqama: '2000000012',
     iqamaExp: '2026-10-15',
     prof: 'cleaner',
     dept: 'OPS',
     titleEn: 'Cleaner',
-    titleAr: '╪╣╪º┘à┘ä╪⌐ ┘å╪╕╪º┘ü╪⌐',
+    titleAr: 'عاملة نظافة',
     join: '2022-05-14',
     entry: '2022-05-12',
     basic: 1400,
@@ -524,14 +524,14 @@ export const EMPLOYEES = [
   {
     code: 'EMP-0013',
     nameEn: 'Suresh Patel',
-    nameAr: '╪│┘ê╪▒┘è╪┤ ╪¿╪º╪¬┘è┘ä',
+    nameAr: 'سوريش باتيل',
     nat: 'India',
     iqama: '2000000013',
     iqamaExp: '2027-04-02',
     prof: 'construction',
     dept: 'OPS',
     titleEn: 'Construction worker',
-    titleAr: '╪╣╪º┘à┘ä ╪Ñ┘å╪┤╪º╪í╪º╪¬',
+    titleAr: 'عامل إنشاءات',
     join: '2020-09-01',
     entry: '2020-08-29',
     basic: 1600,
@@ -553,14 +553,14 @@ export const EMPLOYEES = [
   {
     code: 'EMP-0014',
     nameEn: 'Vikram Singh',
-    nameAr: '┘ü┘è┘â╪▒╪º┘à ╪│┘è┘å╪║',
+    nameAr: 'فيكرام سينغ',
     nat: 'India',
     iqama: '2000000014',
     iqamaExp: '2027-06-19',
     prof: 'construction',
     dept: 'OPS',
     titleEn: 'Construction worker',
-    titleAr: '╪╣╪º┘à┘ä ╪Ñ┘å╪┤╪º╪í╪º╪¬',
+    titleAr: 'عامل إنشاءات',
     join: '2021-03-22',
     entry: '2021-03-20',
     basic: 1600,
@@ -582,14 +582,14 @@ export const EMPLOYEES = [
   {
     code: 'EMP-0015',
     nameEn: 'Bilal Ahmed',
-    nameAr: '╪¿┘ä╪º┘ä ╪ú╪¡┘à╪»',
+    nameAr: 'بلال أحمد',
     nat: 'Pakistan',
     iqama: '2000000015',
     iqamaExp: '2027-02-27',
     prof: 'construction',
     dept: 'OPS',
     titleEn: 'Construction worker',
-    titleAr: '╪╣╪º┘à┘ä ╪Ñ┘å╪┤╪º╪í╪º╪¬',
+    titleAr: 'عامل إنشاءات',
     join: '2022-07-11',
     entry: '2022-07-09',
     basic: 1600,
@@ -611,14 +611,14 @@ export const EMPLOYEES = [
   {
     code: 'EMP-0016',
     nameEn: 'Deepak Yadav',
-    nameAr: '╪»┘è╪¿╪º┘â ┘è╪º╪»╪º┘ü',
+    nameAr: 'ديباك ياداف',
     nat: 'India',
     iqama: '2000000016',
     iqamaExp: '2026-11-20',
     prof: 'construction',
     dept: 'OPS',
     titleEn: 'Construction worker',
-    titleAr: '╪╣╪º┘à┘ä ╪Ñ┘å╪┤╪º╪í╪º╪¬',
+    titleAr: 'عامل إنشاءات',
     join: '2023-05-30',
     entry: '2023-05-28',
     basic: 1500,
@@ -640,14 +640,14 @@ export const EMPLOYEES = [
   {
     code: 'EMP-0017',
     nameEn: 'Rahim Uddin',
-    nameAr: '╪▒╪¡┘è┘à ╪º┘ä╪»┘è┘å',
+    nameAr: 'رحيم الدين',
     nat: 'Bangladesh',
     iqama: '2000000017',
     iqamaExp: '2027-08-08',
     prof: 'construction',
     dept: 'OPS',
     titleEn: 'Construction worker',
-    titleAr: '╪╣╪º┘à┘ä ╪Ñ┘å╪┤╪º╪í╪º╪¬',
+    titleAr: 'عامل إنشاءات',
     join: '2024-02-18',
     entry: '2024-02-16',
     basic: 1500,
@@ -669,14 +669,14 @@ export const EMPLOYEES = [
   {
     code: 'EMP-0018',
     nameEn: 'Mahmoud Ali',
-    nameAr: '┘à╪¡┘à┘ê╪» ╪╣┘ä┘è',
+    nameAr: 'محمود علي',
     nat: 'Egypt',
     iqama: '2000000018',
     iqamaExp: '2027-01-09',
     prof: 'mason',
     dept: 'OPS',
     titleEn: 'Mason',
-    titleAr: '╪¿┘å╪º╪í',
+    titleAr: 'بناء',
     join: '2021-12-05',
     entry: '2021-12-03',
     basic: 2200,
@@ -698,14 +698,14 @@ export const EMPLOYEES = [
   {
     code: 'EMP-0019',
     nameEn: 'Saeed Anwar',
-    nameAr: '╪│╪╣┘è╪» ╪ú┘å┘ê╪▒',
+    nameAr: 'سعيد أنور',
     nat: 'Pakistan',
     iqama: '2000000019',
     iqamaExp: '2027-03-25',
     prof: 'mason',
     dept: 'OPS',
     titleEn: 'Mason',
-    titleAr: '╪¿┘å╪º╪í',
+    titleAr: 'بناء',
     join: '2022-10-17',
     entry: '2022-10-15',
     basic: 2200,
@@ -727,14 +727,14 @@ export const EMPLOYEES = [
   {
     code: 'EMP-0020',
     nameEn: 'Arun Nair',
-    nameAr: '╪ú╪▒┘ê┘å ┘å╪º┘è╪▒',
+    nameAr: 'أرون ناير',
     nat: 'India',
     iqama: '2000000020',
     iqamaExp: '2027-07-12',
     prof: 'electrician',
     dept: 'OPS',
     titleEn: 'Electrician',
-    titleAr: '┘â┘ç╪▒╪¿╪º╪ª┘è',
+    titleAr: 'كهربائي',
     join: '2022-04-09',
     entry: '2022-04-07',
     basic: 2500,
@@ -756,14 +756,14 @@ export const EMPLOYEES = [
   {
     code: 'EMP-0021',
     nameEn: 'Imran Khan',
-    nameAr: '╪╣┘à╪▒╪º┘å ╪«╪º┘å',
+    nameAr: 'عمران خان',
     nat: 'Pakistan',
     iqama: '2000000021',
     iqamaExp: '2027-09-01',
     prof: 'electrician',
     dept: 'OPS',
     titleEn: 'Electrician',
-    titleAr: '┘â┘ç╪▒╪¿╪º╪ª┘è',
+    titleAr: 'كهربائي',
     join: '2026-08-01',
     entry: '2026-07-30',
     basic: 2400,
@@ -785,14 +785,14 @@ export const EMPLOYEES = [
   {
     code: 'EMP-0022',
     nameEn: 'Khaled Ibrahim',
-    nameAr: '╪«╪º┘ä╪» ╪Ñ╪¿╪▒╪º┘ç┘è┘à',
+    nameAr: 'خالد إبراهيم',
     nat: 'Egypt',
     iqama: '2000000022',
     iqamaExp: '2027-05-17',
     prof: 'plumber',
     dept: 'OPS',
     titleEn: 'Plumber',
-    titleAr: '╪│╪¿╪º┘â',
+    titleAr: 'سباك',
     join: '2023-03-14',
     entry: '2023-03-12',
     basic: 2300,
@@ -814,14 +814,14 @@ export const EMPLOYEES = [
   {
     code: 'EMP-0023',
     nameEn: 'Manoj Tiwari',
-    nameAr: '┘à╪º┘å┘ê╪¼ ╪¬┘è┘ê╪º╪▒┘è',
+    nameAr: 'مانوج تيواري',
     nat: 'India',
     iqama: '2000000023',
     iqamaExp: '2027-02-03',
     prof: 'foreman',
     dept: 'OPS',
     titleEn: 'Foreman',
-    titleAr: '┘à╪┤╪▒┘ü ╪╣┘à╪º┘ä',
+    titleAr: 'مشرف عمال',
     join: '2020-01-20',
     entry: '2020-01-18',
     basic: 3200,
@@ -843,14 +843,14 @@ export const EMPLOYEES = [
   {
     code: 'EMP-0024',
     nameEn: 'Danilo Cruz',
-    nameAr: '╪»╪º┘å┘è┘ä┘ê ┘â╪▒┘ê╪▓',
+    nameAr: 'دانيلو كروز',
     nat: 'Philippines',
     iqama: '2000000024',
     iqamaExp: '2027-06-06',
     prof: 'office',
     dept: 'HR',
     titleEn: 'Office assistant',
-    titleAr: '┘à╪│╪º╪╣╪» ╪Ñ╪»╪º╪▒┘è',
+    titleAr: 'مساعد إداري',
     join: '2023-09-11',
     entry: '2023-09-09',
     basic: 2000,
@@ -872,14 +872,14 @@ export const EMPLOYEES = [
   {
     code: 'EMP-0025',
     nameEn: 'Amit Sharma',
-    nameAr: '╪ú┘à┘è╪¬ ╪┤╪º╪▒┘à╪º',
+    nameAr: 'أميت شارما',
     nat: 'India',
     iqama: '2000000025',
     iqamaExp: '2026-10-30',
     prof: 'construction',
     dept: 'OPS',
     titleEn: 'Construction worker',
-    titleAr: '╪╣╪º┘à┘ä ╪Ñ┘å╪┤╪º╪í╪º╪¬',
+    titleAr: 'عامل إنشاءات',
     join: '2023-05-01',
     entry: '2023-04-29',
     basic: 1400,
@@ -894,7 +894,7 @@ export const EMPLOYEES = [
     sponsor: 'HQ',
     exitDate: '2026-07-31',
     exitReason: 'End of contract',
-    exitReasonAr: '╪º┘å╪¬┘ç╪º╪í ╪º┘ä╪╣┘é╪»',
+    exitReasonAr: 'انتهاء العقد',
     client: '',
     site: '',
     phone: '+966 555 010 025',
@@ -904,14 +904,14 @@ export const EMPLOYEES = [
   {
     code: 'EMP-0026',
     nameEn: 'Ana Reyes',
-    nameAr: '╪ó┘å╪º ╪▒┘è┘è╪│',
+    nameAr: 'آنا رييس',
     nat: 'Philippines',
     iqama: '2000000026',
     iqamaExp: '2027-01-20',
     prof: 'cleaner',
     dept: 'OPS',
     titleEn: 'Cleaner',
-    titleAr: '╪╣╪º┘à┘ä ┘å╪╕╪º┘ü╪⌐',
+    titleAr: 'عامل نظافة',
     join: '2024-02-10',
     entry: '2024-02-08',
     basic: 1200,
@@ -926,7 +926,7 @@ export const EMPLOYEES = [
     sponsor: 'HQ',
     exitDate: '2026-08-15',
     exitReason: 'Resignation',
-    exitReasonAr: '╪º╪│╪¬┘é╪º┘ä╪⌐',
+    exitReasonAr: 'استقالة',
     client: '',
     site: '',
     phone: '+966 555 010 026',
@@ -936,14 +936,14 @@ export const EMPLOYEES = [
   {
     code: 'EMP-0027',
     nameEn: 'Tariq Mehmood',
-    nameAr: '╪╖╪º╪▒┘é ┘à╪¡┘à┘ê╪»',
+    nameAr: 'طارق محمود',
     nat: 'Pakistan',
     iqama: '2000000027',
     iqamaExp: '2026-12-01',
     prof: 'driver',
     dept: 'OPS',
     titleEn: 'Driver',
-    titleAr: '╪│╪º╪ª┘é',
+    titleAr: 'سائق',
     join: '2024-11-01',
     entry: '2024-10-30',
     basic: 1800,
@@ -958,7 +958,7 @@ export const EMPLOYEES = [
     sponsor: 'HQ',
     reportedAt: '2026-09-08',
     legalNote: 'Absconding report filed via Absher; passport held per Art. 40 file.',
-    legalNoteAr: '╪¬┘à ╪▒┘ü╪╣ ╪¿┘ä╪º╪║ ┘ç╪▒┘ê╪¿ ╪╣╪¿╪▒ ╪ú╪¿╪┤╪▒╪¢ ╪º┘ä╪¼┘ê╪º╪▓ ┘à╪¡┘ü┘ê╪╕ ┘ü┘è ╪º┘ä┘à┘ä┘ü ╪¡╪│╪¿ ╪º┘ä┘à╪º╪»╪⌐ ┘ñ┘á.',
+    legalNoteAr: 'تم رفع بلاغ هروب عبر أبشر؛ الجواز محفوظ في الملف حسب المادة ٤٠.',
     client: '',
     site: '',
     phone: '+966 555 010 027',
@@ -982,7 +982,7 @@ export const CLIENTS = [
   {
     id: 'CL-001',
     nameEn: 'Al-Bina Construction',
-    nameAr: '╪┤╪▒┘â╪⌐ ╪º┘ä╪¿┘å╪º╪í ┘ä┘ä┘à┘é╪º┘ê┘ä╪º╪¬',
+    nameAr: 'شركة البناء للمقاولات',
     cr: '1010XXXX11',
     contactEn: 'Eng. Sami Haddad',
     phone: '+966 555 020 001',
@@ -998,7 +998,7 @@ export const CLIENTS = [
   {
     id: 'CL-002',
     nameEn: 'Facility Care Services',
-    nameAr: '╪┤╪▒┘â╪⌐ ╪º┘ä╪╣┘å╪º┘è╪⌐ ┘ä┘ä┘à╪▒╪º┘ü┘é',
+    nameAr: 'شركة العناية للمرافق',
     cr: '1010XXXX22',
     contactEn: 'Ms. Dana Kanaan',
     phone: '+966 555 020 002',
@@ -1018,7 +1018,7 @@ export const SITES = [
     id: 'ST-001',
     client: 'CL-001',
     nameEn: 'North Ring Site',
-    nameAr: '┘à┘ê┘é╪╣ ╪º┘ä╪╖╪▒┘è┘é ╪º┘ä╪┤┘à╪º┘ä┘è',
+    nameAr: 'موقع الطريق الشمالي',
     city: 'Riyadh',
     lat: 24.81,
     lng: 46.68
@@ -1027,7 +1027,7 @@ export const SITES = [
     id: 'ST-002',
     client: 'CL-001',
     nameEn: 'Diriyah Project',
-    nameAr: '┘à╪┤╪▒┘ê╪╣ ╪º┘ä╪»╪▒╪╣┘è╪⌐',
+    nameAr: 'مشروع الدرعية',
     city: 'Diriyah',
     lat: 24.732,
     lng: 46.575
@@ -1036,7 +1036,7 @@ export const SITES = [
     id: 'ST-003',
     client: 'CL-002',
     nameEn: 'KAFD Tower FM',
-    nameAr: '╪¿╪▒╪¼ ┘â╪º┘ü╪» ΓÇö ╪Ñ╪»╪º╪▒╪⌐ ╪º┘ä┘à╪▒╪º┘ü┘é',
+    nameAr: 'برج كافد — إدارة المرافق',
     city: 'Riyadh',
     lat: 24.767,
     lng: 46.641
@@ -1045,7 +1045,7 @@ export const SITES = [
     id: 'ST-004',
     client: 'CL-001',
     nameEn: 'Jeddah Corniche Tower',
-    nameAr: '╪¿╪▒╪¼ ┘â┘ê╪▒┘å┘è╪┤ ╪¼╪»╪⌐',
+    nameAr: 'برج كورنيش جدة',
     city: 'Jeddah',
     lat: 21.5433,
     lng: 39.1728
@@ -1054,7 +1054,7 @@ export const SITES = [
     id: 'ST-005',
     client: 'CL-002',
     nameEn: 'Dammam North FM',
-    nameAr: '╪º┘ä╪»┘à╪º┘à ╪º┘ä╪┤┘à╪º┘ä┘è╪⌐ ΓÇö ╪Ñ╪»╪º╪▒╪⌐ ╪º┘ä┘à╪▒╪º┘ü┘é',
+    nameAr: 'الدمام الشمالية — إدارة المرافق',
     city: 'Dammam',
     lat: 26.4207,
     lng: 50.0888
@@ -1063,7 +1063,7 @@ export const SITES = [
     id: 'ST-006',
     client: 'CL-001',
     nameEn: 'Riyadh South Depot',
-    nameAr: '┘à╪│╪¬┘ê╪»╪╣ ╪¼┘å┘ê╪¿ ╪º┘ä╪▒┘è╪º╪╢',
+    nameAr: 'مستودع جنوب الرياض',
     city: 'Riyadh',
     lat: 24.6,
     lng: 46.75
@@ -1071,26 +1071,26 @@ export const SITES = [
 ];
 
 // rate = monthly SAR charged to client per head. ajeer: null = MISSING (violation demo).
-// ┬º0.3 ΓÇö seeded leave types (admin-tunable in Settings from P2; engine reads this shape).
+// §0.3 — seeded leave types (admin-tunable in Settings from P2; engine reads this shape).
 export const LEAVE_TYPES = [
-  { code: 'annual', en: 'Annual', ar: '╪│┘å┘ê┘è╪⌐', base: 21, after5: 30, pay: 1 },
+  { code: 'annual', en: 'Annual', ar: 'سنوية', base: 21, after5: 30, pay: 1 },
   {
     code: 'sick',
     en: 'Sick',
-    ar: '┘à╪▒╪╢┘è╪⌐',
+    ar: 'مرضية',
     tiers: [
       { days: 30, pay: 1 },
       { days: 60, pay: 0.75 },
       { days: 30, pay: 0 }
     ]
   },
-  { code: 'maternity', en: 'Maternity', ar: '╪ú┘à┘ê┘à╪⌐', weeks: 10 },
-  { code: 'paternity', en: 'Newborn', ar: '┘à┘ê┘ä┘ê╪» ╪¼╪»┘è╪»', days: 3, pay: 1 },
-  { code: 'marriage', en: 'Marriage', ar: '╪▓┘ê╪º╪¼', days: 5, pay: 1 },
-  { code: 'bereavement', en: 'Bereavement', ar: '┘ê┘ü╪º╪⌐ ┘é╪▒┘è╪¿', days: 5, siblingDays: 3, pay: 1 },
-  { code: 'iddah', en: 'Iddah (widow)', ar: '╪╣╪»╪⌐', months: 4, extraDays: 10, pay: 1 },
-  { code: 'hajj', en: 'Hajj', ar: '╪¡╪¼', days: 15, once: true, afterYears: 2 },
-  { code: 'unpaid', en: 'Unpaid', ar: '╪¿╪»┘ê┘å ╪ú╪¼╪▒', days: 10, pay: 0 }
+  { code: 'maternity', en: 'Maternity', ar: 'أمومة', weeks: 10 },
+  { code: 'paternity', en: 'Newborn', ar: 'مولود جديد', days: 3, pay: 1 },
+  { code: 'marriage', en: 'Marriage', ar: 'زواج', days: 5, pay: 1 },
+  { code: 'bereavement', en: 'Bereavement', ar: 'وفاة قريب', days: 5, siblingDays: 3, pay: 1 },
+  { code: 'iddah', en: 'Iddah (widow)', ar: 'عدة', months: 4, extraDays: 10, pay: 1 },
+  { code: 'hajj', en: 'Hajj', ar: 'حج', days: 15, once: true, afterYears: 2 },
+  { code: 'unpaid', en: 'Unpaid', ar: 'بدون أجر', days: 10, pay: 0 }
 ];
 
 // Demo holiday calendar (Gregorian + Hijri). Eid dates are approximate demo values.
@@ -1105,24 +1105,24 @@ export const GOSI_VERSIONS = [
 export const GOSI_SANED = 0.0075;
 export const GOSI_HAZARDS = 0.02;
 export const GOSI_CAP = 45000; // SAR/month on basic+housing
-export const GOSI_CUTOFF = '2024-07-03'; // enrolled before ΓåÆ old system (fixed 9%)
+export const GOSI_CUTOFF = '2024-07-03'; // enrolled before → old system (fixed 9%)
 
-// Work-permit levy bands (SAR/month) ΓÇö versioned demo values, editable in Settings.
+// Work-permit levy bands (SAR/month) — versioned demo values, editable in Settings.
 export const LEVY_TABLE = {
   reduced: 700,
   standard: 800,
   noteEn: 'Reduced rate when Saudization targets are met.',
-  noteAr: '╪º┘ä╪│╪╣╪▒ ╪º┘ä┘à╪«┘ü╪╢ ╪╣┘å╪» ╪¬╪¡┘é┘è┘é ┘å╪│╪¿ ╪º┘ä╪│╪╣┘ê╪»╪⌐.'
+  noteAr: 'السعر المخفض عند تحقيق نسب السعودة.'
 };
 
 // Deduction categories payroll must REJECT when employer-borne (Art. 40).
 export const BLOCKED_DEDUCTIONS = ['iqama', 'levy', 'insurance', 'recruitment'];
 
-// ΓöÇΓöÇ P1: expat lifecycle + tracker ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+// ── P1: expat lifecycle + tracker ─────────────────────────────────────────
 // Visa blocks & agents (overseas recruitment channel).
 // Per-worker visas. status: used | awaiting | expired | cancelled.
 // Onboarding pipeline (┬º4.7). type: overseas | transfer. stages: {n: dateISO}.
-// Qiwa transfer cases (local-hire expats skip onboarding stages 2ΓÇô5).
+// Qiwa transfer cases (local-hire expats skip onboarding stages 2–5).
 // Residency documents per expat (passport + medical insurance + traffic fines).
 // Document vault. expires: '' = no expiry. Seeded rows are metadata records.
 // Reporting lines (org chart). mgr: null = root.
@@ -1153,44 +1153,44 @@ export const ORG_LINKS = [
   { emp: 'EMP-0023', mgr: 'EMP-0002' }
 ];
 
-// ΓöÇΓöÇ P2: time & leave ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+// ── P2: time & leave ─────────────────────────────────────────────────────
 // Weekend in KSA: Friday + Saturday (JS day numbers).
 // Deterministic demo attendance: past 14 days for assigned workers.
 // Weekly site timesheets (supervisor view; approved = locked billing feed).
 // Leave requests. status: pending | approved | rejected | cancelled. Historical
 // approved annual requests are already counted in employee.annualUsed.
-// Approval chains v1 (flows ΓåÆ ordered roles). Admin may act at any step.
-// ΓÇö P3: Ajeer permits (one e-contract per deployment; Decision 60339) ΓÇö
-// ΓÇö P3: invoices (inputs only; amounts computed by the engine) ΓÇö
-// ΓöÇΓöÇ P4: payroll, expenses, advances ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+// Approval chains v1 (flows → ordered roles). Admin may act at any step.
+// — P3: Ajeer permits (one e-contract per deployment; Decision 60339) —
+// — P3: invoices (inputs only; amounts computed by the engine) —
+// ── P4: payroll, expenses, advances ────────────────────────────────────────
 // Pay-run lines are computed live from employees + adjustments via calcPayLine
 // (hr-statutory.js) so seed math can never drift; the UI locks approved/paid
 // runs. The backend replaces this with snapshotted lines (see httpAdapter).
 
 export const SEED_EOSB = {
-  basis: 'basic', // 'basic' | 'basic+housing' ΓÇö wage basis for Art. 84 (counsel sets)
-  capMonths: 0, // 0 = no cap; sources cite 12 vs 18 ΓÇö verify, then set here
+  basis: 'basic', // 'basic' | 'basic+housing' — wage basis for Art. 84 (counsel sets)
+  capMonths: 0, // 0 = no cap; sources cite 12 vs 18 — verify, then set here
   payDaysEmployer: 7, // pay within 1 week on employer termination
-  payDaysResign: 14 // ΓÇªwithin 2 weeks on resignation
+  payDaysResign: 14 // …within 2 weeks on resignation
 };
 
-// ΓöÇΓöÇ P5: contract templates + registers + hiring ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+// ── P5: contract templates + registers + hiring ────────────────────────────
 // Template bodies are bilingual with {{placeholders}} (see KNOWN_PLACEHOLDERS).
 // Fields with `source` auto-fill from the picked party; the rest are manual.
 
-// ΓöÇΓöÇ P6: performance, training, org, audit, broadcasts ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+// ── P6: performance, training, org, audit, broadcasts ──────────────────────
 
-// RBAC roles (seed-mode UX only ΓÇö the server enforces). Rank: lower = stronger.
+// RBAC roles (seed-mode UX only — the server enforces). Rank: lower = stronger.
 export const ROLES = [
-  { code: 'admin', en: 'Administrator', ar: '┘à╪»┘è╪▒ ╪º┘ä┘å╪╕╪º┘à', rank: 1 },
-  { code: 'hr', en: 'HR Officer', ar: '┘à┘ê╪╕┘ü ┘à┘ê╪º╪▒╪» ╪¿╪┤╪▒┘è╪⌐', rank: 2 },
-  { code: 'ops', en: 'Operations Coordinator', ar: '┘à┘å╪│┘é ╪º┘ä╪¬╪┤╪║┘è┘ä', rank: 3 },
-  { code: 'payroll', en: 'Payroll Officer', ar: '┘à┘ê╪╕┘ü ╪º┘ä╪▒┘ê╪º╪¬╪¿', rank: 4 },
-  { code: 'pro', en: 'PRO', ar: '╪º┘ä┘à╪╣┘é╪¿', rank: 5 },
-  { code: 'finance', en: 'Finance (read)', ar: '╪º┘ä┘à╪º┘ä┘è╪⌐ (┘é╪▒╪º╪í╪⌐)', rank: 6 },
-  { code: 'manager', en: 'Manager', ar: '┘à╪»┘è╪▒', rank: 7 },
-  { code: 'site-supervisor', en: 'Site Supervisor', ar: '┘à╪┤╪▒┘ü ┘à┘ê┘é╪╣', rank: 8 },
-  { code: 'employee', en: 'Employee', ar: '┘à┘ê╪╕┘ü', rank: 9 }
+  { code: 'admin', en: 'Administrator', ar: 'مدير النظام', rank: 1 },
+  { code: 'hr', en: 'HR Officer', ar: 'موظف موارد بشرية', rank: 2 },
+  { code: 'ops', en: 'Operations Coordinator', ar: 'منسق التشغيل', rank: 3 },
+  { code: 'payroll', en: 'Payroll Officer', ar: 'موظف الرواتب', rank: 4 },
+  { code: 'pro', en: 'PRO', ar: 'المعقب', rank: 5 },
+  { code: 'finance', en: 'Finance (read)', ar: 'المالية (قراءة)', rank: 6 },
+  { code: 'manager', en: 'Manager', ar: 'مدير', rank: 7 },
+  { code: 'site-supervisor', en: 'Site Supervisor', ar: 'مشرف موقع', rank: 8 },
+  { code: 'employee', en: 'Employee', ar: 'موظف', rank: 9 }
 ];
 
 // Module scopes per role ('*' = all). Keys match sidebar data-page keys.
@@ -1256,7 +1256,7 @@ export const AUDIT_LOG = [
     actor: 'EMP-0001',
     action: 'expense.reject',
     entity: 'EXP-2026-017',
-    detail: 'Personal fine ΓÇö not reimbursable'
+    detail: 'Personal fine — not reimbursable'
   },
   {
     id: 'AU-2026-096',

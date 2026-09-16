@@ -47,17 +47,20 @@ function buildMenu(items) {
 
 function position(menu, trigger) {
   const rect = trigger.getBoundingClientRect();
-  // Render to measure size; default placement: right-aligned below trigger.
+  // Render to measure size. Panels align to the trigger's outer edge:
+  // right-edge aligned in LTR (so they open toward the content), left-edge
+  // aligned in RTL (where the chrome cluster sits on the opposite side).
   menu.style.visibility = 'hidden';
   document.body.appendChild(menu);
   const mw = menu.offsetWidth;
   const mh = menu.offsetHeight;
   const margin = 6;
+  const rtl = document.documentElement.getAttribute('dir') === 'rtl';
   let top = rect.bottom + margin;
-  let left = rect.right - mw;
+  let left = rtl ? rect.left : rect.right - mw;
   // Flip up if not enough room below.
   if (top + mh > window.innerHeight - 8) {top = rect.top - mh - margin;}
-  // Clamp horizontally.
+  // Clamp horizontally within the viewport.
   left = Math.max(8, Math.min(left, window.innerWidth - mw - 8));
   menu.style.top = `${Math.round(top)}px`;
   menu.style.left = `${Math.round(left)}px`;

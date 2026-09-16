@@ -32,7 +32,7 @@ export function renderSiteMap(el, cfg = {}) {
   const ar = document.documentElement.lang === 'ar' || document.documentElement.dir === 'rtl';
   const L2 = cfg.labels || { sites: 'Sites', clients: 'Clients', workers: 'workers' };
 
-  // Synchronous, testable, screen-reader honest ΓÇö always rendered.
+  // Synchronous, testable, screen-reader honest — always rendered.
   const total = sites.reduce((s, x) => s + headcountOf(x.id), 0);
   el.setAttribute('data-marker-count', String(sites.length));
   el.setAttribute('data-client-pins', String(clients.length));

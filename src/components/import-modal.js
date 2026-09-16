@@ -1,4 +1,4 @@
-// HR + Operations ΓÇö shared file-import modal (Excel / CSV).
+// HR + Operations — shared file-import modal (Excel / CSV).
 // One helper for every list page: template download + validated parse + save.
 // `onImport(rows)` saves, re-renders and returns the saved count
 // (or false to abort with its own message).
@@ -31,13 +31,13 @@ export function openImportModal({ titleEn, titleAr, filename, schema, example, o
         action: ({ body, close }) => {
           const pending = body._pending;
           if (!pending || !pending.rows.length) {
-            showToast(lang === 'ar' ? '╪º╪«╪¬╪▒ ┘à┘ä┘ü┘ï╪º ╪╡╪º┘ä╪¡┘ï╪º ╪ú┘ê┘ä┘ï╪º' : 'Choose a valid file first', {
+            showToast(lang === 'ar' ? 'اختر ملفًا صالحًا أولًا' : 'Choose a valid file first', {
               variant: 'warning'
             });
             return false;
           }
           if (pending.errors.length) {
-            showToast(lang === 'ar' ? '╪ú╪╡┘ä╪¡ ╪º┘ä╪ú╪«╪╖╪º╪í ╪ú┘ê┘ä┘ï╪º' : 'Fix validation errors first', {
+            showToast(lang === 'ar' ? 'أصلح الأخطاء أولًا' : 'Fix validation errors first', {
               variant: 'warning'
             });
             return false;
@@ -46,7 +46,7 @@ export function openImportModal({ titleEn, titleAr, filename, schema, example, o
           if (n === false) {
             return false;
           }
-          showToast(lang === 'ar' ? `╪¬┘à ╪º╪│╪¬┘è╪▒╪º╪» ${n} ╪╡┘ü┘ï╪º` : `Imported ${n} rows`, {
+          showToast(lang === 'ar' ? `تم استيراد ${n} صفًا` : `Imported ${n} rows`, {
             variant: 'success'
           });
           close();
@@ -74,7 +74,7 @@ export function openImportModal({ titleEn, titleAr, filename, schema, example, o
       return;
     }
     const box = dlg.querySelector('[data-imp-result]');
-    box.textContent = 'ΓÇª';
+    box.textContent = '…';
     try {
       const res = await importFile(input.files[0], schema);
       const bodyEl = dlg.querySelector('.modal-body');
