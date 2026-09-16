@@ -131,6 +131,12 @@
   height: 34px;
   display: block;
   overflow: visible;
+  transform-origin: center;
+}
+// SVG coordinates are always drawn left-to-right; in RTL mirror so the
+// trend reads right-to-left like the rest of the chrome.
+[dir='rtl'] .kpi-spark svg {
+  transform: scaleX(-1);
 }
 
 // ── Inset cards inside zones (nested cards on the secondary fill) ─────────
@@ -140,10 +146,15 @@
 }
 
 // ── Scroll reveal (zone + trailing cards) ─────────────────────────────────
+// Cards rise AND travel along the inline axis (from the reading-start edge:
+// left in LTR, right in RTL), so the entrance follows the UI direction.
 .an-reveal {
   opacity: 0;
-  transform: translateY(12px);
+  transform: translateY(12px) translateX(-14px);
   transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.2, 0, 0, 1);
+}
+[dir='rtl'] .an-reveal {
+  transform: translateY(12px) translateX(14px);
 }
 .an-reveal.in-view {
   opacity: 1;
