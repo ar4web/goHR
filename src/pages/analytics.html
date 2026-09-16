@@ -23,30 +23,39 @@
 
   <div class="dash-head" id="dash-head"></div>
 
+  <!-- KPI hero strip — filled live by hr-dashboard.js -->
+  <div class="kpi-strip" id="analytics-kpis" aria-live="polite"></div>
+
   <!-- Analytics controls — purpose-built for analysis -->
-  <div class="card" style="padding:12px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between">
-    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-      <div class="btn-group" data-group aria-label="Range">
+  <div class="card an-controls">
+    <div class="an-controls-left">
+      <div class="btn-group" data-group role="group" aria-label="Range">
         <button class="btn btn-sm active" data-range="6M">6M</button>
         <button class="btn btn-sm" data-range="12M">12M</button>
         <button class="btn btn-sm" data-range="YTD">YTD</button>
       </div>
-      <select class="form-control" style="height:32px;min-width:140px" id="analytics-segment">
-        <option value="all">All segments</option>
-        <option value="saudi">Saudi only</option>
-        <option value="expat">Expat only</option>
-        <option value="ops">OPS</option>
-        <option value="hr">HR</option>
+      <select class="form-control" id="analytics-segment" aria-label="Segment">
+        <option value="all" data-i18n="an.segAll">All segments</option>
+        <option value="saudi" data-i18n="an.segSaudi">Saudi only</option>
+        <option value="expat" data-i18n="an.segExpat">Expat only</option>
+        <option value="ops" data-i18n="an.segOps">OPS</option>
+        <option value="hr" data-i18n="an.segHr">HR</option>
       </select>
-      <span class="caption-muted" id="analytics-meta" style="font-size:12px"></span>
+      <span class="caption-muted" id="analytics-meta"></span>
     </div>
-    <div style="display:flex;gap:8px">
-      <button class="btn btn-outline btn-sm" id="analytics-export">Export CSV</button>
-      <button class="btn btn-primary btn-sm" id="analytics-refresh">Refresh</button>
+    <div class="an-controls-right">
+      <button class="btn btn-outline btn-sm" id="analytics-export">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+        <span data-i18n="an.exportCsv">Export CSV</span>
+      </button>
+      <button class="btn btn-primary btn-sm" id="analytics-refresh">
+        <svg class="an-refresh-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+        <span data-i18n="common.refresh">Refresh</span>
+      </button>
     </div>
   </div>
 
-  <details class="card zone" open data-zone="workforce">
+  <details class="card zone an-reveal" open data-zone="workforce">
     <summary class="zone-head">
       <h2 class="zone-title" data-i18n="hr.dashboard.zoneWorkforce">Workforce &amp; HR dynamics</h2>
       <span class="zone-meta" id="zone-workforce-meta"></span>
@@ -54,7 +63,7 @@
     <div class="card-body">
       <div id="huroob-card"></div>
       <div class="row col-2 stack-gap">
-        <div class="card">
+        <div class="card an-inset">
           <div class="card-header">
             <div class="card-title" data-i18n="hr.dashboard.headcount">Headcount status</div>
           </div>
@@ -62,7 +71,7 @@
             <div class="chart-box chart-sm" id="chart-headcount"></div>
           </div>
         </div>
-        <div class="card">
+        <div class="card an-inset">
           <div class="card-header">
             <div class="card-title" data-i18n="hr.dashboard.tenure">Tenure mix</div>
           </div>
@@ -71,25 +80,26 @@
           </div>
         </div>
       </div>
-      <div class="card stack-gap">
+      <div class="card an-inset stack-gap">
         <div class="card-header">
-          <div class="card-title" data-i18n="hr.dashboard.separation">Hired / exited · 6 mo</div>
+          <div class="card-title" data-i18n="an.flowTitle">Hired / exited flow</div>
+          <div class="card-options"><span class="caption-muted" id="flow-range"></span></div>
         </div>
         <div class="card-body">
-          <div class="chart-box chart-sm" id="chart-separation"></div>
+          <div class="chart-box" id="chart-separation" style="height:280px;min-height:280px"></div>
         </div>
       </div>
     </div>
   </details>
 
-  <details class="card zone" open data-zone="geo">
+  <details class="card zone an-reveal" open data-zone="geo">
     <summary class="zone-head">
       <h2 class="zone-title" data-i18n="hr.dashboard.zoneGeo">Geography &amp; demographics</h2>
       <span class="zone-meta" id="zone-geo-meta"></span>
     </summary>
     <div class="card-body">
       <div class="chip-row" id="city-chips"></div>
-      <div class="card stack-gap">
+      <div class="card an-inset stack-gap">
         <div class="card-header">
           <div class="card-title" data-i18n="hr.dashboard.rosterTitle">Site roster</div>
         </div>
@@ -98,7 +108,7 @@
         </div>
       </div>
       <div class="row col-3 stack-gap">
-        <div class="card">
+        <div class="card an-inset">
           <div class="card-header">
             <div class="card-title" data-i18n="hr.dashboard.natMix">Nationality mix</div>
           </div>
@@ -106,7 +116,7 @@
             <div class="chart-box chart-sm chart-xs" id="chart-nationality"></div>
           </div>
         </div>
-        <div class="card">
+        <div class="card an-inset">
           <div class="card-header">
             <div class="card-title" data-i18n="hr.dashboard.saudiExpat">Saudi / expat</div>
           </div>
@@ -114,7 +124,7 @@
             <div class="chart-box chart-sm chart-xs" id="chart-saudiexp"></div>
           </div>
         </div>
-        <div class="card">
+        <div class="card an-inset">
           <div class="card-header">
             <div class="card-title" data-i18n="hr.dashboard.genderMix">Gender split</div>
           </div>
@@ -124,7 +134,7 @@
         </div>
       </div>
       <div class="row col-2 stack-gap">
-        <div class="card">
+        <div class="card an-inset">
           <div class="card-header">
             <div class="card-title" data-i18n="hr.dashboard.profMix">Profession mix</div>
           </div>
@@ -132,7 +142,7 @@
             <div class="chart-box chart-sm" id="chart-profession"></div>
           </div>
         </div>
-        <div class="card">
+        <div class="card an-inset">
           <div class="card-header">
             <div class="card-title" data-i18n="hr.dashboard.sponsorMatrix">Sponsorship matrix</div>
           </div>
@@ -141,7 +151,7 @@
           </div>
         </div>
       </div>
-      <div class="card stack-gap">
+      <div class="card an-inset stack-gap">
         <div class="card-header">
           <div class="card-title" data-i18n="hr.dashboard.skillsCloud">Skills cloud</div>
         </div>
@@ -152,7 +162,7 @@
     </div>
   </details>
 
-  <details class="card zone" open data-zone="compliance">
+  <details class="card zone an-reveal" open data-zone="compliance">
     <summary class="zone-head">
       <h2 class="zone-title" data-i18n="hr.dashboard.zoneCompliance">Compliance shield</h2>
       <span class="zone-meta" id="zone-compliance-meta"></span>
@@ -160,7 +170,7 @@
     <div class="card-body">
       <div class="chip-row" id="compliance-chips"></div>
       <div class="stack-gap">
-        <div class="card">
+        <div class="card an-inset">
           <div class="card-header">
             <div class="card-title" data-i18n="hr.dashboard.nitaqatMeter">Saudization vs target</div>
           </div>
@@ -169,7 +179,7 @@
           </div>
         </div>
       </div>
-      <div class="card stack-gap">
+      <div class="card an-inset stack-gap">
         <div class="card-header">
           <div class="card-title" data-i18n="hr.dashboard.expiryDeck">Expiration alert deck</div>
         </div>
@@ -180,7 +190,7 @@
     </div>
   </details>
 
-  <div class="row col-2 stack-gap">
+  <div class="row col-2 stack-gap an-reveal">
     <div class="card">
       <div class="card-header">
         <div class="card-title" data-i18n="hr.dashboard.alerts">Needs attention</div>
@@ -202,7 +212,7 @@
     </div>
   </div>
 
-  <div class="card">
+  <div class="card an-reveal">
     <div class="card-header">
       <div class="card-title" data-i18n="hr.dashboard.expiries">Upcoming Iqama expiries</div>
       <div class="card-options">
