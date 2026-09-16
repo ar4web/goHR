@@ -8,6 +8,7 @@ import { NAV } from './shell-render.js';
 import { showToast } from './toast.js';
 import { escapeHtml } from './markup.js';
 import { showModal } from './modal.js';
+import { t, LANG_EVENT } from './i18n.js';
 
 let host = null;
 let inputEl = null;
@@ -166,14 +167,14 @@ function open() {
     <div class="cmdk-dialog" role="dialog" aria-modal="true" aria-label="Command palette">
       <div class="cmdk-input-wrap">
         <svg class="cmdk-search-icon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="7" cy="7" r="5"/><path d="M11 11l3.5 3.5"/></svg>
-        <input class="cmdk-input" type="text" placeholder="Search pages or run a command…" autocomplete="off" spellcheck="false" aria-label="Search">
+        <input class="cmdk-input" type="text" placeholder="${escapeHtml(t('common.searchPh'))}" autocomplete="off" spellcheck="false" aria-label="${escapeHtml(t('common.search'))}">
         <kbd class="cmdk-esc">esc</kbd>
       </div>
       <div class="cmdk-list" role="listbox"></div>
       <div class="cmdk-footer">
-        <span><kbd>↑</kbd><kbd>↓</kbd> navigate</span>
-        <span><kbd>↵</kbd> select</span>
-        <span><kbd>esc</kbd> close</span>
+        <span><kbd>↑</kbd><kbd>↓</kbd> ${escapeHtml(t('cmdk.navigate'))}</span>
+        <span><kbd>↵</kbd> ${escapeHtml(t('cmdk.select'))}</span>
+        <span><kbd>esc</kbd> ${escapeHtml(t('common.close'))}</span>
       </div>
     </div>
   `;
@@ -201,6 +202,22 @@ function open() {
   renderList();
   inputEl.focus();
 }
+
+// If the language is toggled while the palette is open, re-translate its
+// visible chrome (placeholder + footer hints).
+function localizeOpenPalette() {
+  if (!host || !inputEl) {return;}
+  inputEl.setAttribute('placeholder', t('common.searchPh'));
+  inputEl.setAttribute('aria-label', t('common.search'));
+  const footer = host.querySelector('.cmdk-footer');
+  if (footer) {
+    footer.innerHTML = `
+      <span><kbd>↑</kbd><kbd>↓</kbd> ${escapeHtml(t('cmdk.navigate'))}</span>
+      <span><kbd>↵</kbd> ${escapeHtml(t('cmdk.select'))}</span>
+      <span><kbd>esc</kbd> ${escapeHtml(t('common.close'))}</span>`;
+  }
+}
+document.addEventListener(LANG_EVENT, localizeOpenPalette);
 
 function close() {
   if (!host) {return;}

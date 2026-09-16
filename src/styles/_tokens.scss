@@ -113,6 +113,9 @@
   --shadow-card: 0 0 0 1px var(--border-translucent), rgba(30,38,51,0.04) 0 2px 4px 0;
 
   --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  // Arabic-first stack; becomes --font when <html lang="ar"> so every
+  // component (inputs, command palette, menus, tables) matches in RTL.
+  --font-ar: 'IBM Plex Sans Arabic', 'Inter', 'Segoe UI', Tahoma, sans-serif;
   --font-mono: 'SF Mono', Monaco, Consolas, 'Liberation Mono', monospace;
   --font-size: 0.875rem;
   --font-size-sm: 0.8125rem;
@@ -238,6 +241,12 @@ body {
   background: var(--body-bg);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+// Arabic UI — every var(--font) consumer (including inputs, the command
+// palette, popovers and tables) switches to the Arabic stack at once.
+html[lang='ar'] {
+  --font: 'IBM Plex Sans Arabic', 'Inter', 'Segoe UI', Tahoma, sans-serif;
 }
 
 ::-webkit-scrollbar { width: 6px; }

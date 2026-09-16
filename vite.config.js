@@ -29,7 +29,11 @@ function shellInjectionPlugin() {
         let out = html;
 
         // PWA + meta tags for every page.
+        const fontsHref = 'https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap';
         const metaPwa = `<link rel="stylesheet" href="${base}src/styles/main.scss">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="${fontsHref}" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="${fontsHref}" rel="stylesheet"></noscript>
 <link rel="manifest" href="${base}site.webmanifest">
 <meta name="theme-color" content="#1ABB9C" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#111111" media="(prefers-color-scheme: dark)">
