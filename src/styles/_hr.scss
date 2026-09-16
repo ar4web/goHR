@@ -1400,7 +1400,7 @@ h3.sub:first-child {
   min-width: 0;
 }
 .emp-filter-field .form-control {
-  height: 34px;
+  height: var(--control-h);
   width: 100%;
   background: var(--card-bg, #fff);
   border: 0;

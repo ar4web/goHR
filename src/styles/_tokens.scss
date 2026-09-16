@@ -1,30 +1,39 @@
-// goHR — Design tokens (white-label: --primary is overridden at runtime
-// from Settings → Company brand → Brand color; teal is the default).
-// DNA: Dark sidebar · Teal #1ABB9C default · Light #f9fafb
-// Font: Inter · 14px base · line-height 1.4286
-// Radius: 4/6/8 · Shadows: near-invisible
+// goHR — Design tokens.
+// DNA: charcoal sidebar · orange accent · light or dark content surfaces.
+// Runtime-customizable tokens are driven by the Settings studio
+// (src/components/customize.js): every var marked 「studio」 below is set on
+// :root from a persisted preference, with the value here as the default.
 
 :root {
-  --sidebar-bg: #1a2332;
+  // ── Studio: layout sizing factors (defaults; overridden inline at boot) ──
+  --font-factor: 1;
+  --icon-scale: 1;
+  --spacing-factor: 1;
+  --radius-base: 6px;
+  --control-h: 34px;
+  --btn-h: 32px;
+  --topbar-h: 56px;
+
+  // ── Sidebar ─────────────────────────────────────────────────────────────
+  --sidebar-bg: #16181c;
   --sidebar-hover: rgba(255, 255, 255, 0.06);
-  --sidebar-active: rgba(26, 187, 156, 0.12);
-  --sidebar-text: #9fb0c3;
-  --sidebar-text-hover: #c5d0dc;
+  --sidebar-active: rgba(249, 115, 22, 0.18);
+  --sidebar-text: #9aa3ad;
+  --sidebar-text-hover: #cbd2da;
   --sidebar-text-active: #ffffff;
-  --sidebar-border: rgba(255,255,255,0.06);
+  --sidebar-border: rgba(255,255,255,0.07);
   --sidebar-w: 252px;
 
-  --primary: #1ABB9C;
-  --primary-lt: rgba(26,187,156,0.06);
-  --primary-dk: #169f85;
-  // RGB triplet of the accent for rgba() tints; repainted per theme.
-  --primary-rgb: 26, 187, 156;
+  // ── Accent — construction orange, shared by light & dark ────────────────
+  --primary: #f97316;
+  --primary-lt: rgba(249,115,22,0.1);
+  --primary-dk: #ea6a0c;
+  // RGB triplet of the accent for rgba() tints; repainted per theme/brand.
+  --primary-rgb: 249, 115, 22;
   --yellow-dk: #7a5200;
-  /* Dark ink for text sitting on primary teal (buttons, brand marks).
-     White-on-teal fails AA; this pairs at 7+:1 in both modes. */
-  --on-primary: #06302B;
-  /* Avatar palette — dark variants so white initials pass AA (4.5:1+).
-     Same values in both modes (dark theme never lightens base hues). */
+  /* Dark ink on the bright orange keeps AA contrast. */
+  --on-primary: #241100;
+  /* Avatar palette — dark variants so white initials pass AA (4.5:1+). */
   --avatar-teal: #0C6B57;
   --avatar-blue: #0B5CAD;
   --avatar-azure: #1668B0;
@@ -33,9 +42,10 @@
   --avatar-red: #A82A2A;
   --avatar-purple: #7E2A93;
 
-  --body-bg: #f5f7fb;
+  // ── Surfaces (light theme) ──────────────────────────────────────────────
+  --body-bg: #f3f5f8;
   --bg-surface: #ffffff;
-  --bg-surface-secondary: #f9fafb;
+  --bg-surface-secondary: #f6f7f9;
   // Card fill — explicit form of the var(--card-bg, #fff) fallbacks used
   // across HR screens; dark theme repaints it.
   --card-bg: #ffffff;
@@ -43,14 +53,14 @@
   --topbar-bg: rgba(255, 255, 255, 0.85);
   color-scheme: light;
 
-  --border-color: #e6e7eb;
-  --border-color-light: #eff0f3;
-  --border-translucent: rgba(4,32,69,0.08);
+  --border-color: #e3e6ea;
+  --border-color-light: #eceef1;
+  --border-translucent: rgba(20, 28, 42, 0.08);
 
-  --text: #1e2633;
-  --text-secondary: #626d7d;
-  --text-muted: #7e8896;
-  --text-disabled: #c0c7cf;
+  --text: #191d23;
+  --text-secondary: #5b6572;
+  --text-muted: #79828f;
+  --text-disabled: #b9c0c9;
 
   // Ink color for text sitting on pale status tints (green-lt, yellow-lt).
   // Dark theme swaps these for bright pastels.
@@ -59,7 +69,7 @@
   --danger-ink: #a31228;
 
   // Hover ring for cards — tinted with the accent in each theme.
-  --card-hover-border: rgba(26, 187, 156, 0.15);
+  --card-hover-border: rgba(249, 115, 22, 0.22);
 
   --blue: #066fd1;
   --azure: #4299e1;
@@ -73,18 +83,19 @@
   --indigo: #4263eb;
   --cyan: #17a2b8;
 
-  --green-lt: rgba(47,179,68,0.06);
-  --red-lt: rgba(214,57,57,0.06);
-  --yellow-lt: rgba(245,159,0,0.06);
-  --blue-lt: rgba(6,111,209,0.06);
-  --azure-lt: rgba(66,153,225,0.06);
-  --purple-lt: rgba(174,62,201,0.06);
-  --cyan-lt: rgba(23,162,184,0.06);
+  --green-lt: rgba(47,179,68,0.07);
+  --red-lt: rgba(214,57,57,0.07);
+  --yellow-lt: rgba(245,159,0,0.08);
+  --blue-lt: rgba(6,111,209,0.07);
+  --azure-lt: rgba(66,153,225,0.07);
+  --purple-lt: rgba(174,62,201,0.07);
+  --cyan-lt: rgba(23,162,184,0.07);
 
-  --radius: 6px;
-  --radius-sm: 4px;
-  --radius-lg: 8px;
-  --radius-xl: 12px;
+  // ── Studio: corners derived from a single base ──────────────────────────
+  --radius-sm: calc(var(--radius-base) * 0.667);
+  --radius: var(--radius-base);
+  --radius-lg: calc(var(--radius-base) * 1.333);
+  --radius-xl: calc(var(--radius-base) * 2);
 
   /* Transition */
   --transition: 150ms ease;
@@ -95,36 +106,41 @@
   --card-shadow-hover: 0 4px 12px rgba(0,0,0,0.08);
   --card-radius: var(--radius-lg);
 
-  /* Spacing scale — 4px base, matches Tailwind's mental model (var(--space-4)
-     is 16px just like Tailwind's `p-4` is 16px). Use these instead of raw
-     pixel values for paddings, margins, and grid gaps. Going off-scale is
-     sometimes correct (e.g. 14px between two specific labels) but should be
-     the exception. Six steps cover ~95% of UI needs. */
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-5: 24px;
-  --space-6: 32px;
-  --space-7: 48px;
-  --space-8: 64px;
+  /* ── Studio: spacing scale — 4px base × spacing factor. var(--space-4) is
+     16px at factor 1, like Tailwind's p-4. ─────────────────────────────── */
+  --space-1: calc(4px * var(--spacing-factor));
+  --space-2: calc(8px * var(--spacing-factor));
+  --space-3: calc(12px * var(--spacing-factor));
+  --space-4: calc(16px * var(--spacing-factor));
+  --space-5: calc(24px * var(--spacing-factor));
+  --space-6: calc(32px * var(--spacing-factor));
+  --space-7: calc(48px * var(--spacing-factor));
+  --space-8: calc(64px * var(--spacing-factor));
 
-  --shadow: rgba(30,38,51,0.04) 0 2px 4px 0;
-  --shadow-card: 0 0 0 1px var(--border-translucent), rgba(30,38,51,0.04) 0 2px 4px 0;
+  --shadow: rgba(25,29,35,0.04) 0 2px 4px 0;
+  --shadow-card: 0 0 0 1px var(--border-translucent), rgba(25,29,35,0.04) 0 2px 4px 0;
 
+  // ── Studio: typography ──────────────────────────────────────────────────
   --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  // Arabic-first stack; becomes --font when <html lang="ar"> so every
-  // component (inputs, command palette, menus, tables) matches in RTL.
+  // Arabic-first stack used when <html lang="ar">.
   --font-ar: 'IBM Plex Sans Arabic', 'Inter', 'Segoe UI', Tahoma, sans-serif;
+  --font-system: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --font-mono: 'SF Mono', Monaco, Consolas, 'Liberation Mono', monospace;
-  --font-size: 0.875rem;
-  --font-size-sm: 0.8125rem;
-  --font-size-xs: 0.75rem;
+  // Font-size tokens scale with --font-factor (set from the studio slider).
+  --font-size: calc(0.875rem * var(--font-factor));
+  --font-size-sm: calc(0.8125rem * var(--font-factor));
+  --font-size-xs: calc(0.75rem * var(--font-factor));
   --line-height: 1.4286;
   --font-weight-normal: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
+
+  // ── Studio: icon sizes scale together ───────────────────────────────────
+  --icon-size: calc(18px * var(--icon-scale));
+  --nav-icon-size: calc(18px * var(--icon-scale));
+  --topbar-icon-size: calc(20px * var(--icon-scale));
+  --btn-icon-size: calc(14px * var(--icon-scale));
 
   /* Status colors */
   --status-active: #2fb344;
@@ -134,17 +150,12 @@
 }
 
 // ─────────────────────────────────────────────────────────────────────────
-// DARK ORANGE theme — charcoal surfaces with a vivid orange accent,
-// inspired by the construction / operations-console references. Activated
-// on <html data-theme="dark"> by the theme engine (src/components/theme.js)
-// and the topbar toggle. Every token above that a component consumes is
-// re-painted here so no screen keeps a light surface.
+// DARK ORANGE theme — charcoal surfaces with the same orange accent.
+// Activated on <html data-theme="dark"> by the theme engine / studio.
 // ─────────────────────────────────────────────────────────────────────────
 :root[data-theme='dark'] {
   color-scheme: dark;
 
-  // Shell chrome — sidebar one step darker than the body so the content
-  // reads as the lit surface.
   --sidebar-bg: #0e1013;
   --sidebar-hover: rgba(255, 255, 255, 0.06);
   --sidebar-active: rgba(249, 115, 22, 0.18);
@@ -153,15 +164,9 @@
   --sidebar-text-active: #ffffff;
   --sidebar-border: rgba(255, 255, 255, 0.06);
 
-  // Accent — vivid construction orange. Dark ink on orange keeps AA.
-  --primary: #f97316;
   --primary-lt: rgba(249, 115, 22, 0.14);
-  --primary-dk: #ea6a0c;
-  --primary-rgb: 249, 115, 22;
   --yellow-dk: #ffd98a;
-  --on-primary: #241100;
 
-  // Avatars stay saturated enough to carry white initials on charcoal.
   --avatar-teal: #12977d;
   --avatar-blue: #2f86de;
   --avatar-azure: #3b93d6;
@@ -170,7 +175,6 @@
   --avatar-red: #d05151;
   --avatar-purple: #c061da;
 
-  // Surfaces — body darkest, cards raised one step, headers/hovers lighter.
   --body-bg: #121417;
   --bg-surface: #1b1e23;
   --bg-surface-secondary: #22262d;
@@ -186,14 +190,12 @@
   --text-muted: #7d8794;
   --text-disabled: #616976;
 
-  // Pale-tint ink inverts to bright status pastels on charcoal.
   --ok-ink: #5fd67f;
   --warn-ink: #ffc65a;
   --danger-ink: #ff9aa6;
 
   --card-hover-border: rgba(249, 115, 22, 0.4);
 
-  // Brightened chart/status hues for dark backgrounds.
   --blue: #4d9fff;
   --azure: #63b3ff;
   --green: #44c464;
@@ -206,7 +208,6 @@
   --indigo: #7c93ff;
   --cyan: #3cc7dd;
 
-  // Tints need more alpha to read on charcoal.
   --green-lt: rgba(68, 196, 100, 0.14);
   --red-lt: rgba(240, 97, 109, 0.14);
   --yellow-lt: rgba(255, 197, 61, 0.14);
@@ -220,15 +221,11 @@
   --status-critical: #f0616d;
   --status-info: #4d9fff;
 
-  // Deeper, warmer shadows for raised charcoal surfaces.
   --card-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--border-translucent);
   --card-shadow-hover: 0 10px 28px rgba(0, 0, 0, 0.5);
   --shadow: rgba(0, 0, 0, 0.35) 0 2px 6px 0;
   --shadow-card: 0 0 0 1px var(--border-translucent), rgba(0, 0, 0, 0.35) 0 2px 6px 0;
 }
-
-// Light mode is the default; tokens above are the single source of truth.
-// The pre-paint script in vite.config.js restores the saved data-theme.
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -241,12 +238,14 @@ body {
   background: var(--body-bg);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 200ms ease, color 200ms ease;
 }
 
-// Arabic UI — every var(--font) consumer (including inputs, the command
-// palette, popovers and tables) switches to the Arabic stack at once.
+// Arabic UI — every var(--font) consumer (inputs, command palette, popovers,
+// tables) switches to the Arabic stack. The customization studio can replace
+// both stacks at runtime.
 html[lang='ar'] {
-  --font: 'IBM Plex Sans Arabic', 'Inter', 'Segoe UI', Tahoma, sans-serif;
+  --font: var(--font-ar);
 }
 
 ::-webkit-scrollbar { width: 6px; }

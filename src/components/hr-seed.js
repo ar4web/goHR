@@ -8,9 +8,9 @@ export const SEED_COMPANY = {
   nameAr: 'goHR',
   crNo: '1010XXXXXX',
   addressEn: 'Riyadh, Saudi Arabia',
-  addressAr: '╪º┘ä╪▒┘è╪º╪╢╪î ╪º┘ä┘à┘à┘ä┘â╪⌐ ╪º┘ä╪╣╪▒╪¿┘è╪⌐ ╪º┘ä╪│╪╣┘ê╪»┘è╪⌐',
+  addressAr: 'الرياض، المملكة العربية السعودية',
   logoUrl: '',
-  primary: '#1ABB9C',
+  primary: '#f97316',
   defaultLang: 'en'
 };
 

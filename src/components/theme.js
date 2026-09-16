@@ -19,13 +19,13 @@ export const DEFAULT_THEME = THEMES.LIGHT;
 // <html> background shown before the stylesheet lands (must match
 // --body-bg in each theme; mirrored in the vite.config.js pre-paint script).
 const PRE_PAINT_BG = Object.freeze({
-  light: '#f5f7fb',
+  light: '#f3f5f8',
   dark: '#121417'
 });
 
 // Browser chrome color (<meta name="theme-color">).
 const META_COLOR = Object.freeze({
-  light: '#1ABB9C',
+  light: '#f97316',
   dark: '#121417'
 });
 

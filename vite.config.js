@@ -67,7 +67,7 @@ function shellInjectionPlugin() {
         // avoid a flash. The saved theme (light | dark) is read synchronously
         // from localStorage; keep the backgrounds in sync with --body-bg in
         // _tokens.scss and PRE_PAINT_BG in src/components/theme.js.
-        const prePaint = `<script>(function(){try{var t='light';try{if(localStorage.getItem('hr:theme')==='dark'){t='dark';}}catch(e){}document.documentElement.setAttribute('data-theme',t);document.documentElement.style.background=(t==='dark'?'#121417':'#f5f7fb');document.documentElement.setAttribute('lang','en');document.documentElement.setAttribute('dir','ltr');}catch(e){}})();</script>`;
+        const prePaint = `<script>(function(){try{var t='light';try{if(localStorage.getItem('hr:theme')==='dark'){t='dark';}}catch(e){}document.documentElement.setAttribute('data-theme',t);document.documentElement.style.background=(t==='dark'?'#121417':'#f3f5f8');document.documentElement.setAttribute('lang','en');document.documentElement.setAttribute('dir','ltr');}catch(e){}})();</script>`;
         out = out.replace(/<\/head>/i, `${prePaint}\n</head>`);
 
         // Admin-shell injection for pages with body[data-shell="admin"].

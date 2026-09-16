@@ -54,7 +54,7 @@
 }
 
 .sidebar-brand-row {
-  height: 56px;
+  height: var(--topbar-h);
   display: flex;
   align-items: center;
   gap: 4px;
@@ -75,14 +75,14 @@
 .brand-icon {
   width: 28px; height: 28px;
   background: var(--primary);
-  border-radius: 6px;
+  border-radius: var(--radius);
   display: flex; align-items: center; justify-content: center;
   color: var(--on-primary);
   font-weight: 700;
   font-size: 13px;
 }
 .brand-name {
-  font-size: 15px;
+  font-size: calc(15px * var(--font-factor));
   font-weight: 600;
   color: #fff;
   letter-spacing: -0.2px;
@@ -110,7 +110,8 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: #98a5b8;
+  color: var(--sidebar-text);
+  opacity: 0.7;
 }
 
 .nav-link {
@@ -120,13 +121,13 @@
   padding: 6px 12px;
   border-radius: var(--radius-sm);
   color: var(--sidebar-text);
-  font-size: 13px;
+  font-size: calc(13px * var(--font-factor));
   font-weight: var(--font-weight-normal);
   text-decoration: none;
   cursor: pointer;
   transition: background 120ms, color 120ms;
   margin-bottom: 1px;
-  min-height: 32px;
+  min-height: var(--btn-h);
 }
 .nav-link:hover {
   color: var(--sidebar-text-hover);
@@ -139,7 +140,7 @@
   font-weight: var(--font-weight-medium);
 }
 .nav-link .icon {
-  width: 18px; height: 18px;
+  width: var(--nav-icon-size); height: var(--nav-icon-size);
   opacity: 0.75;
   flex-shrink: 0;
 }
@@ -231,7 +232,7 @@ body.page-leave { opacity: 0; }
   top: 0;
   inset-inline-start: var(--sidebar-w);
   inset-inline-end: 0;
-  height: 56px;
+  height: var(--topbar-h);
   background: var(--topbar-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -275,8 +276,8 @@ body.page-leave { opacity: 0; }
 // Every topbar glyph shares one size, stroke and round caps so the set
 // reads as a single icon pack.
 .topbar-icon-btn svg {
-  width: 20px;
-  height: 20px;
+  width: var(--topbar-icon-size);
+  height: var(--topbar-icon-size);
   stroke-linecap: round;
   stroke-linejoin: round;
 }
@@ -358,7 +359,7 @@ button.settings-toggle.nav-link {
   font-family: inherit;
   text-align: start;
 }
-.settings-toggle .icon { width: 18px; height: 18px; opacity: 0.75; }
+.settings-toggle .icon { width: var(--nav-icon-size); height: var(--nav-icon-size); opacity: 0.75; }
 .settings-toggle:hover .icon { opacity: 1; }
 
 // Sidebar toggle lives in the dark sidebar brand row — same 34px target,
@@ -421,13 +422,13 @@ button.settings-toggle.nav-link {
 }
 .search-box input {
   width: 100%;
-  height: 32px;
+  height: var(--btn-h);
   padding: 0 10px 0 32px;
   background: var(--body-bg);
   border: 1px solid var(--border-color);
   border-radius: var(--radius);
   font: inherit;
-  font-size: 13px;
+  font-size: calc(13px * var(--font-factor));
   color: var(--text);
   outline: none;
   transition: border-color 150ms, box-shadow 150ms;
@@ -463,7 +464,7 @@ button.settings-toggle.nav-link {
 // ────────────────────────
 .main {
   margin-inline-start: var(--sidebar-w);
-  padding-top: 56px;
+  padding-top: var(--topbar-h);
   min-height: 100vh;
   transition: margin-left 220ms cubic-bezier(0.2, 0, 0, 1);
 }

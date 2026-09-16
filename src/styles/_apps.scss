@@ -1055,7 +1055,7 @@
 .qty-btn:hover { background: var(--bg-surface-secondary); }
 .qty-controls input {
   width: 48px;
-  height: 34px;
+  height: var(--control-h);
   text-align: center;
   border: none;
   border-inline-start: 1px solid var(--border-color);

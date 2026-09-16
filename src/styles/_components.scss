@@ -4,12 +4,12 @@
 .btn {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  height: 32px;
+  gap: calc(5px * var(--spacing-factor));
+  height: var(--btn-h);
   padding: 0 12px;
   border-radius: var(--radius-sm);
   font: inherit;
-  font-size: 12.5px;
+  font-size: calc(12.5px * var(--font-factor));
   font-weight: var(--font-weight-medium);
   cursor: pointer;
   border: 1px solid transparent;
@@ -17,10 +17,10 @@
   line-height: 1;
   white-space: nowrap;
 }
-.btn svg { width: 14px; height: 14px; }
+.btn svg { width: var(--btn-icon-size); height: var(--btn-icon-size); }
 // Icon safety net: every inline icon has an explicit size so no SVG can
 // fall back to the 300×150 default (pagination, avatar upload, empty states).
-.page-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+.page-btn svg { width: var(--btn-icon-size); height: var(--btn-icon-size); flex-shrink: 0; }
 .avatar-upload .overlay svg { width: 20px; height: 20px; }
 .empty-state-icon { color: var(--text-disabled); }
 .empty-state-icon svg { width: 48px; height: 48px; }
@@ -45,7 +45,7 @@
   box-shadow: var(--shadow);
 }
 .btn-outline:hover { background: var(--bg-surface-secondary); color: var(--text); }
-.btn-sm { height: 28px; padding: 0 10px; font-size: 12px; }
+.btn-sm { height: calc(var(--btn-h) - 4px); padding: 0 10px; font-size: calc(12px * var(--font-factor)); }
 // Toolbar height language: search boxes (.search-box input, 32px), selects
 // and buttons align at 32px inside card headers, filter rows, toolbars and
 // page actions. Forms keep the roomier 36px .form-control. .btn-sm stays 28px.
@@ -53,7 +53,7 @@
 .users-filters .form-control,
 .page-actions .form-control,
 .toolbar .form-control {
-  height: 32px;
+  height: var(--btn-h);
 }
 
 // Visible keyboard focus everywhere. Component-level :focus rules (higher
@@ -132,7 +132,7 @@
   transition: background 100ms, color 100ms;
 }
 .card-opt-btn:hover { background: var(--body-bg); color: var(--text-secondary); }
-.card-opt-btn svg { width: 14px; height: 14px; }
+.card-opt-btn svg { width: var(--btn-icon-size); height: var(--btn-icon-size); }
 
 .card-body { padding: 16px; }
 .card-body.p-0 { padding: 0; }
@@ -148,14 +148,14 @@ table.table,
 table.hr-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 13px;
+  font-size: calc(13px * var(--font-factor));
   color: var(--text-secondary);
 }
 table.table th,
 table.hr-table th {
   text-align: start;
   padding: 6px var(--space-4);
-  font-size: 11px;
+  font-size: calc(11px * var(--font-factor));
   font-weight: var(--font-weight-bold);
   text-transform: uppercase;
   letter-spacing: 0.4px;
@@ -189,6 +189,28 @@ table.table tbody tr:has(input[type="checkbox"]:checked),
 table.hr-table tbody tr:has(input[type="checkbox"]:checked) {
   background: var(--primary-lt);
 }
+// Studio table-alignment control: one attribute re-aligns every data
+// table. Numeric columns (.num) and trailing action cells stay right-aligned
+// because they host figures/actions regardless of the chosen flow.
+html[data-table-align='center'] table.table th,
+html[data-table-align='center'] table.hr-table th,
+html[data-table-align='center'] table.table td,
+html[data-table-align='center'] table.hr-table td {
+  text-align: center;
+}
+html[data-table-align='end'] table.table th,
+html[data-table-align='end'] table.hr-table th,
+html[data-table-align='end'] table.table td,
+html[data-table-align='end'] table.hr-table td {
+  text-align: end;
+}
+html[data-table-align] table.table .num,
+html[data-table-align] table.hr-table .num,
+html[data-table-align] table.table th.num,
+html[data-table-align] table.hr-table th.num {
+  text-align: end;
+}
+
 table.table .num,
 table.hr-table .num,
 table.table th.num,
@@ -371,7 +393,7 @@ table.hr-table td:last-child .card-opt-btn {
   border: none;
   text-align: start;
   font: inherit;
-  font-size: 13px;
+  font-size: calc(13px * var(--font-factor));
   color: var(--text);
   padding: 7px 10px;
   border-radius: var(--radius-sm);
@@ -706,13 +728,13 @@ body.modal-open { overflow: hidden; }
 .modal-form-row textarea,
 .modal-form-row select {
   width: 100%;
-  height: 34px;
+  height: var(--control-h);
   padding: 0 var(--space-2);
   background: var(--bg-surface);
   border: 1px solid var(--border-color);
   border-radius: var(--radius);
   font: inherit;
-  font-size: 13px;
+  font-size: calc(13px * var(--font-factor));
   color: var(--text);
   outline: none;
   transition: border-color 120ms, box-shadow 120ms;
@@ -840,10 +862,10 @@ body.modal-open { overflow: hidden; }
 // ────────────────────────
 //  EXTENDED BUTTONS — color variants, sizes, states, groups
 // ────────────────────────
-.btn-lg { height: 38px; padding: 0 16px; font-size: 13.5px; }
-.btn-icon { width: 32px; padding: 0; justify-content: center; }
-.btn-icon.btn-sm { width: 28px; }
-.btn-icon.btn-lg { width: 38px; }
+.btn-lg { height: calc(var(--btn-h) + 6px); padding: 0 16px; font-size: calc(13.5px * var(--font-factor)); }
+.btn-icon { width: var(--btn-h); padding: 0; justify-content: center; }
+.btn-icon.btn-sm { width: calc(var(--btn-h) - 4px); }
+.btn-icon.btn-lg { width: calc(var(--btn-h) + 6px); }
 .btn-success {
   background: var(--green);
   color: white;
@@ -1569,7 +1591,7 @@ blockquote footer cite {
   border: 0;
   outline: 0;
   font-family: var(--font);
-  font-size: 14px;
+  font-size: calc(14px * var(--font-factor));
   color: var(--text);
 }
 .cmdk-input::placeholder { color: var(--text-muted); }
@@ -1605,7 +1627,7 @@ blockquote footer cite {
   background: transparent;
   border-radius: var(--radius-sm);
   font-family: var(--font);
-  font-size: 13px;
+  font-size: calc(13px * var(--font-factor));
   color: var(--text);
   cursor: pointer;
   text-align: start;

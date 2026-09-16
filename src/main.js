@@ -9,6 +9,7 @@ import { openMenu, DEFAULT_CARD_MENU } from './components/menus.js';
 import { initCommandPalette } from './components/command-palette.js';
 import { initPageActions } from './components/page-actions.js';
 import { initI18n } from './components/i18n.js';
+import { initCustomize } from './components/customize.js';
 import { initTheme } from './components/theme.js';
 import { initShellChrome } from './components/shell-chrome.js';
 
@@ -16,6 +17,7 @@ mountShell();
 initTheme();
 initShellChrome();
 initI18n();
+initCustomize();
 // Heavy last: charts (echarts) + grids (datatables) mount after first paint
 // so shell, text and LCP settle first. Skeletons cover the wait; idle fires
 // ASAP when the main thread is free, setTimeout covers jsdom/no-idle.

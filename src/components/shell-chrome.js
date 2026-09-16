@@ -17,6 +17,7 @@ import { setTheme, getTheme, THEMES } from './theme.js';
 import { getSeed } from './hr-api.js';
 import { daysUntil } from './hr-statutory.js';
 import { showToast } from './toast.js';
+import { openCustomizeSettings } from './customize.js';
 import { escapeHtml as esc } from './markup.js';
 
 // ── Inline icon set (16–18px, currentColor) ───────────────────────────────
@@ -34,7 +35,9 @@ const ICON = {
   sun:
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></svg>',
   globe:
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>'
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
+  sliders:
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 6h10M18 6h2M4 12h2M10 12h10M4 18h7M15 18h5"/><circle cx="16" cy="6" r="2"/><circle cx="8" cy="12" r="2"/><circle cx="13" cy="18" r="2"/></svg>'
 };
 
 // Session read-state (kept light deliberately; no backend inbox).
@@ -203,8 +206,7 @@ function buildUserPanel() {
     <button class="menu-item menu-item-danger" type="button" data-signout>${esc(t('common.signOut'))}</button>`;
   root.querySelector('[data-pref]').addEventListener('click', () => {
     closeMenu();
-    const gear = document.getElementById('sidebar-settings');
-    if (gear) {openSettingsPanel(gear);}
+    openCustomizeSettings();
   });
   root.querySelector('a.menu-item').addEventListener('click', () => closeMenu());
   root.querySelector('[data-signout]').addEventListener('click', () => {
@@ -237,6 +239,13 @@ export function openSettingsPanel(trigger) {
         <span class="panel-from">${esc(t('common.language'))}</span>
         <span class="panel-text" data-lang-state>${ar ? 'العربية' : 'English'}</span>
       </span>
+    </button>
+    <button class="panel-row" type="button" data-cz-row>
+      <span class="panel-icon panel-icon-ok">${ICON.sliders}</span>
+      <span class="panel-body">
+        <span class="panel-from">${esc(t('cz.title'))}</span>
+        <span class="panel-text">${esc(t('st.prefsD'))}</span>
+      </span>
     </button>`;
   root.querySelector('[data-theme-row]').addEventListener('click', () => {
     const next = dark ? THEMES.LIGHT : THEMES.DARK;
@@ -247,6 +256,10 @@ export function openSettingsPanel(trigger) {
   root.querySelector('[data-lang-row]').addEventListener('click', () => {
     setLang(ar ? 'en' : 'ar');
     closeMenu();
+  });
+  root.querySelector('[data-cz-row]').addEventListener('click', () => {
+    closeMenu();
+    openCustomizeSettings();
   });
   openPanel(trigger, root, { width: 300 });
 }

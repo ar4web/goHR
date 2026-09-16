@@ -70,7 +70,7 @@ export function renderSiteMap(el, cfg = {}) {
           leaflet
             .circleMarker([s2.lat, s2.lng], {
               radius: radiusFor(n),
-              color: css.getPropertyValue('--primary').trim() || '#1ABB9C',
+              color: css.getPropertyValue('--primary').trim() || '#f97316',
               weight: 2,
               fillOpacity: 0.25
             })
