@@ -3,8 +3,8 @@
 
 import { showToast } from './toast.js';
 import { showModal } from './modal.js';
-import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
-import { fmtSAR, fmtDate, fmtHijri, initialsOf, maskIban, L } from './hr-locale.js';
+import { t, currentLang, LANG_EVENT } from './i18n.js';
+import { fmtSAR, fmtDate, fmtHijri, initialsOf, maskIban } from './hr-locale.js';
 import { calcGosi, calcEOSB, daysUntil, yearsBetween, annualBalance } from './hr-statutory.js';
 import { getSeed } from './hr-api.js';
 import { exportData } from './import-export.js';
@@ -116,8 +116,8 @@ function renderHeader(e, info) {
   const meta = document.getElementById('emp-file-meta');
   const warning = document.getElementById('emp-file-warning');
   if (!e) {
-    if (aHead) {aHead.innerHTML = '<div class="hr-empty">Employee record not found.</div>';}
-    if (meta) {meta.textContent = 'Record unavailable';}
+    if (aHead) {aHead.innerHTML = `<div class="hr-empty">${t('file.recordNotFound')}</div>`;}
+    if (meta) {meta.textContent = t('file.recordUnavailable');}
     return;
   }
   if (avatarEl) {
@@ -130,7 +130,7 @@ function renderHeader(e, info) {
   if (warning) {
     warning.hidden = !info.missing;
     warning.textContent = info.missing
-      ? `Code ${info.code} was not found. Showing the first available employee record.`
+      ? t('file.codeNotFound').replace('{code}', info.code)
       : '';
   }
   if (!aHead) {return;}
@@ -154,7 +154,7 @@ function renderHeader(e, info) {
         </div>
       </div>
       <div class="emp-file-package">
-        <div>Total package</div>
+        <div>${t('file.totalPackage')}</div>
         <strong>${esc(fmtSAR(total))}</strong>
         <span>${esc(e.phone || '—')}<br>${esc(e.email || '—')}</span>
       </div>
@@ -177,96 +177,102 @@ function renderBody(e) {
 
   // A4 dense dossier — all areas visible, not tabs.
   const overview =
-    '<div class="a4-card"><h3>Personal</h3>' +
-    '<div class="hr-kv"><span>Code</span><strong>' + esc(e.code) + '</strong></div>' +
-    kvd('Nationality', e.nat) +
-    kvd(e.saudi ? 'National ID' : 'Iqama', e.saudi ? e.nid || '—' : e.iqama || '—') +
-    kvd('Phone', e.phone || '—') +
-    kvd('Email', e.email || '—') +
-    kvd('Gender', e.gender === 'F' ? 'Female' : e.gender === 'M' ? 'Male' : '—') +
-    kvd('Join', `${fmtDate(e.join)} · ${fmtHijri(e.join)}`) +
-    (e.entry ? kvd('KSA entry', fmtDate(e.entry)) : '') +
+    `<div class="a4-card"><h3>${t('file.personal')}</h3>` +
+    `<div class="hr-kv"><span>${t('emp.code')}</span><strong>${esc(e.code)}</strong></div>` +
+    kvd(t('file.nationality'), e.nat) +
+    kvd(e.saudi ? t('file.nationalId') : t('file.iqama'), e.saudi ? e.nid || '—' : e.iqama || '—') +
+    kvd(t('emp.phone'), e.phone || '—') +
+    kvd(t('file.email'), e.email || '—') +
+    kvd(t('file.gender'), e.gender === 'F' ? t('file.female') : e.gender === 'M' ? t('file.male') : '—') +
+    kvd(t('file.join'), `${fmtDate(e.join)} · ${fmtHijri(e.join)}`) +
+    (e.entry ? kvd(t('file.ksaEntry'), fmtDate(e.entry)) : '') +
     kvd('Qiwa', t(`status.${e.q}`)) +
     '</div>';
   const job =
-    '<div class="a4-card"><h3>Job & Pay</h3>' +
-    kvd('Department', deptName(e.dept)) +
-    kvd('Title', currentLang() === 'ar' ? e.titleAr || e.titleEn : e.titleEn) +
-    kvd('Profession', profName(e.prof)) +
-    kvd('Employment', e.partTime ? 'Part-time' : 'Full-time') +
-    kvd('Basic', fmtSAR(e.basic)) +
-    kvd('Housing', fmtSAR(e.housing)) +
-    kvd('Transport', fmtSAR(e.transport)) +
-    kv('Total', `<b>${fmtSAR(total)}</b>`) +
-    kvd('EOSB est.', fmtSAR(eosb.net)) +
+    `<div class="a4-card"><h3>${t('file.jobPay')}</h3>` +
+    kvd(t('file.department'), deptName(e.dept)) +
+    kvd(t('file.jobTitle'), currentLang() === 'ar' ? e.titleAr || e.titleEn : e.titleEn) +
+    kvd(t('file.profession'), profName(e.prof)) +
+    kvd(t('file.employment'), e.partTime ? t('file.partTime') : t('file.fullTime')) +
+    kvd(t('file.basic'), fmtSAR(e.basic)) +
+    kvd(t('file.housing'), fmtSAR(e.housing)) +
+    kvd(t('file.transport'), fmtSAR(e.transport)) +
+    kv(t('file.total'), `<b>${fmtSAR(total)}</b>`) +
+    kvd(t('file.eosbEst'), fmtSAR(eosb.net)) +
     '</div>';
   const deployment =
-    '<div class="a4-card"><h3>Deployment</h3>' +
-    kvd('Work status', t(`status.${e.st}`)) +
-    kvd('Client', clientName || t('status.bench')) +
-    kvd('Site', siteName || '—') +
-    kvd('Sponsor', sponsorName(e.sponsor)) +
-    kvd('City', site?.city || e.city || '—') +
+    `<div class="a4-card"><h3>${t('file.deployment')}</h3>` +
+    kvd(t('file.workStatus'), t(`status.${e.st}`)) +
+    kvd(t('file.client'), clientName || t('status.bench')) +
+    kvd(t('file.site'), siteName || '—') +
+    kvd(t('file.sponsor'), sponsorName(e.sponsor)) +
+    kvd(t('file.city'), site?.city || e.city || '—') +
     '</div>';
   const leaveCard =
-    '<div class="a4-card"><h3>Time & Leave</h3>' +
-    kvd('Tenure', tenure === '—' ? '—' : `${tenure} years`) +
-    (leave ? kvd('Annual entitlement', `${leave.entitlement} days`) : '') +
-    (leave ? kvd('Annual used', `${leave.used} days`) : '') +
-    (leave ? kvd('Annual balance', `${leave.left} days`) : '') +
-    kvd('Last exit', e.exitDate ? fmtDate(e.exitDate) : '—') +
+    `<div class="a4-card"><h3>${t('file.timeLeave')}</h3>` +
+    kvd(t('file.tenure'), tenure === '—' ? '—' : t('file.years').replace('{n}', tenure)) +
+    (leave ? kvd(t('file.annualEnt'), `${leave.entitlement} ${t('common.days')}`) : '') +
+    (leave ? kvd(t('file.annualUsed'), `${leave.used} ${t('common.days')}`) : '') +
+    (leave ? kvd(t('file.annualBalance'), `${leave.left} ${t('common.days')}`) : '') +
+    kvd(t('file.lastExit'), e.exitDate ? fmtDate(e.exitDate) : '—') +
     '</div>';
   const gosi =
-    '<div class="a4-card"><h3>GOSI</h3>' +
-    kvd('GOSI no.', e.gosi || (e.saudi ? '—' : 'Expat 2%')) +
-    kv('System', g.system === 'expat' ? 'Expat 2%' : g.system === 'old' ? 'Old 9%' : `New ${Math.round(g.pensionRate * 100)}%`) +
-    kvd('Contributory', fmtSAR(g.base)) +
-    kvd('Employee', fmtSAR(g.employee)) +
-    kvd('Employer', fmtSAR(g.employer)) +
+    `<div class="a4-card"><h3>${t('file.gosi')}</h3>` +
+    kvd(t('file.gosiNo'), e.gosi || (e.saudi ? '—' : t('file.expat2'))) +
+    kv(t('file.system'), g.system === 'expat' ? t('file.expat2') : g.system === 'old' ? t('file.old9') : t('file.newPct').replace('{pct}', Math.round(g.pensionRate * 100))) +
+    kvd(t('file.contributory'), fmtSAR(g.base)) +
+    kvd(t('file.employee'), fmtSAR(g.employee)) +
+    kvd(t('file.employer'), fmtSAR(g.employer)) +
     '</div>';
   const residency = e.saudi
-    ? `<div class="a4-card"><h3>Residency</h3><div class="hr-kv"><span>National ID</span><strong>${esc(e.nid || '—')}</strong></div>${kvd('IBAN', e.iban ? maskIban(e.iban) : '—')}${kvd('Bank', e.bank || '—')}</div>`
-    : '<div class="a4-card"><h3>Residency</h3>' +
-      kvd('Iqama no.', e.iqama || '—') +
-      kv('Expiry', expBadge(e.iqamaExp)) +
-      kvd('Iqama profession', profName(e.prof)) +
-      kvd('IBAN', e.iban ? maskIban(e.iban) : '—') +
-      kvd('Bank', e.bank || '—') +
+    ? `<div class="a4-card"><h3>${t('file.residency')}</h3><div class="hr-kv"><span>${t('file.nationalId')}</span><strong>${esc(e.nid || '—')}</strong></div>${kvd(t('file.iban'), e.iban ? maskIban(e.iban) : '—')}${kvd(t('emp.bank'), e.bank || '—')}</div>`
+    : `<div class="a4-card"><h3>${t('file.residency')}</h3>` +
+      kvd(t('file.iqamaNo'), e.iqama || '—') +
+      kv(t('file.expiry'), expBadge(e.iqamaExp)) +
+      kvd(t('file.iqamaProfession'), profName(e.prof)) +
+      kvd(t('file.iban'), e.iban ? maskIban(e.iban) : '—') +
+      kvd(t('emp.bank'), e.bank || '—') +
       '</div>';
   const docs =
-    '<div class="a4-card"><h3>Documents</h3>' +
-    kvd('Contract', 'PDF · Valid') +
-    kvd(e.saudi ? 'NID copy' : 'Iqama copy', 'PDF · Valid') +
+    `<div class="a4-card"><h3>${t('file.documents')}</h3>` +
+    kvd(t('file.contract'), t('file.pdfValid')) +
+    kvd(e.saudi ? t('file.nidCopy') : t('file.iqamaCopy'), t('file.pdfValid')) +
     kvd('Qiwa', t(`status.${e.q}`)) +
-    kvd('Insurance', e.ins || '—') +
+    kvd(t('file.insurance'), e.ins || '—') +
     '</div>';
   const skills = e.skills?.length
-    ? '<div class="a4-card"><h3>Skills</h3><div class="a4-skill-list">' +
+    ? `<div class="a4-card"><h3>${t('file.skills')}</h3><div class="a4-skill-list">` +
       e.skills.map(s => `<span class="status status-blue">${esc(skillName(s))}</span>`).join('') +
       '</div></div>'
     : '';
   grid.innerHTML = overview + job + deployment + leaveCard + gosi + residency + docs + skills;
   if (extra) {
-    extra.innerHTML = `<div class="a4-card a4-notes"><h3>Notes</h3><div>File: ${esc(e.code)} · Generated ${fmtDate(new Date().toISOString().slice(0, 10))} · goHR dossier — use Print for a PDF copy.</div>${e.legalNote ? `<div class="a4-legal-note">${esc(currentLang() === 'ar' ? e.legalNoteAr || e.legalNote : e.legalNote)}</div>` : ''}</div>`;
+    extra.innerHTML = `<div class="a4-card a4-notes"><h3>${t('file.notes')}</h3><div>${
+      t('file.dossierFoot')
+        .replace('{code}', esc(e.code))
+        .replace('{date}', fmtDate(new Date().toISOString().slice(0, 10)))
+    }</div>${e.legalNote ? `<div class="a4-legal-note">${esc(currentLang() === 'ar' ? e.legalNoteAr || e.legalNote : e.legalNote)}</div>` : ''}</div>`;
   }
 }
 
 function renderAll() {
+  // Static chrome is localized by applyI18n() before init and by setLang()
+  // before the language event, so it must not run after rendering (it would
+  // reset the live meta line back to its loading placeholder).
   const info = findEmployee();
   renderHeader(info.employee, info);
   renderBody(info.employee);
-  applyI18n(document.querySelector('[data-hr-employee]') || document);
 }
 
 function openEditModal(e) {
   showModal({
     title: `${t('common.edit')} · ${e.code}`,
     body: `
-      <div class="form-group"><label class="form-label">${L('Phone', 'الجوال')}</label>
+      <div class="form-group"><label class="form-label">${t('emp.phone')}</label>
         <input class="form-control" id="ed-phone" value="${e.phone || ''}" dir="ltr"></div>
       <div class="form-group"><label class="form-label">IBAN</label>
         <input class="form-control" id="ed-iban" value="${e.iban || ''}" dir="ltr"></div>
-      <div class="form-group" style="margin-bottom:0"><label class="form-label">${L('Bank', 'البنك')}</label>
+      <div class="form-group" style="margin-bottom:0"><label class="form-label">${t('emp.bank')}</label>
         <input class="form-control" id="ed-bank" value="${e.bank || ''}"></div>`,
     actions: [
       { label: t('common.cancel'), variant: 'ghost' },
@@ -291,7 +297,7 @@ function openEditModal(e) {
             /* ignore */
           }
           renderAll();
-          showToast(L('Saved', 'تم الحفظ'), { variant: 'success' });
+          showToast(t('act.savedShort'), { variant: 'success' });
         }
       }
     ]

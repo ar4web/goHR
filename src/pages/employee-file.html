@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Employee File | goHR</title>
+<title data-i18n="file.pageTitle">Employee File | goHR</title>
 <link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
 <script type="module" src="/src/main.js"></script>
 </head>
@@ -16,25 +16,25 @@
     <div>
       <a class="emp-file-back" href="employees.html">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
-        <span>Employees</span>
+        <span data-i18n="hr.nav.employees">Employees</span>
       </a>
-      <div class="page-pretitle">HR &amp; Operations</div>
-      <h1 class="page-title">Employee file</h1>
-      <div class="caption-muted" id="emp-file-meta">Loading employee record…</div>
+      <div class="page-pretitle" data-i18n="hr.ui.pretitle">HR &amp; Operations</div>
+      <h1 class="page-title" data-i18n="file.pageTitle">Employee file</h1>
+      <div class="caption-muted" id="emp-file-meta" data-i18n="file.loadingRecord">Loading employee record…</div>
       <div class="emp-file-warning" id="emp-file-warning" hidden></div>
     </div>
-    <div class="emp-file-actions" aria-label="Employee file actions">
+    <div class="emp-file-actions" data-i18n-aria="file.actionsAria" aria-label="Employee file actions">
       <button class="btn btn-outline btn-sm" id="emp360-print" type="button">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg>
-        Print
+        <span data-i18n="common.print">Print</span>
       </button>
       <button class="btn btn-outline btn-sm" id="emp360-export" type="button">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>
-        Export XLSX
+        <span data-i18n="file.exportXlsx">Export XLSX</span>
       </button>
       <button class="btn btn-primary btn-sm" id="emp360-edit" type="button">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M17 3a2.8 2.8 0 014 4L7.5 20.5 2 22l1.5-5.5z"/></svg>
-        Edit
+        <span data-i18n="common.edit">Edit</span>
       </button>
     </div>
   </div>
@@ -43,16 +43,16 @@
     <div class="emp-file-hero">
       <div class="cell-avatar emp-file-avatar" id="a4-avatar" aria-hidden="true">–</div>
       <div class="emp-file-head" id="a4-head">
-        <div class="caption-muted">Loading…</div>
+        <div class="caption-muted" data-i18n="common.loading">Loading…</div>
       </div>
     </div>
   </section>
 
-  <section class="a4-grid" id="a4-grid" aria-label="Employee details">
-    <div class="a4-card"><h3>Loading</h3><div class="caption-muted">Preparing employee dossier…</div></div>
+  <section class="a4-grid" id="a4-grid" data-i18n-aria="file.detailsAria" aria-label="Employee details">
+    <div class="a4-card"><h3 data-i18n="common.loading">Loading</h3><div class="caption-muted" data-i18n="file.preparing">Preparing employee dossier…</div></div>
   </section>
 
-  <section class="a4-extra" id="a4-extra" aria-label="File notes"></section>
+  <section class="a4-extra" id="a4-extra" data-i18n-aria="file.notesAria" aria-label="File notes"></section>
 
 </div>
 </main>

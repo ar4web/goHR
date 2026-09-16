@@ -15,15 +15,25 @@
 
 import { showToast } from './toast.js';
 import { showModal } from './modal.js';
+import { t } from './i18n.js';
+
+// Map known i18n keys directly so translated buttons keep their actions
+// even though matching below is label-text based.
+const KEY_ACTIONS = {
+  'common.print': 'print',
+  'common.export': 'export',
+  'common.refresh': 'refresh',
+  'an.exportCsv': 'export'
+};
 
 const RX = {
-  print:    /^print$/i,
-  export:   /^(export|download)( pdf| csv)?$/i,
-  refresh:  /^refresh$/i,
-  share:    /^share$/i,
-  compose:  /^(compose|new chat|new message|new email)$/i,
-  newDeal:  /^(new deal|new project|new event|new task|\+ ?new)$/i,
-  add:      /^(\+ ?invite|\+ ?invite user|\+ ?invite member|invite|add (member|user|customer|contact))$/i
+  print:    /^(print|طباعة)$/i,
+  export:   /^(export|download|تصدير|تنزيل)( pdf| csv)?$/i,
+  refresh:  /^(refresh|تحديث)$/i,
+  share:    /^(share|مشاركة)$/i,
+  compose:  /^(compose|new chat|new message|new email|رسالة جديدة|بريد جديد)$/i,
+  newDeal:  /^(new deal|new project|new event|new task|\+ ?new|صفقة جديدة|مشروع جديد|حدث جديد|مهمة جديدة|\+ ?جديد)$/i,
+  add:      /^(\+ ?invite|\+ ?invite user|\+ ?invite member|invite|add (member|user|customer|contact)|دعوة|دعوة عضو|إضافة (عضو|مستخدم|عميل|جهة اتصال))$/i
 };
 
 function matchAction(label) {
@@ -35,6 +45,12 @@ function matchAction(label) {
 
 function getLabel(btn) {
   return (btn.getAttribute('aria-label') || btn.textContent || '').trim().replace(/\s+/g, ' ');
+}
+
+function actionFor(btn) {
+  const key = btn.getAttribute('data-i18n');
+  if (key && KEY_ACTIONS[key]) {return KEY_ACTIONS[key];}
+  return matchAction(getLabel(btn));
 }
 
 // ── Action implementations ──
@@ -50,7 +66,7 @@ function doRefresh(btn) {
   // Force charts to repaint by dispatching themechange on this card's chart
   // hosts (charts.js listens globally; restricted dispatch keeps it scoped).
   document.documentElement.dispatchEvent(new CustomEvent('themechange'));
-  showToast('Refreshed', { variant: 'success' });
+  showToast(t('act.refreshed'), { variant: 'success' });
 }
 
 async function doShare() {
@@ -59,7 +75,7 @@ async function doShare() {
       await navigator.share({ title: document.title, url: location.href });
     } else {
       await navigator.clipboard.writeText(location.href);
-      showToast('Link copied to clipboard', { variant: 'success' });
+      showToast(t('act.linkCopied'), { variant: 'success' });
     }
   } catch (_e) { /* user cancelled */ }
 }
@@ -87,108 +103,98 @@ function doExport(_btn) {
   a.href = url; a.download = filename;
   document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 0);
-  showToast(`Exported ${filename}`, { variant: 'success' });
+  showToast(t('act.exportedFile').replace('{file}', filename), { variant: 'success' });
 }
 
 function composeModal() {
   showModal({
-    title: 'New message',
+    title: t('act.newMessage'),
     size: 'lg',
     body: `
       <div class="form-group">
-        <label class="form-label">To</label>
+        <label class="form-label">${t('act.to')}</label>
         <input class="form-control" type="email" placeholder="name@example.com">
       </div>
       <div class="form-group">
-        <label class="form-label">Subject</label>
-        <input class="form-control" placeholder="Subject">
+        <label class="form-label">${t('act.subject')}</label>
+        <input class="form-control" placeholder="${t('act.subject')}">
       </div>
       <div class="form-group" style="margin-bottom:0">
-        <label class="form-label">Message</label>
-        <textarea class="form-control" rows="6" placeholder="Write your message…"></textarea>
+        <label class="form-label">${t('act.message')}</label>
+        <textarea class="form-control" rows="6"></textarea>
       </div>
     `,
     actions: [
-      { label: 'Discard', variant: 'ghost' },
-      { label: 'Save draft', variant: 'outline', action: () => showToast('Draft saved', { variant: 'success' }) },
-      { label: 'Send', variant: 'primary', action: () => showToast('Message sent', { variant: 'success' }) }
+      { label: t('act.discard'), variant: 'ghost' },
+      { label: t('act.saveDraft'), variant: 'outline', action: () => showToast(t('act.draftSaved'), { variant: 'success' }) },
+      { label: t('act.send'), variant: 'primary', action: () => showToast(t('act.messageSent'), { variant: 'success' }) }
     ]
   });
 }
 
 function newGenericModal(label) {
-  // "New deal", "New project", "New event", "+ New" etc — show a tailored
-  // form. Use the label to pick the title/fields without a giant switch.
-  const isEvent = /event/i.test(label);
-  const isTask  = /task/i.test(label);
-  const isDeal  = /deal/i.test(label);
-  const isProject = /project/i.test(label);
+  // "New deal", "New project", "New event", "+ New" (or their Arabic
+  // equivalents) — pick the tailored title/fields without a giant switch.
+  const isEvent = /event|حدث/i.test(label);
+  const isTask  = /task|مهمة/i.test(label);
+  const isDeal  = /deal|صفقة/i.test(label);
+  const isProject = /project|مشروع/i.test(label);
 
-  const title = isEvent ? 'New event'
-    : isTask ? 'New task'
-      : isDeal ? 'New deal'
-        : isProject ? 'New project'
-          : 'Create new';
+  const title = isEvent ? t('act.newEvent')
+    : isTask ? t('act.newTask')
+      : isDeal ? t('act.newDeal')
+        : isProject ? t('act.newProject')
+          : t('act.createNew');
+  const fieldLabel = isEvent ? t('act.eventTitle')
+    : isTask ? t('act.taskTitle')
+      : isDeal ? t('act.dealName')
+        : t('act.title');
 
   const body = `
     <div class="form-group">
-      <label class="form-label">${isEvent ? 'Event title' : isTask ? 'Task' : isDeal ? 'Deal name' : 'Title'}</label>
-      <input class="form-control" placeholder="${isEvent ? 'Q2 design review' : 'Untitled'}" autofocus>
+      <label class="form-label">${fieldLabel}</label>
+      <input class="form-control" autofocus>
     </div>
-    ${isDeal ? `
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Value (USD)</label><input class="form-control" type="number" placeholder="25000"></div>
-        <div class="form-group"><label class="form-label">Stage</label>
-          <select class="form-control"><option>Lead</option><option>Qualified</option><option>Proposal</option><option>Negotiation</option><option>Closed won</option></select>
-        </div>
-      </div>
-    ` : ''}
     ${isEvent ? `
       <div class="form-row">
-        <div class="form-group"><label class="form-label">Start</label><input class="form-control" type="datetime-local"></div>
-        <div class="form-group"><label class="form-label">End</label><input class="form-control" type="datetime-local"></div>
-      </div>
-    ` : ''}
-    ${isProject ? `
-      <div class="form-group">
-        <label class="form-label">Description</label>
-        <textarea class="form-control" rows="3" placeholder="What problem are we solving?"></textarea>
+        <div class="form-group"><label class="form-label">${t('act.start')}</label><input class="form-control" type="datetime-local"></div>
+        <div class="form-group"><label class="form-label">${t('act.end')}</label><input class="form-control" type="datetime-local"></div>
       </div>
     ` : ''}
     <div class="form-group" style="margin-bottom:0">
-      <label class="form-label">${isEvent ? 'Notes' : 'Description'}</label>
-      <textarea class="form-control" rows="3" placeholder="Optional…"></textarea>
+      <label class="form-label">${isEvent ? t('act.notes') : t('act.description')}</label>
+      <textarea class="form-control" rows="3"></textarea>
     </div>
   `;
   showModal({
     title, body, size: 'md',
     actions: [
-      { label: 'Cancel', variant: 'ghost' },
-      { label: 'Create', variant: 'primary', action: () => showToast(`${title} saved`, { variant: 'success' }) }
+      { label: t('common.cancel'), variant: 'ghost' },
+      { label: t('act.create'), variant: 'primary', action: () => showToast(t('act.saved').replace('{what}', title), { variant: 'success' }) }
     ]
   });
 }
 
 function inviteModal() {
   showModal({
-    title: 'Invite member',
+    title: t('act.inviteMember'),
     body: `
       <div class="form-group">
-        <label class="form-label">Email address</label>
+        <label class="form-label">${t('act.emailAddress')}</label>
         <input class="form-control" type="email" placeholder="colleague@example.com" autofocus>
       </div>
       <div class="form-group">
-        <label class="form-label">Role</label>
+        <label class="form-label">${t('act.role')}</label>
         <select class="form-control"><option>Member</option><option>Admin</option><option>Owner</option></select>
       </div>
       <div class="form-group" style="margin-bottom:0">
-        <label class="form-label">Personal message (optional)</label>
-        <textarea class="form-control" rows="3" placeholder="Welcome to the team!"></textarea>
+        <label class="form-label">${t('act.personalMsg')}</label>
+        <textarea class="form-control" rows="3"></textarea>
       </div>
     `,
     actions: [
-      { label: 'Cancel', variant: 'ghost' },
-      { label: 'Send invite', variant: 'primary', action: () => showToast('Invite sent', { variant: 'success' }) }
+      { label: t('common.cancel'), variant: 'ghost' },
+      { label: t('act.sendInvite'), variant: 'primary', action: () => showToast(t('act.inviteSent'), { variant: 'success' }) }
     ]
   });
 }
@@ -235,9 +241,7 @@ export function initPageActions() {
     // Submit buttons → form submit handler in main.js
     if (btn.type === 'submit') {return;}
 
-    const label = getLabel(btn);
-    if (!label) {return;}
-    const action = matchAction(label);
+    const action = actionFor(btn);
     if (!action) {return;}
 
     e.preventDefault();

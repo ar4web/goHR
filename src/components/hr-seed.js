@@ -1121,7 +1121,7 @@ export const BLOCKED_DEDUCTIONS = ['iqama', 'levy', 'insurance', 'recruitment'];
 // ── P1: expat lifecycle + tracker ─────────────────────────────────────────
 // Visa blocks & agents (overseas recruitment channel).
 // Per-worker visas. status: used | awaiting | expired | cancelled.
-// Onboarding pipeline (┬º4.7). type: overseas | transfer. stages: {n: dateISO}.
+// Onboarding pipeline (§4.7). type: overseas | transfer. stages: {n: dateISO}.
 // Qiwa transfer cases (local-hire expats skip onboarding stages 2–5).
 // Residency documents per expat (passport + medical insurance + traffic fines).
 // Document vault. expires: '' = no expiry. Seeded rows are metadata records.

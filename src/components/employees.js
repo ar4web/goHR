@@ -79,10 +79,10 @@ function deployOf(e) {
     return { cls: 'blue', label: t('status.bench') };
   }
   const c = CLIENTS.find(x => x.id === e.client);
-  const s = SITES.find(x => x.id === e.site);
+  const site = SITES.find(x => x.id === e.site);
   const cn = c ? (currentLang() === 'ar' ? c.nameAr : c.nameEn) : e.client;
-  const sn = s ? (currentLang() === 'ar' ? s.nameAr : s.nameEn) : '';
-  return { cls: 'green', label: `${t('status.deployed')} · ${cn}${sn ? ` / ${sn}` : ''}` };
+  const sn = site ? (currentLang() === 'ar' ? site.nameAr : site.nameEn) : '';
+  return { cls: 'green', label: t('status.deployed'), short: `${cn}${sn ? ` / ${sn}` : ''}` };
 }
 function iqamaBucket(e) {
   if (e.saudi || !e.iqamaExp) {
@@ -132,7 +132,7 @@ function ageBucket(e) {
 }
 
 function siteName(code) {
-  if (code === 'bench') {return 'Bench / unassigned';}
+  if (code === 'bench') {return t('ro.benchUnassigned');}
   const s = SITES.find(x => x.id === code);
   return s ? (currentLang() === 'ar' ? s.nameAr : s.nameEn) : code;
 }
@@ -213,11 +213,11 @@ function renderStats(list) {
   const pctDeployed = list.filter(e => e.st === 'active').length
     ? Math.round((deployed / list.filter(e => e.st === 'active').length) * 100)
     : 0;
-  setText('stat-sub-total', `${n.saudis} Saudi · ${n.expats} Expat`);
-  setText('stat-sub-saudi', `${pctSaudi}% of total`);
-  setText('stat-sub-expat', `${pctExpat}% of total`);
-  setText('stat-sub-deployed', `${pctDeployed}% of active`);
-  setText('stat-sub-saud', n.pct >= 25 ? 'Platinum' : `Need ${(25 - n.pct).toFixed(1)}% to green`);
+  setText('stat-sub-total', t('dash.saudiExpatSub').replace('{saudi}', n.saudis).replace('{expat}', n.expats));
+  setText('stat-sub-saudi', t('ro.pctOfTotal').replace('{n}', pctSaudi));
+  setText('stat-sub-expat', t('ro.pctOfTotal').replace('{n}', pctExpat));
+  setText('stat-sub-deployed', t('ro.pctOfActive').replace('{n}', pctDeployed));
+  setText('stat-sub-saud', n.pct >= 25 ? t('ro.platinum') : t('ro.needPct').replace('{n}', (25 - n.pct).toFixed(1)));
   const bar = (id, pct, color) => {
     const b = document.getElementById(id);
     if (b) {
@@ -283,13 +283,13 @@ function renderTicker(list) {
     .filter(e => e.st === 'huroob')
     .slice(0, 5)
     .forEach(e => {
-      items.push({ cls: 'red', text: `Huroob · ${e.nameEn}` });
+      items.push({ cls: 'red', text: t('ro.tHuroob').replace('{name}', currentLang() === 'ar' ? (e.nameAr || e.nameEn) : e.nameEn) });
     });
   list
     .filter(e => !e.saudi && e.iqamaExp && daysUntil(e.iqamaExp) < 0)
     .slice(0, 8)
     .forEach(e => {
-      items.push({ cls: 'red', text: `Iqama expired · ${e.nameEn}` });
+      items.push({ cls: 'red', text: t('ro.tIqExpired').replace('{name}', currentLang() === 'ar' ? (e.nameAr || e.nameEn) : e.nameEn) });
     });
   list
     .filter(
@@ -297,16 +297,16 @@ function renderTicker(list) {
     )
     .slice(0, 8)
     .forEach(e => {
-      items.push({ cls: '', text: `Iqama expiring · ${e.nameEn}` });
+      items.push({ cls: '', text: t('ro.tIqExpiring').replace('{name}', currentLang() === 'ar' ? (e.nameAr || e.nameEn) : e.nameEn) });
     });
   list
     .filter(e => e.q === 'draft')
     .slice(0, 4)
     .forEach(e => {
-      items.push({ cls: 'green', text: `Qiwa draft · ${e.nameEn}` });
+      items.push({ cls: 'green', text: t('ro.tQiwaDraft').replace('{name}', currentLang() === 'ar' ? (e.nameAr || e.nameEn) : e.nameEn) });
     });
   if (!items.length) {
-    track.innerHTML = '<span class="ticker-band green">All clear</span>';
+    track.innerHTML = `<span class="ticker-band green">${t('dash.allClear')}</span>`;
     return;
   }
   const half = items.map(a => `<span class="ticker-band ${a.cls}">${esc(a.text)}</span>`).join('');
@@ -324,6 +324,7 @@ function populateFilters() {
   };
   const uniq = (fn) => [...new Set(emps.map(fn).filter(Boolean))].sort();
   const signature = JSON.stringify({
+    lang: currentLang(),
     st: uniq(e => e.st),
     site: uniq(e => (e.site || 'bench')),
     exp: uniq(experienceBucket),
@@ -340,7 +341,7 @@ function populateFilters() {
     const sel = document.getElementById(id);
     if (!sel) {return;}
     const current = sel.value;
-    sel.innerHTML = '<option value="">All</option>' +
+    sel.innerHTML = `<option value="">${t('common.all')}</option>` +
       options.map(([v, label]) => `<option value="${esc(v)}">${esc(label)}</option>`).join('');
     sel.value = current;
   };
@@ -348,7 +349,9 @@ function populateFilters() {
   fill('emp-status', present(
     emps.map(e => e.st),
     ['active', 'probation', 'on-leave', 'huroob', 'exited'],
-    { active: 'Active', probation: 'Probation', 'on-leave': 'On leave', huroob: 'Huroob', exited: 'Exited' }
+    { active: t('status.active'), probation: t('status.probation'),
+      'on-leave': t('status.on-leave'), huroob: t('status.huroob'),
+      exited: t('status.exited') }
   ));
   fill('emp-nat', uniq(e => e.nat).map(v => [v, v]));
   fill('emp-dept', uniq(e => e.dept).map(v => [v, deptName(v)]));
@@ -367,38 +370,40 @@ function populateFilters() {
   fill('emp-exp', present(
     emps.map(experienceBucket),
     ['lt1', '1-3', '3-5', '5+'],
-    { lt1: 'Under 1 year', '1-3': '1–3 years', '3-5': '3–5 years', '5+': '5+ years' }
+    { lt1: t('ro.expLt1'), '1-3': t('ro.exp13'), '3-5': t('ro.exp35'), '5+': t('ro.exp5') }
   ));
   fill('emp-age', present(
     emps.map(ageBucket),
     ['lt25', '25-34', '35-44', '45+'],
-    { lt25: 'Under 25', '25-34': '25–34', '35-44': '35–44', '45+': '45+' }
+    { lt25: t('ro.ageLt25'), '25-34': t('ro.age2534'), '35-44': t('ro.age3544'), '45+': t('ro.age45') }
   ));
 }
 
 function empType(e) {
-  return e.partTime ? 'Part-time' : 'Full-time';
+  return e.partTime ? t('file.partTime') : t('file.fullTime');
 }
 function hiredBy(e) {
-  return e.dept === 'HR' ? 'HR Manager' : 'Recruitment';
+  return e.dept === 'HR' ? t('ro.hrManager') : t('ro.recruitment');
 }
 function refOf(e) {
-  return e.sponsor ? `Sponsor ${e.sponsor}` : '—';
+  return e.sponsor ? t('ro.sponsorRef').replace('{x}', e.sponsor) : '—';
 }
 function docStatus(e) {
-  if (e.saudi) {
-    return e.nid ? 'Complete' : 'Pending';
-  }
-  return e.iqama && e.iqamaExp ? 'Complete' : 'Pending';
+  const complete = e.saudi ? !!e.nid : !!(e.iqama && e.iqamaExp);
+  return complete ? { key: 'complete', label: t('ro.complete') }
+    : { key: 'pending', label: t('ro.pending') };
 }
 function vacEligible(e) {
   if (!e.join) {
-    return '—';
+    return { key: 'none', label: '—' };
   }
   const join = new Date(e.join);
   const now = new Date();
   const months = (now.getFullYear() - join.getFullYear()) * 12 + (now.getMonth() - join.getMonth());
-  return months >= 12 && (e.annualUsed || 0) < 21 ? 'Eligible' : 'Not eligible';
+  if (months >= 12 && (e.annualUsed || 0) < 21) {
+    return { key: 'eligible', label: t('ro.eligible') };
+  }
+  return { key: 'no', label: t('ro.notEligible') };
 }
 function expiryOf(e) {
   if (e.iqamaExp) {
@@ -420,7 +425,9 @@ function insStatus(e) {
     return '—';
   }
   const d = daysUntil(exp);
-  return d < 0 ? 'Expired' : d <= 30 ? 'Expiring' : 'Active';
+  if (d < 0) {return { key: 'expired', label: t('ro.iqExpired') };}
+  if (d <= 30) {return { key: 'expiring', label: t('ro.expiring') };}
+  return { key: 'active', label: t('status.active') };
 }
 function insCompany(e) {
   return e.ins || (e.saudi ? '—' : 'Bupa');
@@ -527,27 +534,32 @@ function renderRows() {
         const b = exp ? iqamaBucket({ ...e, iqamaExp: exp }) : 'ok';
         const iqStat =
           b === 'expired'
-            ? 'Expired'
+            ? { key: 'expired', label: t('ro.iqExpired') }
             : b === 'le30'
-              ? 'Expiring ≤30d'
+              ? { key: 'le30', label: t('ro.iqLe30') }
               : b === 'le90'
-                ? 'Expiring ≤90d'
+                ? { key: 'le90', label: t('ro.iqLe90') }
                 : exp
-                  ? 'Valid'
-                  : 'No expiry';
+                  ? { key: 'valid', label: t('ro.iqValid') }
+                  : { key: 'none', label: t('ro.iqNoExpiry') };
         const iqCls =
-          iqStat === 'Expired'
+          iqStat.key === 'expired'
             ? 'red'
-            : iqStat.includes('≤')
+            : iqStat.key === 'le30' || iqStat.key === 'le90'
               ? 'yellow'
-              : iqStat === 'Valid'
+              : iqStat.key === 'valid'
                 ? 'green'
                 : 'blue';
         const sc = siteCity(e);
         const dep = deployOf(e);
+        const doc = docStatus(e);
+        const vac = vacEligible(e);
+        const ins = insStatus(e);
+        const depText = dep.short || dep.label;
+        const daySuffix = t('notif.dayShort');
         return `
     <tr data-code="${esc(e.code)}">
-      <td><input type="checkbox" class="row-cb" aria-label="Select row"></td>
+      <td><input type="checkbox" class="row-cb" aria-label="${t('ro.selectRow')}"></td>
       <td class="cell-mono">${esc(e.code)}</td>
       <td style="min-width:160px">
         <div class="cell-customer">
@@ -559,20 +571,20 @@ function renderRows() {
       </td>
       <td style="font-size:12.5px">${esc(e.nat)}</td>
       <td style="font-size:12.5px">${esc(e.sponsor || '—')}</td>
-      <td><span class="status status-${iqCls}">${esc(iqStat)}</span></td>
-      <td style="font-size:12.5px">${exp ? `<span style="font-weight:600">${esc(e.saudi ? 'NID' : 'Iqama')}</span>: ${esc(fmtDate(exp))}<div style="font-size:11px;color:var(--text-muted)">${esc(iqStat)}${exp ? ` · ${daysUntil(exp)}d` : ''}</div>` : '—'}</td>
+      <td><span class="status status-${iqCls}">${esc(iqStat.label)}</span></td>
+      <td style="font-size:12.5px">${exp ? `<span style="font-weight:600">${esc(e.saudi ? t('ro.nid') : t('file.iqama'))}</span>: ${esc(fmtDate(exp))}<div style="font-size:11px;color:var(--text-muted)">${esc(iqStat.label)} · ${daysUntil(exp)}${esc(daySuffix)}</div>` : '—'}</td>
       <td style="font-size:12.5px">${esc(profName(e.prof))}</td>
       <td style="font-size:12.5px"><span class="status status-blue">${esc(empType(e))}</span></td>
-      <td><span class="status status-${esc(dep.cls)}">${esc(dep.label.replace('Deployed ·', '').trim() || dep.label)}</span></td>
+      <td><span class="status status-${esc(dep.cls)}">${esc(depText)}</span></td>
       <td style="font-size:12.5px">${esc(sc.site)}<div style="font-size:11px;color:var(--text-muted)">${esc(sc.city)}</div></td>
       <td style="font-size:12.5px">${esc(hiredBy(e))}</td>
       <td style="font-size:12.5px">${esc(refOf(e))}</td>
-      <td><span class="status status-${docStatus(e) === 'Complete' ? 'green' : 'yellow'}">${esc(docStatus(e))}</span></td>
-      <td><span class="status status-${vacEligible(e) === 'Eligible' ? 'green' : 'blue'}">${esc(vacEligible(e))}</span></td>
-      <td style="font-size:12.5px"><span class="status status-${insStatus(e) === 'Active' ? 'green' : insStatus(e) === 'Expired' ? 'red' : 'yellow'}">${esc(insStatus(e))}</span><div style="font-size:11px;color:var(--text-muted)">${esc(insCompany(e))}</div></td>
+      <td><span class="status status-${doc.key === 'complete' ? 'green' : 'yellow'}">${esc(doc.label)}</span></td>
+      <td><span class="status status-${vac.key === 'eligible' ? 'green' : 'blue'}">${esc(vac.label)}</span></td>
+      <td style="font-size:12.5px"><span class="status status-${ins.key === 'active' ? 'green' : ins.key === 'expired' ? 'red' : 'yellow'}">${esc(ins.label)}</span><div style="font-size:11px;color:var(--text-muted)">${esc(insCompany(e))}</div></td>
       <td class="emp-actions-cell">
-        <button class="card-opt-btn" data-emp-edit="${esc(e.code)}" aria-label="Edit ${esc(e.code)}" data-tooltip="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 3a2.8 2.8 0 014 4L7.5 20.5 2 22l1.5-5.5z"/></svg></button>
-        <button class="card-opt-btn" data-emp-view="${esc(e.code)}" aria-label="View ${esc(e.code)}" data-tooltip="View"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        <button class="card-opt-btn" data-emp-edit="${esc(e.code)}" aria-label="${t('ro.editRow').replace('{code}', e.code)}" data-tooltip="${t('common.edit')}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 3a2.8 2.8 0 014 4L7.5 20.5 2 22l1.5-5.5z"/></svg></button>
+        <button class="card-opt-btn" data-emp-view="${esc(e.code)}" aria-label="${t('ro.viewRow').replace('{code}', e.code)}" data-tooltip="${t('common.view')}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></button>
       </td>
     </tr>`;
       })
@@ -757,7 +769,7 @@ export function initEmployees() {
       const code = edit.dataset.empEdit;
       openMenu(edit, [
         {
-          label: currentLang() === 'ar' ? 'عرض الملف' : 'View profile',
+          label: t('emp.viewProfile'),
           action: () => openProfile(code)
         },
         { label: `${t('common.edit')} · ${code}`, action: () => openEditRecord(code) },
@@ -775,9 +787,11 @@ export function initEmployees() {
     }
   });
   window.addEventListener(LANG_EVENT, () => {
+    // Localize static chrome first so the rebuilt DataTable reads the
+    // translated <th> labels, then rebuild filter options and rows.
+    applyI18n(root);
     populateFilters();
     renderRows();
-    applyI18n(root);
   });
 }
 
@@ -853,7 +867,6 @@ const EMP_SCHEMA = [
 ];
 
 function openEmployeeImport() {
-  const lang = currentLang();
   openImportModal({
     titleEn: 'Import employees (Excel / CSV)',
     titleAr: 'استيراد الموظفين (Excel / CSV)',
@@ -902,9 +915,9 @@ function openEmployeeImport() {
       }
       renderRows();
       showToast(
-        lang === 'ar'
-          ? `تمت إضافة ${fresh.length} وتخطي ${skipped}`
-          : `Added ${fresh.length}, skipped ${skipped} existing`,
+        t('act.importAdded')
+          .replace('{added}', fresh.length)
+          .replace('{skipped}', skipped),
         { variant: 'success' }
       );
       return fresh.length;
@@ -914,11 +927,11 @@ function openEmployeeImport() {
 
 function openAddModal() {
   showModal({
-    title: currentLang() === 'ar' ? 'موظف جديد' : 'New employee',
+    title: t('emp.newEmployee'),
     body: `
-      <div class="modal-form-row"><label>Code *</label><input type="text" id="na-code" dir="ltr" required></div>
-      <div class="modal-form-row"><label>Name (EN) *</label><input type="text" id="na-name"></div>
-      <div class="modal-form-row"><label>Join date</label><input type="date" id="na-join"></div>
+      <div class="modal-form-row"><label>${t('emp.code')} *</label><input type="text" id="na-code" dir="ltr" required></div>
+      <div class="modal-form-row"><label>${t('emp.nameEn')} *</label><input type="text" id="na-name"></div>
+      <div class="modal-form-row"><label>${t('emp.joinDate')}</label><input type="date" id="na-join"></div>
       <div data-add-err style="font-size:12px;color:var(--red)"></div>`,
     actions: [
       { label: t('common.cancel'), variant: 'ghost' },
@@ -930,14 +943,11 @@ function openAddModal() {
           const name = body.querySelector('#na-name').value.trim();
           const err = body.querySelector('[data-add-err]');
           if (!code || !name) {
-            err.textContent =
-              currentLang() === 'ar'
-                ? 'الرمز والاسم مطلوبان'
-                : 'Code and name are required — nothing saved.';
+            err.textContent = t('emp.codeNameRequired');
             return false;
           }
           if (getSeed('employees').some(e => String(e.code).toLowerCase() === code.toLowerCase())) {
-            err.textContent = `Duplicate ID: ${code} already exists — skipped.`;
+            err.textContent = t('emp.dupId').replace('{code}', code);
             return false;
           }
           try {
@@ -983,11 +993,11 @@ function openEditRecord(code) {
   showModal({
     title: `${t('common.edit')} · ${esc(code)}`,
     body: `
-      <div class="modal-form-row"><label class="form-label">${currentLang() === 'ar' ? 'الجوال' : 'Phone'}</label>
+      <div class="modal-form-row"><label class="form-label">${t('emp.phone')}</label>
         <input class="form-control" id="er-phone" value="${esc(e.phone || '')}" dir="ltr"></div>
       <div class="modal-form-row"><label class="form-label">IBAN</label>
         <input class="form-control" id="er-iban" value="${esc(e.iban || '')}" dir="ltr"></div>
-      <div class="modal-form-row" style="margin-bottom:0"><label class="form-label">${currentLang() === 'ar' ? 'البنك' : 'Bank'}</label>
+      <div class="modal-form-row" style="margin-bottom:0"><label class="form-label">${t('emp.bank')}</label>
         <input class="form-control" id="er-bank" value="${esc(e.bank || '')}"></div>`,
     actions: [
       { label: t('common.cancel'), variant: 'ghost' },
@@ -1014,7 +1024,7 @@ function openEditRecord(code) {
             /* private mode */
           }
           renderRows();
-          showToast(currentLang() === 'ar' ? 'تم الحفظ' : 'Saved', { variant: 'success' });
+          showToast(t('act.savedShort'), { variant: 'success' });
         }
       }
     ]

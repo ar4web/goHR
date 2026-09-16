@@ -3,6 +3,7 @@
 // closes it.
 
 import { showToast } from './toast.js';
+import { t } from './i18n.js';
 
 let openMenuEl = null;
 let openMenuTrigger = null;
@@ -30,7 +31,7 @@ function buildMenu(items) {
     btn.type = 'button';
     btn.className = 'menu-item';
     btn.setAttribute('role', 'menuitem');
-    btn.textContent = item.label;
+    btn.textContent = typeof item.label === 'function' ? item.label() : item.label;
     btn.addEventListener('click', () => {
       // Capture the trigger before closeMenu() clears it so action() can
       // still reference the card that owns this menu.
@@ -150,7 +151,7 @@ window.addEventListener('resize', closeMenu);
 // (the 3-dot button that opened the menu) so it can locate its parent card.
 export const DEFAULT_CARD_MENU = [
   {
-    label: 'Refresh',
+    label: () => t('common.refresh'),
     action: (trigger) => {
       const card = trigger?.closest('.card');
       if (!card) {return;}
@@ -159,11 +160,11 @@ export const DEFAULT_CARD_MENU = [
       if (card.querySelector('[data-chart]')) {
         document.documentElement.dispatchEvent(new CustomEvent('themechange'));
       }
-      showToast('Refreshed', { variant: 'success' });
+      showToast(t('act.refreshed'), { variant: 'success' });
     }
   },
   {
-    label: 'Move up',
+    label: () => t('act.moveUp'),
     action: (trigger) => {
       const card = trigger?.closest('.card');
       const prev = card?.previousElementSibling;
@@ -173,7 +174,7 @@ export const DEFAULT_CARD_MENU = [
     }
   },
   {
-    label: 'Move down',
+    label: () => t('act.moveDown'),
     action: (trigger) => {
       const card = trigger?.closest('.card');
       const next = card?.nextElementSibling;
@@ -184,7 +185,7 @@ export const DEFAULT_CARD_MENU = [
   },
   '-',
   {
-    label: 'Hide card',
+    label: () => t('act.hideCard'),
     action: (trigger) => {
       const card = trigger?.closest('.card');
       if (!card) {return;}
@@ -196,7 +197,7 @@ export const DEFAULT_CARD_MENU = [
         card.parentNode.insertBefore(placeholder, card);
         card.remove();
       }, 220);
-      showToast('Card hidden — click here to undo', { duration: 5000 });
+      showToast(t('act.cardHiddenUndo'), { duration: 5000 });
       // Hijack the next toast click to restore the card.
       setTimeout(() => {
         const toast = document.querySelector('.toast-host .toast:last-child');

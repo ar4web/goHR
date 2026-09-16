@@ -426,7 +426,7 @@ export function calcPayLine(emp, { otH = 0, extras = 0, deductions = [], at = nu
 }
 
 // ── WPS / SIF (P4) ───────────────────────────────────────────────────────
-// Pay within the first 10 days of the following month (┬º0.7).
+// Pay within the first 10 days of the following month (§0.7).
 
 export function wpsDeadline(month) {
   const [y, m] = String(month).split('-').map(Number);
@@ -871,7 +871,7 @@ export function addMonths(iso, n) {
   return fmtYMD(t);
 }
 
-// Probation must be stated in the contract and may not exceed 180 days (┬º0.4).
+// Probation must be stated in the contract and may not exceed 180 days (§0.4).
 export function probationOk(days) {
   const n = Number(days);
   return Number.isFinite(n) && n > 0 && n <= 180;
@@ -881,7 +881,7 @@ export function contractEnd(start, months) {
   return addMonths(start, months);
 }
 
-// SAR 4,000/month floor for a Saudi to count toward Nitaqat (┬º0.8).
+// SAR 4,000/month floor for a Saudi to count toward Nitaqat (§0.8).
 export function nitaqatWageFloor() {
   return 4000;
 }
@@ -922,7 +922,7 @@ export function returnStats(requests) {
   };
 }
 
-// Headcount buckets for the ┬º1 status ring (huroob/exited visible, not hidden).
+// Headcount buckets for the §1 status ring (huroob/exited visible, not hidden).
 export function headcountByStatus(employees) {
   const out = { active: 0, probation: 0, 'on-leave': 0, exited: 0, huroob: 0, other: 0 };
   for (const e of employees || []) {

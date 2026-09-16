@@ -1,4 +1,4 @@
-// Lazy Leaflet site map (T2 ┬º3). CircleMarkers only (no image assets, so no
+// Lazy Leaflet site map (T2 §3). CircleMarkers only (no image assets, so no
 // bundler icon-URL pitfalls); markers + popups render even when tiles can't
 // load (offline-tolerant). jsdom-safe: marker DATA is exposed synchronously
 // via data attributes + a text summary, the Leaflet canvas is best-effort.
@@ -37,7 +37,7 @@ export function renderSiteMap(el, cfg = {}) {
   el.setAttribute('data-marker-count', String(sites.length));
   el.setAttribute('data-client-pins', String(clients.length));
   el.setAttribute('role', 'img');
-  const summary = `${L2.sites}: ${sites.length} ┬╖ ${total} ${L2.workers}`;
+  const summary = `${L2.sites}: ${sites.length} · ${total} ${L2.workers}`;
   el.setAttribute('aria-label', summary);
   let sr = el.querySelector(':scope > .sr-only');
   if (!sr) {
@@ -74,7 +74,7 @@ export function renderSiteMap(el, cfg = {}) {
               weight: 2,
               fillOpacity: 0.25
             })
-            .bindTooltip(`${nm} ┬╖ ${n}`, { direction: 'top' })
+            .bindTooltip(`${nm} · ${n}`, { direction: 'top' })
             .on('click', () => cfg.onSelect && cfg.onSelect(s2.id))
             .addTo(siteLayer);
         });

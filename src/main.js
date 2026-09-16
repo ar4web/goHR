@@ -21,7 +21,7 @@ import { initTables } from './components/tables.js';
 import { openMenu, DEFAULT_CARD_MENU } from './components/menus.js';
 import { initCommandPalette } from './components/command-palette.js';
 import { initPageActions } from './components/page-actions.js';
-import { initI18n } from './components/i18n.js';
+import { initI18n, t } from './components/i18n.js';
 import { initCustomize } from './components/customize.js';
 import { initTheme } from './components/theme.js';
 import { initShellChrome } from './components/shell-chrome.js';
@@ -117,7 +117,9 @@ document.addEventListener('click', (e) => {
   const done = card.querySelectorAll('.todo-row.done');
   const remaining = all.length - done.length;
   // Format: "<remaining> of <total> remaining" — matches existing copy.
-  counter.textContent = `${remaining} of ${all.length} remaining`;
+  counter.textContent = t('common.ofRemaining')
+    .replace('{remaining}', remaining)
+    .replace('{total}', all.length);
 });
 
 // Tab groups: works for any container of .chart-tab buttons (chart cards,
@@ -183,7 +185,7 @@ document.addEventListener('submit', (e) => {
   // see the submit event, so reaching here means the form is already valid.
   e.preventDefault();
   const submitBtn = form.querySelector('button[type="submit"], input[type="submit"]');
-  const label = (submitBtn?.textContent || submitBtn?.value || 'Saved').trim();
+  const label = (submitBtn?.textContent || submitBtn?.value || t('act.savedShort')).trim();
   import('./components/toast.js').then(({ showToast }) => showToast(`${label} ✓`, { variant: 'success' }));
   if (form.dataset.resetOnSubmit !== 'false') {form.reset();}
 });

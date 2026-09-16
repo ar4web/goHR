@@ -8,7 +8,7 @@ import { NAV } from './shell-render.js';
 import { showToast } from './toast.js';
 import { escapeHtml } from './markup.js';
 import { showModal } from './modal.js';
-import { t, LANG_EVENT } from './i18n.js';
+import { t, currentLang, LANG_EVENT } from './i18n.js';
 
 let host = null;
 let inputEl = null;
@@ -44,16 +44,18 @@ function buildItems() {
   // Inline actions
   const actions = [
     {
-      label: 'Sign out',
-      keywords: 'sign out logout exit',
+      label: t('common.signOut'),
+      keywords: currentLang() === 'ar'
+        ? 'تسجيل الخروج خروج إغلاق sign out logout exit'
+        : 'sign out logout exit',
       action: () => showModal({
-        title: 'Sign out?',
+        title: t('act.signOutQ'),
         size: 'sm',
-        body: '<p style="font-size:13px;color:var(--text-secondary);line-height:1.6;margin:0">You\'ll need to sign back in to access your dashboard.</p>',
+        body: `<p style="font-size:13px;color:var(--text-secondary);line-height:1.6;margin:0">${escapeHtml(t('act.signOutBody'))}</p>`,
         actions: [
-          { label: 'Cancel', variant: 'ghost' },
-          { label: 'Sign out', variant: 'primary', action: () => {
-            showToast('Signed out', { variant: 'success' });
+          { label: t('common.cancel'), variant: 'ghost' },
+          { label: t('common.signOut'), variant: 'primary', action: () => {
+            showToast(t('act.signedOut'), { variant: 'success' });
             setTimeout(() => { window.location.href = 'login.html'; }, 600);
           } }
         ]
@@ -110,13 +112,13 @@ function applyFilter() {
 
 function renderList() {
   if (!filtered.length) {
-    listEl.innerHTML = '<div class="cmdk-empty">No results</div>';
+    listEl.innerHTML = `<div class="cmdk-empty">${t('cmdk.noResults')}</div>`;
     return;
   }
   // Group results by section while preserving sort order.
   const seen = new Set();
   const html = filtered.map((it, i) => {
-    const sectionLabel = it.kind === 'action' ? 'Actions' : it.section;
+    const sectionLabel = it.kind === 'action' ? t('cmdk.actions') : it.section;
     let header = '';
     if (!seen.has(sectionLabel)) {
       seen.add(sectionLabel);
