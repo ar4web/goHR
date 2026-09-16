@@ -68,6 +68,7 @@ const STR = {
     'common.markAllRead': 'Mark all read',
     'common.allMarkedRead': 'All notifications marked read',
     'common.viewAllNotif': 'View all notifications',
+    'common.search': 'Search',
     'common.searchPh': 'Search pages or run a command…',
     'common.messages': 'Messages',
     'common.language': 'Language',
@@ -289,6 +290,7 @@ const STR = {
     'common.markAllRead': '╪¬╪╣┘è┘è┘å ╪º┘ä┘â┘ä ┘â┘à┘é╪▒┘ê╪í',
     'common.allMarkedRead': '╪¬┘à ╪¬╪╣┘è┘è┘å ┘â┘ä ╪º┘ä╪¬┘å╪¿┘è┘ç╪º╪¬ ┘â┘à┘é╪▒┘ê╪í╪⌐',
     'common.viewAllNotif': '╪╣╪▒╪╢ ┘â┘ä ╪º┘ä╪¬┘å╪¿┘è┘ç╪º╪¬',
+    'common.search': 'بحث',
     'common.searchPh': '╪º╪¿╪¡╪½ ┘ü┘è ╪º┘ä╪╡┘ü╪¡╪º╪¬ ╪ú┘ê ┘å┘ü┘æ╪░ ╪ú┘à╪▒┘ï╪ºΓÇª',
     'common.messages': 'الرسائل',
     'common.language': 'اللغة',
@@ -558,14 +560,11 @@ export function applyShellI18n() {
   if (settingsToggle) {
     settingsToggle.textContent = t('hr.navgroup.settings');
   }
-  // Topbar language pill shows the language currently in use.
+  // Topbar language toggle shows a compact single letter of the active
+  // language: E (English) or ع (Arabic).
   const langLabel = document.getElementById('topbar-lang-label');
   if (langLabel) {
-    langLabel.textContent = currentLang() === 'ar' ? 'ع' : 'EN';
-  }
-  const userRole = document.getElementById('topbar-user-role');
-  if (userRole) {
-    userRole.textContent = t('profile.role');
+    langLabel.textContent = currentLang() === 'ar' ? 'ع' : 'E';
   }
 }
 

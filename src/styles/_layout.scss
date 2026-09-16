@@ -248,94 +248,51 @@ body.page-leave { opacity: 0; }
 
 // Theme engine toggle (light ⇄ dark). Moon shows in light mode (action:
 // go dark), sun shows in dark mode (action: go light).
+// Icon-only ghost buttons — no border, no filled circle; only a soft tint
+// on hover. Search, theme, bell, mail and language share this treatment.
 .topbar-icon-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 36px;
   height: 36px;
-  border: 1px solid var(--border-color);
+  border: 0;
   border-radius: 999px;
-  background: var(--bg-surface);
+  background: transparent;
   color: var(--text-secondary);
   cursor: pointer;
-  transition: color 120ms, border-color 120ms, background 120ms, transform 120ms;
+  transition: color 120ms, background 120ms, transform 120ms;
 }
 .topbar-icon-btn:hover {
   color: var(--primary);
-  border-color: rgba(var(--primary-rgb), 0.45);
-  background: var(--primary-lt);
+  background: var(--bg-surface-secondary);
 }
 .topbar-icon-btn:active { transform: scale(0.94); }
-.topbar-icon-btn svg { width: 18px; height: 18px; }
-:root[data-theme='light'] .theme-icon-sun { display: none; }
-:root[data-theme='dark'] .theme-icon-moon { display: none; }
-:root[data-theme='dark'] .theme-icon-sun { color: var(--yellow); }
-
-// Global search — opens the command palette (Ctrl/⌘ K). Styled as a pill
-// input; collapses to a round icon button in the cramped breakpoint.
-.topbar-search {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  height: 36px;
-  width: min(300px, 34vw);
-  padding: 0 8px 0 12px;
-  border: 1px solid var(--border-color);
-  border-radius: 999px;
-  background: var(--bg-surface);
-  color: var(--text-muted);
-  font: inherit;
-  font-size: 12.5px;
-  cursor: pointer;
-  transition: border-color 120ms, box-shadow 120ms, background 120ms;
-}
-.topbar-search:hover {
-  border-color: rgba(var(--primary-rgb), 0.45);
-  background: var(--bg-surface);
-}
-.topbar-search:focus-visible {
+.topbar-icon-btn:focus-visible {
   outline: 2px solid var(--primary-dk);
   outline-offset: 1px;
 }
-.topbar-search svg { width: 15px; height: 15px; flex-shrink: 0; }
-.topbar-search-label {
-  flex: 1 1 auto;
-  min-width: 0;
-  text-align: start;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.topbar-search-kbd {
-  flex-shrink: 0;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 600;
-  line-height: 1;
-  color: var(--text-muted);
-  background: var(--bg-surface-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  padding: 4px 5px;
-}
+.topbar-icon-btn svg { width: 19px; height: 19px; }
+:root[data-theme='light'] .theme-icon-sun { display: none; }
+:root[data-theme='dark'] .theme-icon-moon { display: none; }
+:root[data-theme='dark'] .theme-icon-sun { color: var(--yellow); }
 
 // Count bubbles on bell / mail icons.
 .topbar-alert-btn { position: relative; }
 .topbar-btn-dot {
   position: absolute;
-  top: -3px;
-  inset-inline-end: -3px;
-  min-width: 16px;
-  height: 16px;
-  padding: 0 4px;
+  top: 2px;
+  inset-inline-end: 2px;
+  min-width: 15px;
+  height: 15px;
+  padding: 0 3px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   border-radius: 999px;
   background: var(--red);
   color: #fff;
-  font-size: 9.5px;
+  font-size: 9px;
   font-weight: 700;
   line-height: 1;
   border: 2px solid var(--topbar-bg);
@@ -343,49 +300,35 @@ body.page-leave { opacity: 0; }
 }
 .topbar-btn-dot-blue { background: var(--blue); }
 
-// Language pill (cycles EN ⇄ ع).
-.topbar-lang {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  height: 36px;
-  padding: 0 11px;
-  border: 1px solid var(--border-color);
-  border-radius: 999px;
-  background: var(--bg-surface);
-  color: var(--text-secondary);
-  font: inherit;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: color 120ms, border-color 120ms, background 120ms;
+// Language toggle — compact single letter (E / ع), same ghost treatment
+// as the icon buttons.
+.topbar-lang { color: var(--text-secondary); font-weight: 700; }
+.topbar-lang #topbar-lang-label {
+  font-size: 13px;
+  line-height: 1;
+  font-weight: 700;
 }
-.topbar-lang:hover {
-  color: var(--primary);
-  border-color: rgba(var(--primary-rgb), 0.45);
-  background: var(--primary-lt);
-}
-.topbar-lang svg { width: 15px; height: 15px; }
+:root[dir='rtl'] .topbar-lang #topbar-lang-label { font-size: 15px; }
+.topbar-lang:hover #topbar-lang-label { color: var(--primary); }
 
-// User chip — far-right profile trigger.
+// Profile trigger — avatar only, no chip border/name/chevron.
 .topbar-user {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  border-radius: 50%;
+  cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  height: 38px;
-  padding: 0 10px 0 4px;
-  border: 1px solid var(--border-color);
-  border-radius: 999px;
-  background: var(--bg-surface);
-  color: var(--text);
-  font: inherit;
-  cursor: pointer;
-  transition: border-color 120ms, box-shadow 120ms;
+  justify-content: center;
+  transition: background 120ms;
 }
-.topbar-user:hover { border-color: rgba(var(--primary-rgb), 0.45); }
+.topbar-user:hover { background: var(--bg-surface-secondary); }
 .topbar-user-avatar {
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   flex-shrink: 0;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--primary), var(--primary-dk));
@@ -396,32 +339,12 @@ body.page-leave { opacity: 0; }
   align-items: center;
   justify-content: center;
 }
-.topbar-user-meta {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  line-height: 1.2;
-  text-align: start;
-}
-.topbar-user-name { font-size: 12.5px; font-weight: 600; }
-.topbar-user-role { font-size: 10.5px; color: var(--text-muted); }
-.topbar-user-chev { width: 14px; height: 14px; color: var(--text-muted); flex-shrink: 0; }
 
-@media (max-width: 1180px) {
-  .topbar-user-meta { display: none; }
-  .topbar-user { padding: 4px; }
-  .topbar-search {
-    width: 38px;
-    justify-content: center;
-    padding: 0;
-  }
-  .topbar-search-label,
-  .topbar-search-kbd { display: none; }
-}
 @media (max-width: 600px) {
-  .topbar-lang span { display: none; }
-  .topbar-lang { width: 36px; padding: 0; justify-content: center; }
-  .topbar { gap: 8px; }
+  .topbar { gap: 4px; padding-inline: 10px; }
+  .topbar-right { gap: 2px; }
+  .topbar-icon-btn { width: 34px; height: 34px; }
+  .topbar-user { width: 34px; height: 34px; }
 }
 
 // ────────────────────────

@@ -273,16 +273,14 @@ function updateChromeStrings() {
     const el = document.getElementById(id);
     if (el) {el.setAttribute('aria-label', t(key));}
   };
-  setLabel('topbar-search', 'common.searchPh');
+  setLabel('topbar-search', 'common.search');
   setLabel('topbar-notifications', 'nav.notifications');
   setLabel('topbar-messages', 'common.messages');
   setLabel('lang-toggle', 'common.language');
   setLabel('topbar-user', 'nav.profile');
   setLabel('sidebar-settings', 'nav.settings');
   const langLabel = document.getElementById('topbar-lang-label');
-  if (langLabel) {langLabel.textContent = ar ? 'ع' : 'EN';}
-  const role = document.getElementById('topbar-user-role');
-  if (role) {role.textContent = t('profile.role');}
+  if (langLabel) {langLabel.textContent = ar ? 'ع' : 'E';}
 }
 
 // ── Boot ──────────────────────────────────────────────────────────────────

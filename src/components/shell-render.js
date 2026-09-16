@@ -195,10 +195,8 @@ export function renderTopbar() {
     <header class="topbar">
       <div class="topbar-left">
         <button class="topbar-menu" type="button" aria-label="Open menu" aria-controls="sidebar" aria-expanded="false"><svg width="22px" height="22px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
-        <button class="topbar-search" id="topbar-search" type="button" aria-keyshortcuts="Control+K">
+        <button class="topbar-icon-btn" id="topbar-search" type="button" aria-label="Search" aria-keyshortcuts="Control+K">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-          <span class="topbar-search-label" data-i18n="common.searchPh">Search pages or run a command…</span>
-          <kbd class="topbar-search-kbd">Ctrl K</kbd>
         </button>
       </div>
       <div class="topbar-right">
@@ -210,9 +208,8 @@ export function renderTopbar() {
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 3a6 6 0 0 0-6 6c0 6-3 7-3 7h18s-3-1-3-7a6 6 0 0 0-6-6z"/><path d="M10.5 21a1.5 1.5 0 0 0 3 0"/></svg>
           <span class="topbar-btn-dot" id="topbar-notif-badge" hidden><span id="topbar-notif-count"></span></span>
         </button>
-        <button class="topbar-lang" id="lang-toggle" type="button" aria-label="Language">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-          <span id="topbar-lang-label">EN</span>
+        <button class="topbar-icon-btn topbar-lang" id="lang-toggle" type="button" aria-label="Language">
+          <span id="topbar-lang-label">E</span>
         </button>
         <button class="topbar-icon-btn topbar-alert-btn" id="topbar-messages" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Messages">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2.5"/><path d="M3 7l9 7 9-7"/></svg>
@@ -220,11 +217,6 @@ export function renderTopbar() {
         </button>
         <button class="topbar-user" id="topbar-user" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Your profile">
           <span class="topbar-user-avatar">HA</span>
-          <span class="topbar-user-meta">
-            <span class="topbar-user-name" id="topbar-user-name">HR Admin</span>
-            <span class="topbar-user-role" id="topbar-user-role">HR Manager</span>
-          </span>
-          <svg class="topbar-user-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
         </button>
       </div>
     </header>
