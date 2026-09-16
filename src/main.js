@@ -1,6 +1,19 @@
 // goHR — entry
 // Self-contained dashboard skin. Loads the core design system.
 
+// Self-hosted webfonts (Fontsource woff2, bundled by Vite) — no external
+// CDN at runtime, so Arabic (IBM Plex Sans Arabic) renders even where
+// fonts.googleapis.com is blocked. Only the latin/arabic subsets and the
+// weights the UI uses are emitted.
+import '@fontsource/inter/latin-400.css';
+import '@fontsource/inter/latin-500.css';
+import '@fontsource/inter/latin-600.css';
+import '@fontsource/inter/latin-700.css';
+import '@fontsource/ibm-plex-sans-arabic/arabic-400.css';
+import '@fontsource/ibm-plex-sans-arabic/arabic-500.css';
+import '@fontsource/ibm-plex-sans-arabic/arabic-600.css';
+import '@fontsource/ibm-plex-sans-arabic/arabic-700.css';
+
 import './styles/main.scss';
 import { mountShell } from './components/shell.js';
 import { initCharts } from './components/charts.js';

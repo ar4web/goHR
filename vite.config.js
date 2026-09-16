@@ -28,12 +28,10 @@ function shellInjectionPlugin() {
       handler(html) {
         let out = html;
 
-        // PWA + meta tags for every page.
-        const fontsHref = 'https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap';
+        // PWA + meta tags for every page. Fonts are self-hosted (Fontsource,
+        // imported from src/main.js) so there is no runtime dependency on a
+        // font CDN — Arabic renders correctly on restricted networks too.
         const metaPwa = `<link rel="stylesheet" href="${base}src/styles/main.scss">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="${fontsHref}" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="${fontsHref}" rel="stylesheet"></noscript>
 <link rel="manifest" href="${base}site.webmanifest">
 <meta name="theme-color" content="#1ABB9C" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#111111" media="(prefers-color-scheme: dark)">
@@ -67,7 +65,7 @@ function shellInjectionPlugin() {
         // avoid a flash. The saved theme (light | dark) is read synchronously
         // from localStorage; keep the backgrounds in sync with --body-bg in
         // _tokens.scss and PRE_PAINT_BG in src/components/theme.js.
-        const prePaint = `<script>(function(){try{var t='light';try{if(localStorage.getItem('hr:theme')==='dark'){t='dark';}}catch(e){}document.documentElement.setAttribute('data-theme',t);document.documentElement.style.background=(t==='dark'?'#121417':'#f3f5f8');document.documentElement.setAttribute('lang','en');document.documentElement.setAttribute('dir','ltr');}catch(e){}})();</script>`;
+        const prePaint = `<script>(function(){try{var t='light';try{if(localStorage.getItem('hr:theme')==='dark'){t='dark';}}catch(e){}document.documentElement.setAttribute('data-theme',t);document.documentElement.style.background=(t==='dark'?'#121417':'#f3f5f8');var l='en';try{if(localStorage.getItem('hr:lang')==='ar'){l='ar';}}catch(e){}document.documentElement.setAttribute('lang',l);document.documentElement.setAttribute('dir',l==='ar'?'rtl':'ltr');}catch(e){}})();</script>`;
         out = out.replace(/<\/head>/i, `${prePaint}\n</head>`);
 
         // Admin-shell injection for pages with body[data-shell="admin"].
