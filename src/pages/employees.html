@@ -87,33 +87,27 @@
       <div class="emp-toolbar-left">
         <span class="caption-muted" id="emp-count"></span>
       </div>
-      <div class="emp-toolbar-right" role="toolbar" aria-label="Employee actions">
-        <button class="btn btn-icon btn-outline" id="emp-add" type="button" data-tooltip="Add employee" aria-label="Add employee"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12h14"/></svg></button>
-        <button class="btn btn-icon btn-outline" id="emp-import" type="button" data-tooltip="Import" aria-label="Import"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 15V3m0 12L8 11m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg></button>
-        <button class="btn btn-icon btn-outline" id="emp-export" type="button" data-tooltip="Export" aria-label="Export"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg></button>
-        <button class="btn btn-outline btn-sm" id="emp-filter-btn" type="button" aria-expanded="false" aria-controls="emp-filter-pop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h16M7 12h10M10 18h4"/></svg> Filter <span class="badge badge-teal" id="emp-filter-count" hidden></span></button>
+      <div class="emp-toolbar-right" role="toolbar" aria-label="Roster filters">
+        <button class="btn btn-primary btn-sm" id="emp-filter-btn" type="button" aria-expanded="false" aria-controls="emp-filter-pop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h16M7 12h10M10 18h4"/></svg> Filter <span class="badge badge-teal" id="emp-filter-count" hidden></span></button>
       </div>
     </div>
     <div class="emp-filter-pop" id="emp-filter-pop" hidden>
-      <div class="emp-filter-group">
-        <div class="emp-filter-title">Popular</div>
-        <label class="emp-filter-field"><span>Status</span><select class="form-control" id="emp-status"><option value="">All statuses</option><option value="active">Active</option><option value="probation">Probation</option><option value="on-leave">On leave</option><option value="huroob">Huroob</option><option value="exited">Exited</option></select></label>
-        <label class="emp-filter-field"><span>Group</span><select class="form-control" id="emp-group"><option value="">All groups</option><option value="saudi">Saudi</option><option value="expat">Expat</option></select></label>
-        <label class="emp-filter-field"><span>Iqama</span><select class="form-control" id="emp-iqama"><option value="">All Iqama</option><option value="ok">OK</option><option value="le30">≤30d</option><option value="le90">≤90d</option><option value="expired">Expired</option></select></label>
+      <div class="emp-filter-head">
+        <span class="emp-filter-head-title">Filters</span>
+        <button class="emp-filter-clear" id="emp-filter-clear" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          Clear filters
+        </button>
       </div>
-      <div class="emp-filter-group">
-        <div class="emp-filter-title">All fields · A–Z</div>
-        <label class="emp-filter-field"><span>Department</span><select class="form-control" id="emp-dept"><option value="">All departments</option></select></label>
-        <label class="emp-filter-field"><span>Join date</span><input type="date" class="form-control" id="emp-date" aria-label="Join date"></label>
-        <label class="emp-filter-field"><span>Nationality</span><select class="form-control" id="emp-nat"><option value="">All nationalities</option></select></label>
-        <label class="emp-filter-field"><span>Profession</span><select class="form-control" id="emp-prof"><option value="">All professions</option></select></label>
-        <label class="emp-filter-field"><span>Qiwa</span><select class="form-control" id="emp-qiwa"><option value="">All Qiwa</option><option value="authenticated">Authenticated</option><option value="sent">Sent</option><option value="draft">Draft</option></select></label>
-        <label class="emp-filter-field"><span>Sort</span><select class="form-control" id="emp-sort"><option value="Code">Code</option><option value="name">Name A-Z</option><option value="join">Join date</option><option value="basic">Salary</option><option value="iqamaExp">Iqama expiry</option></select></label>
-        <label class="emp-filter-field"><span>Sponsor</span><select class="form-control" id="emp-sponsor"><option value="">All sponsors</option></select></label>
-      </div>
-      <div class="emp-filter-foot">
-        <button class="btn btn-ghost btn-sm" id="emp-filter-clear" type="button">Clear</button>
-      </div>
+      <label class="emp-filter-field"><span>Nationality</span><select class="form-control" id="emp-nat"><option value="">All</option></select></label>
+      <label class="emp-filter-field"><span>Department</span><select class="form-control" id="emp-dept"><option value="">All</option></select></label>
+      <label class="emp-filter-field"><span>Site</span><select class="form-control" id="emp-site"><option value="">All</option></select></label>
+      <label class="emp-filter-field"><span>Profession</span><select class="form-control" id="emp-prof"><option value="">All</option></select></label>
+      <label class="emp-filter-field"><span>Experience</span><select class="form-control" id="emp-exp"><option value="">All</option></select></label>
+      <label class="emp-filter-field"><span>Sponsor</span><select class="form-control" id="emp-sponsor"><option value="">All</option></select></label>
+      <label class="emp-filter-field"><span>Age</span><select class="form-control" id="emp-age"><option value="">All</option></select></label>
+      <label class="emp-filter-field"><span>Status</span><select class="form-control" id="emp-status"><option value="">All</option></select></label>
+      <label class="emp-filter-field"><span>Sort</span><select class="form-control" id="emp-sort"><option value="Code">Code</option><option value="name">Name A–Z</option><option value="join">Join date</option><option value="basic">Salary</option><option value="iqamaExp">Iqama expiry</option></select></label>
     </div>
   </div>
 
@@ -121,7 +115,7 @@
   <div class="card emp-table-card">
     <div class="card-body p-0 emp-table-wrap">
       <div class="table-responsive">
-        <table class="table emp-table" data-datatable data-page-length="10" data-orderable="true">
+        <table class="table emp-table" data-page-length="10">
           <thead>
             <tr>
               <th class="cb-col"><input type="checkbox" id="emp-select-all" aria-label="Select all"></th>
@@ -147,6 +141,24 @@
         </table>
       </div>
     </div>
+  </div>
+
+  <!-- BOTTOM ACTION RAIL — Add on the left, Import/Export on the right -->
+  <div class="emp-action-rail" role="toolbar" aria-label="Employee actions">
+    <button class="btn btn-primary" id="emp-add" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
+      Add employee
+    </button>
+    <span class="emp-rail-right">
+      <button class="btn btn-outline" id="emp-import" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 15V3m0 12L8 11m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>
+        Import
+      </button>
+      <button class="btn btn-outline" id="emp-export" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>
+        Export
+      </button>
+    </span>
   </div>
 
 </div>

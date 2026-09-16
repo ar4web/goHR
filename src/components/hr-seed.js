@@ -149,7 +149,7 @@ export const TASKS = [
     due: '2026-09-14',
     priority: 'high',
     done: false,
-    link: 'employee.html?code=EMP-0027'
+    link: 'employee-file.html?code=EMP-0027'
   },
   {
     id: 'TSK-06',
@@ -966,6 +966,17 @@ export const EMPLOYEES = [
     annualUsed: 0
   }
 ];
+
+// Demo date of birth where the HRIS value is not seeded yet. Deterministic
+// per employee number (24–54 range) so the Age filter is stable across reloads.
+EMPLOYEES.forEach((e, i) => {
+  if (e.dob) {return;}
+  const n = parseInt(String(e.code).replace(/\D/g, ''), 10) || i + 1;
+  const age = 24 + ((n * 7) % 31);
+  const month = String(((n * 3) % 12) + 1).padStart(2, '0');
+  const day = String(((n * 5) % 28) + 1).padStart(2, '0');
+  e.dob = `${2026 - age}-${month}-${day}`;
+});
 
 export const CLIENTS = [
   {

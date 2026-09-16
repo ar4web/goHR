@@ -3,8 +3,8 @@
 
 import { openMenu } from './menus.js';
 import { t, currentLang, LANG_EVENT, applyI18n } from './i18n.js';
-import { fmtDate, fmtSAR, initialsOf, setText } from './hr-locale.js';
-import { daysUntil, nitaqatEstimate } from './hr-statutory.js';
+import { fmtDate, initialsOf, setText } from './hr-locale.js';
+import { daysUntil, nitaqatEstimate, yearsBetween } from './hr-statutory.js';
 import { getSeed } from './hr-api.js';
 import { exportData } from './import-export.js';
 import { openImportModal } from './import-modal.js';
@@ -44,18 +44,18 @@ const EXPORT_COLS = [
 
 let filter = {
   q: '',
-  group: '',
-  st: '',
-  dept: '',
-  prof: '',
   nat: '',
-  qiwa: '',
-  iqama: '',
+  dept: '',
+  site: '',
+  prof: '',
+  exp: '',
+  age: '',
   sponsor: '',
-  date: '',
-  sort: 'code'
+  st: '',
+  sort: 'Code'
 };
 let booted = false;
+let dataTable = null;
 
 function profName(code) {
   const p = PROFESSIONS.find(x => x.code === code);
@@ -84,27 +84,6 @@ function deployOf(e) {
   const sn = s ? (currentLang() === 'ar' ? s.nameAr : s.nameEn) : '';
   return { cls: 'green', label: `${t('status.deployed')} · ${cn}${sn ? ` / ${sn}` : ''}` };
 }
-function iqamaBadge(e) {
-  if (e.saudi) {
-    return '<span class="status status-green">SA</span>';
-  }
-  if (!e.iqamaExp) {
-    return `<span class="status status-red">${t('status.missing')}</span>`;
-  }
-  const d = daysUntil(e.iqamaExp);
-  if (d < 0) {
-    return `<span class="status status-red">${fmtDate(e.iqamaExp)} · ${t('status.expired')}</span>`;
-  }
-  if (d <= 30) {
-    return `<span class="status status-red">${fmtDate(e.iqamaExp)} · ${d}${t('common.days')}</span>`;
-  }
-  if (d <= 90) {
-    return `<span class="status status-yellow">${fmtDate(e.iqamaExp)} · ${d}${t('common.days')}</span>`;
-  }
-  return `<span class="status status-green">${fmtDate(e.iqamaExp)}</span>`;
-}
-const QIWA_CLS = { authenticated: 'green', sent: 'yellow', draft: 'blue' };
-
 function iqamaBucket(e) {
   if (e.saudi || !e.iqamaExp) {
     return 'ok';
@@ -122,6 +101,42 @@ function iqamaBucket(e) {
   return 'ok';
 }
 
+// Whole-year age from date of birth.
+function ageOf(e) {
+  if (!e.dob) {return null;}
+  return Math.floor(yearsBetween(e.dob));
+}
+
+// Whole-year work experience (tenure) from the join date.
+function experienceYears(e) {
+  if (!e.join) {return null;}
+  return Math.floor(yearsBetween(e.join));
+}
+
+function experienceBucket(e) {
+  const y = experienceYears(e);
+  if (y === null) {return '';}
+  if (y < 1) {return 'lt1';}
+  if (y < 3) {return '1-3';}
+  if (y < 5) {return '3-5';}
+  return '5+';
+}
+
+function ageBucket(e) {
+  const a = ageOf(e);
+  if (a === null) {return '';}
+  if (a < 25) {return 'lt25';}
+  if (a < 35) {return '25-34';}
+  if (a < 45) {return '35-44';}
+  return '45+';
+}
+
+function siteName(code) {
+  if (code === 'bench') {return 'Bench / unassigned';}
+  const s = SITES.find(x => x.id === code);
+  return s ? (currentLang() === 'ar' ? s.nameAr : s.nameEn) : code;
+}
+
 function visible(list) {
   const q = filter.q.toLowerCase();
   let out = list.filter(
@@ -133,15 +148,15 @@ function visible(list) {
         (e.iqama || '').includes(q) ||
         (e.nid || '').includes(q) ||
         (e.phone || '').includes(q)) &&
-      (!filter.group || (filter.group === 'saudi' ? e.saudi : !e.saudi)) &&
       (!filter.st || e.st === filter.st) &&
       (!filter.dept || e.dept === filter.dept) &&
       (!filter.prof || e.prof === filter.prof) &&
       (!filter.nat || e.nat === filter.nat) &&
-      (!filter.qiwa || e.q === filter.qiwa) &&
-      (!filter.iqama || iqamaBucket(e) === filter.iqama) &&
       (!filter.sponsor || e.sponsor === filter.sponsor) &&
-      (!filter.date || (e.join || '') >= filter.date)
+      (!filter.site ||
+        (filter.site === 'bench' ? !e.site : e.site === filter.site)) &&
+      (!filter.exp || experienceBucket(e) === filter.exp) &&
+      (!filter.age || ageBucket(e) === filter.age)
   );
   const s = filter.sort;
   out.sort((a, b) => {
@@ -298,51 +313,67 @@ function renderTicker(list) {
   track.innerHTML = half + half; // duplicate for seamless loop
 }
 
+// Filter dropdowns list only values that actually exist in the roster —
+// nothing empty or irrelevant. Rebuilt when the data changes (import/add).
+let filterOptionsSignature = '';
 function populateFilters() {
-  const deptSel = document.getElementById('emp-dept');
-  if (deptSel && deptSel.options.length <= 1) {
-    DEPARTMENTS.forEach(d => {
-      const o = document.createElement('option');
-      o.value = d.code;
-      o.textContent = currentLang() === 'ar' ? d.ar : d.en;
-      deptSel.appendChild(o);
-    });
-  }
-  const profSel = document.getElementById('emp-prof');
-  if (profSel && profSel.options.length <= 1) {
-    PROFESSIONS.forEach(p => {
-      const o = document.createElement('option');
-      o.value = p.code;
-      o.textContent = currentLang() === 'ar' ? p.ar : p.en;
-      profSel.appendChild(o);
-    });
-  }
-  const natSel = document.getElementById('emp-nat');
-  if (natSel && natSel.options.length <= 1) {
-    const nats = [...new Set(getSeed('employees').map(e => e.nat))].sort();
-    nats.forEach(n => {
-      const o = document.createElement('option');
-      o.value = n;
-      o.textContent = n;
-      natSel.appendChild(o);
-    });
-  }
-  const sponsorSel = document.getElementById('emp-sponsor');
-  if (sponsorSel && sponsorSel.options.length <= 1) {
-    const sponsors = [
-      ...new Set(
-        getSeed('employees')
-          .map(e => e.sponsor)
-          .filter(Boolean)
-      )
-    ].sort();
-    sponsors.forEach(s => {
-      const o = document.createElement('option');
-      o.value = s;
-      o.textContent = s;
-      sponsorSel.appendChild(o);
-    });
-  }
+  const emps = getSeed('employees');
+  const present = (values, order, labels) => {
+    const found = new Set(values);
+    return order.filter(v => found.has(v)).map(v => [v, labels[v] || v]);
+  };
+  const uniq = (fn) => [...new Set(emps.map(fn).filter(Boolean))].sort();
+  const signature = JSON.stringify({
+    st: uniq(e => e.st),
+    site: uniq(e => (e.site || 'bench')),
+    exp: uniq(experienceBucket),
+    age: uniq(ageBucket),
+    dept: uniq(e => e.dept),
+    prof: uniq(e => e.prof),
+    nat: uniq(e => e.nat),
+    sponsor: uniq(e => e.sponsor)
+  });
+  if (signature === filterOptionsSignature) {return;}
+  filterOptionsSignature = signature;
+
+  const fill = (id, options) => {
+    const sel = document.getElementById(id);
+    if (!sel) {return;}
+    const current = sel.value;
+    sel.innerHTML = '<option value="">All</option>' +
+      options.map(([v, label]) => `<option value="${esc(v)}">${esc(label)}</option>`).join('');
+    sel.value = current;
+  };
+
+  fill('emp-status', present(
+    emps.map(e => e.st),
+    ['active', 'probation', 'on-leave', 'huroob', 'exited'],
+    { active: 'Active', probation: 'Probation', 'on-leave': 'On leave', huroob: 'Huroob', exited: 'Exited' }
+  ));
+  fill('emp-nat', uniq(e => e.nat).map(v => [v, v]));
+  fill('emp-dept', uniq(e => e.dept).map(v => [v, deptName(v)]));
+  fill('emp-prof', uniq(e => e.prof).map(v => [v, profName(v)]));
+  fill('emp-sponsor', uniq(e => e.sponsor).map(v => [v, v]));
+  fill('emp-site', present(
+    emps.map(e => e.site || 'bench'),
+    ['ST-001', 'ST-002', 'ST-003', 'ST-004', 'ST-005', 'ST-006', 'bench'],
+    {
+      'ST-001': siteName('ST-001'), 'ST-002': siteName('ST-002'),
+      'ST-003': siteName('ST-003'), 'ST-004': siteName('ST-004'),
+      'ST-005': siteName('ST-005'), 'ST-006': siteName('ST-006'),
+      bench: siteName('bench')
+    }
+  ));
+  fill('emp-exp', present(
+    emps.map(experienceBucket),
+    ['lt1', '1-3', '3-5', '5+'],
+    { lt1: 'Under 1 year', '1-3': '1–3 years', '3-5': '3–5 years', '5+': '5+ years' }
+  ));
+  fill('emp-age', present(
+    emps.map(ageBucket),
+    ['lt25', '25-34', '35-44', '45+'],
+    { lt25: 'Under 25', '25-34': '25–34', '35-44': '35–44', '45+': '45+' }
+  ));
 }
 
 function empType(e) {
@@ -401,11 +432,88 @@ function siteCity(e) {
   }
   return { site: currentLang() === 'ar' ? s.nameAr : s.nameEn, city: s.city || '—' };
 }
+
+function destroyDataTable() {
+  if (!dataTable) {
+    return;
+  }
+  dataTable.destroy();
+  dataTable = null;
+}
+
+async function mountDataTable() {
+  const table = document.querySelector('table.emp-table');
+  if (!table || dataTable || table.classList.contains('dataTable')) {
+    return;
+  }
+  const { default: DataTable } = await import('datatables.net');
+  // The roster owns filtering/sorting so DataTables provides stable pagination
+  // only. It is rebuilt after each roster render, preventing stale DT caches.
+  dataTable = new DataTable(table, {
+    pageLength: parseInt(table.dataset.pageLength || '10', 10),
+    lengthChange: false,
+    searching: false,
+    ordering: false,
+    order: [],
+    language: {
+      info: 'Showing _START_–_END_ of _TOTAL_',
+      infoEmpty: 'No matching records',
+      infoFiltered: '(of _MAX_ total)',
+      zeroRecords: 'No matches found',
+      paginate: { previous: '←', next: '→' }
+    }
+  });
+}
+
+function resetRowSelection() {
+  const selectAll = document.getElementById('emp-select-all');
+  if (selectAll) {
+    selectAll.checked = false;
+    selectAll.indeterminate = false;
+  }
+}
+
+function syncFilterControls() {
+  const controls = [
+    ['emp-status', 'st'],
+    ['emp-nat', 'nat'],
+    ['emp-dept', 'dept'],
+    ['emp-site', 'site'],
+    ['emp-prof', 'prof'],
+    ['emp-exp', 'exp'],
+    ['emp-age', 'age'],
+    ['emp-sponsor', 'sponsor']
+  ];
+  controls.forEach(([id, key]) => {
+    const el = document.getElementById(id);
+    if (el) {el.value = filter[key] || '';}
+  });
+  const sort = document.getElementById('emp-sort');
+  if (sort) {sort.value = filter.sort === 'code' ? 'Code' : filter.sort;}
+}
+
+function applyUrlFilters() {
+  const params = new URLSearchParams(window.location.search);
+  // Dashboard KPI links use ?status=active/huroob.
+  filter.st = params.get('status') || params.get('st') || '';
+  const keys = ['q', 'nat', 'dept', 'site', 'prof', 'exp', 'age', 'sponsor', 'sort'];
+  keys.forEach(key => {
+    const value = params.get(key);
+    if (value !== null) {
+      filter[key] = value;
+    }
+  });
+  if (filter.sort === 'code') {filter.sort = 'Code';}
+  syncFilterControls();
+}
+
 function renderRows() {
   const tbody = document.getElementById('emp-rows');
   if (!tbody) {
     return;
   }
+  destroyDataTable();
+  populateFilters();
   const items = visible(getSeed('employees'));
   renderStats(getSeed('employees'));
   const cnt = document.getElementById('emp-count');
@@ -470,6 +578,8 @@ function renderRows() {
       })
       .join('') ||
     `<tr><td colspan="17" style="text-align:center;color:var(--text-muted);padding:24px">${t('common.noData')}</td></tr>`;
+  resetRowSelection();
+  void mountDataTable();
 }
 
 export function initEmployees() {
@@ -478,6 +588,7 @@ export function initEmployees() {
     return;
   }
   populateFilters();
+  applyUrlFilters();
   renderRows();
   syncFilterCount();
   cleanupToolbar(root);
@@ -507,28 +618,34 @@ export function initEmployees() {
       renderRows();
       syncFilterCount();
     });
-  onChange('emp-group', 'group');
   onChange('emp-status', 'st');
-  onChange('emp-dept', 'dept');
-  onChange('emp-prof', 'prof');
   onChange('emp-nat', 'nat');
-  onChange('emp-qiwa', 'qiwa');
-  onChange('emp-iqama', 'iqama');
+  onChange('emp-dept', 'dept');
+  onChange('emp-site', 'site');
+  onChange('emp-prof', 'prof');
+  onChange('emp-exp', 'exp');
+  onChange('emp-age', 'age');
   onChange('emp-sponsor', 'sponsor');
-  onChange('emp-date', 'date');
   onChange('emp-sort', 'sort');
-  // Filter popover
+  // Filter popover — fixed panel opening under the button, edge to edge.
   const pop = document.getElementById('emp-filter-pop');
   const btn = document.getElementById('emp-filter-btn');
-  btn?.addEventListener('click', e => {
-    e.stopPropagation();
-    const hidden = pop.hasAttribute('hidden');
-    if (hidden) {
+  const togglePop = (open) => {
+    if (!pop || !btn) {return;}
+    const show = open ?? pop.hasAttribute('hidden');
+    if (show) {
+      const r = btn.getBoundingClientRect();
+      pop.style.top = `${r.bottom + 8}px`;
       pop.removeAttribute('hidden');
+      btn.setAttribute('aria-expanded', 'true');
     } else {
       pop.setAttribute('hidden', '');
+      btn.setAttribute('aria-expanded', 'false');
     }
-    btn.setAttribute('aria-expanded', hidden ? 'true' : 'false');
+  };
+  btn?.addEventListener('click', e => {
+    e.stopPropagation();
+    togglePop();
   });
   document.addEventListener('click', e => {
     if (!pop || pop.hasAttribute('hidden')) {
@@ -542,34 +659,32 @@ export function initEmployees() {
   });
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && pop && !pop.hasAttribute('hidden')) {
-      pop.setAttribute('hidden', '');
-      btn?.setAttribute('aria-expanded', 'false');
+      togglePop(false);
     }
   });
+  window.addEventListener('resize', () => togglePop(false));
   document.getElementById('emp-filter-clear')?.addEventListener('click', () => {
     filter = {
-      q: document.getElementById('emp-search')?.value || '',
-      group: '',
-      st: '',
-      dept: '',
-      prof: '',
+      q: filter.q,
       nat: '',
-      qiwa: '',
-      iqama: '',
+      dept: '',
+      site: '',
+      prof: '',
+      exp: '',
+      age: '',
       sponsor: '',
-      date: '',
-      sort: 'code'
+      st: '',
+      sort: 'Code'
     };
     [
-      'emp-group',
       'emp-status',
-      'emp-dept',
-      'emp-prof',
       'emp-nat',
-      'emp-qiwa',
-      'emp-iqama',
-      'emp-sponsor',
-      'emp-date'
+      'emp-dept',
+      'emp-site',
+      'emp-prof',
+      'emp-exp',
+      'emp-age',
+      'emp-sponsor'
     ].forEach(id => {
       const el = document.getElementById(id);
       if (el) {
@@ -587,9 +702,9 @@ export function initEmployees() {
   root.querySelectorAll('th[data-sort]').forEach(th => {
     th.style.cursor = 'pointer';
     th.addEventListener('click', () => {
-      filter.sort = th.dataset.sort;
+      filter.sort = th.dataset.sort === 'code' ? 'Code' : th.dataset.sort;
       const s = document.getElementById('emp-sort');
-      if (s) {
+      if (s && [...s.options].some(o => o.value === filter.sort)) {
         s.value = filter.sort;
       }
       renderRows();
@@ -600,12 +715,34 @@ export function initEmployees() {
       cb.checked = e.target.checked;
     });
   });
+  document.getElementById('emp-rows')?.addEventListener('change', e => {
+    if (!e.target.classList.contains('row-cb')) {
+      return;
+    }
+    const selectAll = document.getElementById('emp-select-all');
+    if (!selectAll) {
+      return;
+    }
+    const boxes = [...document.querySelectorAll('#emp-rows .row-cb')];
+    const checked = boxes.filter(cb => cb.checked).length;
+    selectAll.checked = checked > 0 && checked === boxes.length;
+    selectAll.indeterminate = checked > 0 && checked < boxes.length;
+  });
   // Header actions: add / export / import (single icon family, right-aligned)
-  document.getElementById('emp-add')?.addEventListener('click', () => openAddModal());
-  document.getElementById('emp-export')?.addEventListener('click', () => {
+  document.getElementById('emp-add')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    openAddModal();
+  });
+  document.getElementById('emp-export')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     exportData('csv', 'employees', EXPORT_COLS, visible(getSeed('employees')));
   });
-  document.getElementById('emp-import')?.addEventListener('click', () => openEmployeeImport());
+  document.getElementById('emp-import')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    openEmployeeImport();
+  });
   document.getElementById('emp-rows')?.addEventListener('click', e => {
     const view = e.target.closest('[data-emp-view]');
     if (view) {
@@ -649,37 +786,17 @@ function syncFilterCount() {
   if (!badge) {
     return;
   }
-  const n = ['group', 'st', 'dept', 'prof', 'nat', 'qiwa', 'iqama', 'sponsor', 'date'].filter(
+  const n = ['st', 'nat', 'dept', 'site', 'prof', 'exp', 'age', 'sponsor'].filter(
     k => filter[k]
   ).length;
   badge.hidden = n === 0;
   badge.textContent = n ? String(n) : '';
 }
 
-// Top toolbar cleanup (idempotent): drop the search node, Filter leads the
-// right-side actions with import/export packed compactly next to it.
-function cleanupToolbar(root) {
+// The top toolbar holds only the Filter button; Add / Import / Export live
+// in the fixed bottom action rail (see employees.html).
+function cleanupToolbar() {
   document.getElementById('emp-search')?.remove();
-  const bar = root.querySelector('.emp-toolbar-right');
-  const imp = document.getElementById('emp-import');
-  const exp = document.getElementById('emp-export');
-  if (bar && imp && exp && !imp.parentElement.classList.contains('btn-group')) {
-    let g = bar.querySelector('.btn-group');
-    if (!g) {
-      g = document.createElement('span');
-      g.className = 'btn-group';
-      g.setAttribute('role', 'group');
-      g.setAttribute('aria-label', 'Import or export');
-      bar.insertBefore(g, imp);
-    }
-    g.append(imp, exp);
-  }
-  const fbtn = document.getElementById('emp-filter-btn');
-  if (fbtn && bar) {
-    fbtn.classList.remove('btn-outline');
-    fbtn.classList.add('btn-primary');
-    bar.prepend(fbtn); // starting right-side anchor, import/export group follows
-  }
 }
 
 // Cramped header cells: CSS truncates with ellipsis; full label via title
@@ -851,79 +968,10 @@ function openAddModal() {
   });
 }
 
-// Employee profile overlay — modal only, never navigates. Soft-depth backdrop,
-// summary segments + small CSS charts render synchronously with zero refresh.
+// Employee profile opens the dedicated, printable employee 360 file.
 function openProfile(code) {
-  const e = getSeed('employees').find(x => x.code === code);
-  if (!e) {
-    return;
-  }
-  const basic = e.basic || 0,
-    housing = e.housing || 0,
-    transport = e.transport || 0;
-  const total = basic + housing + transport;
-  const exp = expiryOf(e);
-  const expDays = exp ? daysUntil(exp) : null;
-  const expTone =
-    expDays === null
-      ? 'blue'
-      : expDays < 0
-        ? 'red'
-        : expDays <= 30
-          ? 'red'
-          : expDays <= 90
-            ? 'yellow'
-            : 'green';
-  const spark = [35, 55, 42, 68, 58, 78, 66]
-    .map(v => `<span class="bar" style="height:${v}%"></span>`)
-    .join('');
-  const split =
-    total > 0
-      ? `<span style="width:${Math.round((basic / total) * 100)}%;background:var(--primary)"></span><span style="width:${Math.round((housing / total) * 100)}%;background:var(--blue)"></span><span style="width:${Math.round((transport / total) * 100)}%;background:var(--yellow)"></span>`
-      : '';
-  const expPct =
-    expDays === null ? 0 : Math.max(0, Math.min(100, Math.round(((365 - expDays) / 365) * 100)));
-  showModal({
-    title: `${currentLang() === 'ar' ? e.nameAr || e.nameEn : e.nameEn} · ${esc(e.code)}`,
-    size: 'lg',
-    body: `
-      <div class="emp-profile-head">
-        <div class="cell-avatar emp-profile-avatar" style="background:${AV[e.av] || 'var(--avatar-teal)'};color:white">${esc(initialsOf(e.nameEn))}</div>
-        <div class="emp-profile-head-text">
-          <div class="emp-profile-name">${esc(currentLang() === 'ar' ? e.nameAr || e.nameEn : e.nameEn)}</div>
-          <div class="caption-muted">${esc(e.code)} · ${esc(profName(e.prof))} · ${esc(deptName(e.dept))}</div>
-        </div>
-        <span class="status status-${e.st === 'active' ? 'green' : e.st === 'huroob' ? 'red' : 'yellow'}">${esc(e.st || '—')}</span>
-      </div>
-      <div class="emp-profile-grid">
-        <div class="emp-profile-card"><div class="emp-profile-k">Status</div><div><span class="status status-${e.st === 'active' ? 'green' : 'yellow'}">${esc(e.st || '—')}</span> <span class="status status-blue">${esc(e.nat || '')}</span></div><div class="caption-muted">Qiwa ${esc(e.q || '—')} · ${esc(empType(e))}</div></div>
-        <div class="emp-profile-card"><div class="emp-profile-k">Package · ${esc(fmtSAR(total))}</div><div class="emp-paysplit" aria-hidden="true">${split}</div><div class="caption-muted">Basic ${esc(fmtSAR(basic))} · Housing ${esc(fmtSAR(housing))} · Transport ${esc(fmtSAR(transport))}</div><div class="stat-spark emp-micro" aria-hidden="true">${spark}</div></div>
-        <div class="emp-profile-card"><div class="emp-profile-k">Residency</div><div><span class="status status-${expTone}">${exp ? `${esc(fmtDate(exp))} · ${expDays}d` : 'No expiry'}</span></div><div class="progress-thin emp-expbar"><div class="bar" style="width:${expPct}%;background:var(--${expTone === 'blue' ? 'blue' : expTone})"></div></div><div class="caption-muted">${esc(e.saudi ? e.nid || '' : e.iqama || '')}</div></div>
-        <div class="emp-profile-card"><div class="emp-profile-k">Contact</div><div style="font-size:12.5px">${esc(e.phone || '—')}<br>${esc(e.email || '')}</div><div class="caption-muted">Joined ${esc(e.join ? fmtDate(e.join) : '—')}</div></div>
-      </div>`,
-    actions: [
-      {
-        label: `${t('common.edit')}`,
-        variant: 'outline',
-        action: () => openEditRecord(code),
-        closeOnAction: false
-      },
-      {
-        label: `${t('common.export')} CSV`,
-        variant: 'outline',
-        action: () =>
-          exportData(
-            'csv',
-            encodeURIComponent(e.code),
-            EXPORT_COLS,
-            getSeed('employees').filter(x => x.code === code)
-          ),
-        closeOnAction: false
-      },
-      { label: t('common.cancel'), variant: 'ghost' }
-    ]
-  });
-  document.querySelector('.modal-backdrop:last-child')?.classList.add('emp-profile-backdrop');
+  if (!code) {return;}
+  window.location.href = `employee-file.html?code=${encodeURIComponent(code)}`;
 }
 
 function openEditRecord(code) {

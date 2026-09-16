@@ -556,16 +556,23 @@ export function applyBranding() {
   const base = (document.title.split('|')[0] || '').trim() || name;
   document.title = `${base} | ${String(name).replace(/\|/g, ' ')}`;
   const hex = raw.company.primary;
-  if (/^#[0-9a-fA-F]{6}$/.test(hex || '')) {
+  // The seed company carries the built-in teal; only a genuinely customized
+  // brand color overrides the theme accent — otherwise the dark-orange theme
+  // (data-theme="dark") would be repainted teal at boot.
+  const isCustomBrand =
+    hex && hex.toLowerCase() !== (SEED_COMPANY.primary || '').toLowerCase();
+  if (isCustomBrand && /^#[0-9a-fA-F]{6}$/.test(hex || '')) {
     const r = parseInt(hex.slice(1, 3), 16);
     const g = parseInt(hex.slice(3, 5), 16);
     const b = parseInt(hex.slice(5, 7), 16);
     const dk = [r, g, b].map(v => Math.round(v * 0.85));
     const root = document.documentElement.style;
     root.setProperty('--primary', hex);
-    root.setProperty('--primary-lt', `rgba(${r},${g},${b},0.06)`);
+    root.setProperty('--primary-rgb', `${r}, ${g}, ${b}`);
+    root.setProperty('--primary-lt', `rgba(${r},${g},${b},0.1)`);
     root.setProperty('--primary-dk', `rgb(${dk[0]},${dk[1]},${dk[2]})`);
-    root.setProperty('--sidebar-active', `rgba(${r},${g},${b},0.12)`);
+    root.setProperty('--sidebar-active', `rgba(${r},${g},${b},0.16)`);
+    root.setProperty('--card-hover-border', `rgba(${r},${g},${b},0.25)`);
   }
   const brandName = document.querySelector('.sidebar-brand .brand-name');
   if (brandName) {

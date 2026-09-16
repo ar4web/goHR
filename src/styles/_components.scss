@@ -73,7 +73,7 @@
 }
 .card:hover {
   box-shadow: var(--card-shadow-hover);
-  border-color: rgba(26,187,156,0.15);
+  border-color: var(--card-hover-border);
 }
 .card.is-refreshing {
   position: relative;
@@ -84,7 +84,7 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: linear-gradient(90deg, transparent 0%, rgba(26, 187, 156, 0.10) 50%, transparent 100%);
+  background: linear-gradient(90deg, transparent 0%, rgba(var(--primary-rgb), 0.10) 50%, transparent 100%);
   background-size: 200% 100%;
   animation: card-refresh-sweep 700ms ease-out;
   pointer-events: none;
@@ -240,7 +240,7 @@ table.hr-table td:last-child .card-opt-btn {
   flex-shrink: 0;
 }
 .status-green {
-  color: #1e7e34;
+  color: var(--ok-ink);
 }
 // Semantic text colors with dark-mode mates (measured 4.5:1+ both modes).
 .text-danger { color: var(--avatar-red); }
@@ -249,7 +249,7 @@ table.hr-table td:last-child .card-opt-btn {
 .status-green::before {
   background: var(--green);
 }
-.status-yellow { color: #b45309; }
+.status-yellow { color: var(--warn-ink); }
 .status-yellow::before { background: var(--yellow); }
 .status-blue { color: var(--blue); }
 .status-blue::before { background: var(--blue); }
@@ -1572,7 +1572,7 @@ blockquote footer cite {
   justify-content: center;
   flex-shrink: 0;
 }
-.cmdk-item.active .cmdk-item-icon { background: rgba(26, 187, 156, 0.14); color: var(--primary); }
+.cmdk-item.active .cmdk-item-icon { background: rgba(var(--primary-rgb), 0.14); color: var(--primary); }
 .cmdk-item-label { flex: 1; text-align: start; }
 .cmdk-item-kbd {
   font-size: 11px;
@@ -1763,7 +1763,7 @@ body.cmdk-open { overflow: hidden; }
   padding: 12px 16px;
   border-radius: var(--radius);
   background: var(--primary-lt);
-  border: 1px solid rgba(26, 187, 156, 0.18);
+  border: 1px solid rgba(var(--primary-rgb), 0.18);
   font-size: 13px;
   color: var(--text);
 }

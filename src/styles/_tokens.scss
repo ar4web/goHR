@@ -17,6 +17,9 @@
   --primary: #1ABB9C;
   --primary-lt: rgba(26,187,156,0.06);
   --primary-dk: #169f85;
+  // RGB triplet of the accent for rgba() tints; repainted per theme.
+  --primary-rgb: 26, 187, 156;
+  --yellow-dk: #7a5200;
   /* Dark ink for text sitting on primary teal (buttons, brand marks).
      White-on-teal fails AA; this pairs at 7+:1 in both modes. */
   --on-primary: #06302B;
@@ -33,6 +36,11 @@
   --body-bg: #f5f7fb;
   --bg-surface: #ffffff;
   --bg-surface-secondary: #f9fafb;
+  // Card fill — explicit form of the var(--card-bg, #fff) fallbacks used
+  // across HR screens; dark theme repaints it.
+  --card-bg: #ffffff;
+  // Translucent, blurred topbar.
+  --topbar-bg: rgba(255, 255, 255, 0.85);
   color-scheme: light;
 
   --border-color: #e6e7eb;
@@ -43,6 +51,15 @@
   --text-secondary: #626d7d;
   --text-muted: #7e8896;
   --text-disabled: #c0c7cf;
+
+  // Ink color for text sitting on pale status tints (green-lt, yellow-lt).
+  // Dark theme swaps these for bright pastels.
+  --ok-ink: #1e7e34;
+  --warn-ink: #b45309;
+  --danger-ink: #a31228;
+
+  // Hover ring for cards — tinted with the accent in each theme.
+  --card-hover-border: rgba(26, 187, 156, 0.15);
 
   --blue: #066fd1;
   --azure: #4299e1;
@@ -113,8 +130,102 @@
   --status-info: #066fd1;
 }
 
-// Light mode is the only theme — tokens below are the single source of truth.
-// The pre-paint script in vite.config.js pins `data-theme="light"`.
+// ─────────────────────────────────────────────────────────────────────────
+// DARK ORANGE theme — charcoal surfaces with a vivid orange accent,
+// inspired by the construction / operations-console references. Activated
+// on <html data-theme="dark"> by the theme engine (src/components/theme.js)
+// and the topbar toggle. Every token above that a component consumes is
+// re-painted here so no screen keeps a light surface.
+// ─────────────────────────────────────────────────────────────────────────
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  // Shell chrome — sidebar one step darker than the body so the content
+  // reads as the lit surface.
+  --sidebar-bg: #0e1013;
+  --sidebar-hover: rgba(255, 255, 255, 0.06);
+  --sidebar-active: rgba(249, 115, 22, 0.18);
+  --sidebar-text: #8b95a1;
+  --sidebar-text-hover: #cdd3db;
+  --sidebar-text-active: #ffffff;
+  --sidebar-border: rgba(255, 255, 255, 0.06);
+
+  // Accent — vivid construction orange. Dark ink on orange keeps AA.
+  --primary: #f97316;
+  --primary-lt: rgba(249, 115, 22, 0.14);
+  --primary-dk: #ea6a0c;
+  --primary-rgb: 249, 115, 22;
+  --yellow-dk: #ffd98a;
+  --on-primary: #241100;
+
+  // Avatars stay saturated enough to carry white initials on charcoal.
+  --avatar-teal: #12977d;
+  --avatar-blue: #2f86de;
+  --avatar-azure: #3b93d6;
+  --avatar-green: #39a84d;
+  --avatar-yellow: #c79100;
+  --avatar-red: #d05151;
+  --avatar-purple: #c061da;
+
+  // Surfaces — body darkest, cards raised one step, headers/hovers lighter.
+  --body-bg: #121417;
+  --bg-surface: #1b1e23;
+  --bg-surface-secondary: #22262d;
+  --card-bg: #1b1e23;
+  --topbar-bg: rgba(18, 20, 23, 0.82);
+
+  --border-color: #2c3138;
+  --border-color-light: #262a30;
+  --border-translucent: rgba(255, 255, 255, 0.08);
+
+  --text: #e6e9ee;
+  --text-secondary: #a8b0bb;
+  --text-muted: #7d8794;
+  --text-disabled: #616976;
+
+  // Pale-tint ink inverts to bright status pastels on charcoal.
+  --ok-ink: #5fd67f;
+  --warn-ink: #ffc65a;
+  --danger-ink: #ff9aa6;
+
+  --card-hover-border: rgba(249, 115, 22, 0.4);
+
+  // Brightened chart/status hues for dark backgrounds.
+  --blue: #4d9fff;
+  --azure: #63b3ff;
+  --green: #44c464;
+  --lime: #97d848;
+  --yellow: #ffc53d;
+  --orange: #fb8c3f;
+  --red: #f0616d;
+  --pink: #e8659b;
+  --purple: #c763dd;
+  --indigo: #7c93ff;
+  --cyan: #3cc7dd;
+
+  // Tints need more alpha to read on charcoal.
+  --green-lt: rgba(68, 196, 100, 0.14);
+  --red-lt: rgba(240, 97, 109, 0.14);
+  --yellow-lt: rgba(255, 197, 61, 0.14);
+  --blue-lt: rgba(77, 159, 255, 0.14);
+  --azure-lt: rgba(99, 179, 255, 0.14);
+  --purple-lt: rgba(199, 99, 221, 0.14);
+  --cyan-lt: rgba(60, 199, 221, 0.14);
+
+  --status-active: #44c464;
+  --status-pending: #ffc53d;
+  --status-critical: #f0616d;
+  --status-info: #4d9fff;
+
+  // Deeper, warmer shadows for raised charcoal surfaces.
+  --card-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--border-translucent);
+  --card-shadow-hover: 0 10px 28px rgba(0, 0, 0, 0.5);
+  --shadow: rgba(0, 0, 0, 0.35) 0 2px 6px 0;
+  --shadow-card: 0 0 0 1px var(--border-translucent), rgba(0, 0, 0, 0.35) 0 2px 6px 0;
+}
+
+// Light mode is the default; tokens above are the single source of truth.
+// The pre-paint script in vite.config.js restores the saved data-theme.
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 

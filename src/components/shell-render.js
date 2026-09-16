@@ -4,8 +4,8 @@
 //   1. The Vite plugin (vite.config.js) to inject shell HTML at build/dev time.
 //   2. src/components/shell.js as a runtime fallback for pages that bypass the plugin.
 
-// Shell chrome is sidebar + slim topbar (toggle only) — no footer element,
-// no search, no theme/lang/notifications/messages/avatar controls.
+// Shell chrome is sidebar + slim topbar (mobile menu + theme toggle) —
+// no footer element, no search/lang/notifications/messages/avatar controls.
 
 // NAV items are either flat — { key, href, text, icon, badge? } —
 // or a section parent with `children: [{ key, href, text, badge? }]`. The
@@ -189,6 +189,12 @@ export function renderTopbar() {
     <header class="topbar">
       <div class="topbar-left">
         <button class="topbar-menu" type="button" aria-label="Open menu" aria-controls="sidebar" aria-expanded="false"><svg width="22px" height="22px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+      </div>
+      <div class="topbar-right">
+        <button class="topbar-icon-btn" id="theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark theme" title="Switch to dark theme">
+          <svg class="theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg>
+          <svg class="theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></svg>
+        </button>
       </div>
     </header>
   `;

@@ -66,7 +66,7 @@ function alerts() {
         out.push({
           sev: 'red',
           text: `${L('Missing Iqama expiry', 'تاريخ انتهاء الإقامة مفقود')} · ${currentLang() === 'ar' ? e.nameAr : e.nameEn}`,
-          href: `employees.html?code=${e.code}`
+          href: `employee-file.html?code=${encodeURIComponent(e.code)}`
         });
         return;
       }
@@ -75,7 +75,7 @@ function alerts() {
         out.push({
           sev: d <= 30 ? 'red' : 'yellow',
           text: `${L('Iqama', 'الإقامة')} ${fmtDate(e.iqamaExp)} (${d}${L('d', 'ي')}) · ${currentLang() === 'ar' ? e.nameAr : e.nameEn}`,
-          href: `employees.html?code=${e.code}`
+          href: `employee-file.html?code=${encodeURIComponent(e.code)}`
         });
       }
     });
@@ -124,7 +124,7 @@ function renderExpiries() {
       rows
         .map(
           ({ e, d }) => `<tr>
-      <td data-label="${L('Worker', 'الموظف')}"><a href="employees.html?code=${e.code}">${currentLang() === 'ar' ? e.nameAr || e.nameEn : e.nameEn}</a></td>
+      <td data-label="${L('Worker', 'الموظف')}"><a href="employee-file.html?code=${encodeURIComponent(e.code)}">${currentLang() === 'ar' ? e.nameAr || e.nameEn : e.nameEn}</a></td>
       <td data-label="${L('Expiry', 'الانتهاء')}">${fmtDate(e.iqamaExp)}</td>
       <td data-label="${t('common.status')}"><span class="status status-${d <= 30 ? 'red' : 'yellow'}">${d}${L('d', 'ي')}</span></td>
     </tr>`
@@ -214,7 +214,7 @@ function renderS1() {
   if (hc2) {
     const flagged = emps.filter(e => e.st === 'huroob');
     hc2.innerHTML = flagged.length
-      ? `<a class="hr-alert hr-alert-red" href="employees.html?code=${encodeURIComponent(flagged[0].code)}" style="margin-bottom:12px">
+      ? `<a class="hr-alert hr-alert-red" href="employee-file.html?code=${encodeURIComponent(flagged[0].code)}" style="margin-bottom:12px">
           <span class="status status-red">${flagged.length} × ${esc(t('status.huroob'))}</span>
           <span><strong>${esc(t('hr.dashboard.huroobTitle'))}</strong> — ${flagged.map(e => esc(currentLang() === 'ar' ? e.nameAr || e.nameEn : e.nameEn)).join(currentLang() === 'ar' ? '، ' : ', ')} · ${esc(flagged[0].reportedAt || '')}</span>
         </a>`
@@ -383,7 +383,7 @@ function renderRoster(siteId) {
           rows
             .map(
               e => `<tr>
-      <td><a href="employees.html?code=${encodeURIComponent(e.code)}">${esc(empName(e.code))}</a><br><small style="color:var(--text-secondary)">${esc(profName(e.prof))}</small></td>
+      <td><a href="employee-file.html?code=${encodeURIComponent(e.code)}">${esc(empName(e.code))}</a><br><small style="color:var(--text-secondary)">${esc(profName(e.prof))}</small></td>
       <td dir="ltr" style="text-align:end;white-space:nowrap">${esc(fmtSAR(e.basic))}</td>
     </tr>`
             )

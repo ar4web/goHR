@@ -9,8 +9,10 @@ import { openMenu, DEFAULT_CARD_MENU } from './components/menus.js';
 import { initCommandPalette } from './components/command-palette.js';
 import { initPageActions } from './components/page-actions.js';
 import { initI18n } from './components/i18n.js';
+import { initTheme } from './components/theme.js';
 
 mountShell();
+initTheme();
 initI18n();
 // Heavy last: charts (echarts) + grids (datatables) mount after first paint
 // so shell, text and LCP settle first. Skeletons cover the wait; idle fires

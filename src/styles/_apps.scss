@@ -1567,7 +1567,7 @@
 .kanban-label-blue   { background: var(--blue-lt);   color: var(--blue); }
 .kanban-label-green  { background: var(--green-lt);  color: var(--green); }
 .kanban-label-red    { background: var(--red-lt);    color: var(--red); }
-.kanban-label-yellow { background: var(--yellow-lt); color: #b45309; }
+.kanban-label-yellow { background: var(--yellow-lt); color: var(--warn-ink); }
 
 .kanban-card-title {
   font-size: 13px;

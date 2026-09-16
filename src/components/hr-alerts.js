@@ -25,7 +25,7 @@ export function hrAlerts() {
           sticky: true,
           from: L('Iqama expiring', 'الإقامة تنتهي'),
           text: `${e.code} · ${empName(e)}`,
-          href: 'employees.html'
+          href: `employee-file.html?code=${encodeURIComponent(e.code)}`
         });
       }
     }
