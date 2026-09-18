@@ -27,7 +27,7 @@ const fmtInt = n => Number(n || 0).toLocaleString('en-US', { maximumFractionDigi
 
 // Bilingual export headers (same pattern as the roster's EXPORT_COLS).
 const ATT_EXPORT_COLS = [
-  { key: 'code', label: 'Code / الرمز' },
+  { key: 'emp', label: 'Code / الرمز' },
   { key: 'name', label: 'Name / الاسم' },
   { key: 'dept', label: 'Department / القسم' },
   { key: 'date', label: 'Date / التاريخ' },
@@ -52,6 +52,7 @@ const STATUS_CLS = { present: 'green', late: 'yellow', absent: 'red', leave: 'bl
 let filter = { date: '', dept: '', st: '', sort: 'date' };
 let booted = false;
 let dataTable = null;
+let dataTableMounting = null;
 let filterOptionsSignature = '';
 
 // ── Lookups ──
@@ -124,7 +125,7 @@ function visible() {
   if (filter.st) {
     rows = rows.filter(r => r.st === filter.st);
   }
-  const byName = (a, b) => nameOf(a.code).localeCompare(nameOf(b.code), currentLang() === 'ar' ? 'ar' : 'en');
+  const byName = (a, b) => nameOf(a.emp).localeCompare(nameOf(b.emp), currentLang() === 'ar' ? 'ar' : 'en');
   if (filter.sort === 'date') {
     rows.sort((a, b) => b.date.localeCompare(a.date) || byName(a, b));
   } else if (filter.sort === 'name') {
@@ -134,7 +135,7 @@ function visible() {
   } else if (filter.sort === 'hours') {
     rows.sort((a, b) => hoursOf(b) - hoursOf(a) || byName(a, b));
   } else {
-    rows.sort((a, b) => String(a.code).localeCompare(String(b.code)) || b.date.localeCompare(a.date));
+    rows.sort((a, b) => String(a.emp).localeCompare(String(b.emp)) || b.date.localeCompare(a.date));
   }
   return rows.map(r => ({ ...r, hours: hoursOf(r), late: r.late ?? lateOf(r) }));
 }
@@ -337,23 +338,35 @@ async function mountDataTable() {
   if (!table || dataTable || table.classList.contains('dataTable')) {
     return;
   }
-  const { default: DataTable } = await import('datatables.net');
-  // Same contract as the roster: the page owns filtering/sorting; DataTables
-  // provides stable pagination only and is rebuilt after each render.
-  dataTable = new DataTable(table, {
-    pageLength: parseInt(table.dataset.pageLength || '10', 10),
-    lengthChange: false,
-    searching: false,
-    ordering: false,
-    order: [],
-    language: {
-      info: t('dt.info'),
-      infoEmpty: t('dt.infoEmpty'),
-      infoFiltered: t('dt.infoFiltered'),
-      zeroRecords: t('dt.zero'),
-      paginate: { previous: t('dt.previous'), next: t('dt.next') }
+  // Serialize mounts: rapid successive renders (sync event bursts) must not
+  // construct two instances before the first await resumes.
+  if (dataTableMounting) {
+    await dataTableMounting;
+    if (dataTable || table.classList.contains('dataTable')) {
+      return;
     }
-  });
+  }
+  dataTableMounting = (async () => {
+    const { default: DataTable } = await import('datatables.net');
+    // Same contract as the roster: the page owns filtering/sorting; DataTables
+    // provides stable pagination only and is rebuilt after each render.
+    dataTable = new DataTable(table, {
+      pageLength: parseInt(table.dataset.pageLength || '10', 10),
+      lengthChange: false,
+      searching: false,
+      ordering: false,
+      order: [],
+      language: {
+        info: t('dt.info'),
+        infoEmpty: t('dt.infoEmpty'),
+        infoFiltered: t('dt.infoFiltered'),
+        zeroRecords: t('dt.zero'),
+        paginate: { previous: t('dt.previous'), next: t('dt.next') }
+      }
+    });
+  })();
+  await dataTableMounting;
+  dataTableMounting = null;
 }
 
 function renderRows() {
@@ -372,16 +385,16 @@ function renderRows() {
   tbody.innerHTML =
     items
       .map(r => {
-        const e = empOf(r.code);
+        const e = empOf(r.emp);
         const st = statusOf(r.st);
         return `
-    <tr data-code="${esc(r.code)}" data-date="${esc(r.date)}">
-      <td class="cell-mono">${esc(r.code)}</td>
+    <tr data-code="${esc(r.emp)}" data-date="${esc(r.date)}">
+      <td class="cell-mono">${esc(r.emp)}</td>
       <td style="min-width:160px">
         <div class="cell-customer">
-          <div class="cell-avatar" style="background:${AV[e?.av] || 'var(--avatar-teal)'};color:white">${esc(initialsOf(e?.nameEn || r.code))}</div>
+          <div class="cell-avatar" style="background:${AV[e?.av] || 'var(--avatar-teal)'};color:white">${esc(initialsOf(e?.nameEn || r.emp))}</div>
           <div>
-            <div class="cell-strong"><button type="button" class="emp-name-btn" style="white-space:nowrap" data-emp-view="${esc(r.code)}">${esc(nameOf(r.code))}</button></div>
+            <div class="cell-strong"><button type="button" class="emp-name-btn" style="white-space:nowrap" data-emp-view="${esc(r.emp)}">${esc(nameOf(r.emp))}</button></div>
           </div>
         </div>
       </td>
@@ -447,7 +460,7 @@ function openLogModal() {
           const e = empOf(code);
           const rec = {
             id: `${code}@${date}`,
-            code,
+            emp: code,
             dept: e?.dept || '',
             date,
             st,
@@ -498,7 +511,7 @@ function openAttendanceImport() {
         const cout = offSite ? '' : String(r.cout || '').trim();
         fresh.push({
           id: `${code}@${date}`,
-          code,
+          emp: code,
           dept: empOf(code)?.dept || '',
           date,
           st,

@@ -1350,7 +1350,9 @@ export const ATTENDANCE = (() => {
       if (e.st === 'exited') {
         continue; // off roster — not scheduled
       }
-      const base = { id: `${e.code}@${day}`, code: e.code, dept: e.dept, date: day };
+      // `emp` (not `code`) keeps getSeed's overlay key on the composite `id`,
+      // so locally logged/imported days merge per employee+date.
+      const base = { id: `${e.code}@${day}`, emp: e.code, dept: e.dept, date: day };
       if (e.st === 'huroob') {
         rows.push({ ...base, st: 'absent', cin: '', cout: '', hours: 0, late: 0 });
         continue;
