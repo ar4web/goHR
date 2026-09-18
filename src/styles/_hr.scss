@@ -1297,6 +1297,143 @@ h3.sub:first-child {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+// Payroll: 5-up stat row (emp-stats defaults to 6) + period selector.
+.pr-stats {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+@media (max-width: 1200px) {
+  .pr-stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 768px) {
+  .pr-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 480px) {
+  .pr-stats {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.pr-period-label {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+// Printable bilingual payslip (modal content; print CSS at file bottom).
+.payslip {
+  background: #fff;
+  color: #111;
+  border: 1px solid #d8dde3;
+  border-radius: var(--radius);
+  padding: var(--space-4);
+  max-width: 640px;
+  margin: 0 auto;
+}
+.payslip-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-3);
+  border-bottom: 2px solid #111;
+  padding-bottom: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+.payslip-brand {
+  font-weight: 700;
+  font-size: 18px;
+}
+.payslip-title {
+  font-size: 13px;
+  color: #333;
+}
+.payslip-emp {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2) var(--space-4);
+  margin-bottom: var(--space-3);
+  font-size: 12.5px;
+}
+.payslip-emp > div > span {
+  color: #555;
+  margin-inline-end: 6px;
+}
+.payslip-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: var(--space-3);
+  font-size: 12.5px;
+}
+.payslip-table th {
+  text-align: start;
+  border-bottom: 1px solid #111;
+  padding: 6px 0;
+  font-size: 12px;
+}
+.payslip-table td {
+  padding: 6px 0;
+  border-bottom: 1px dashed #d8dde3;
+}
+.payslip-table td:last-child {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+.payslip-table .payslip-sub td {
+  font-weight: 700;
+  border-bottom: 1px solid #111;
+}
+.payslip-net {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #111;
+  color: #fff;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 14px;
+  margin-bottom: var(--space-3);
+}
+.payslip-net strong {
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+}
+.payslip-foot {
+  font-size: 11px;
+  color: #555;
+  display: grid;
+  gap: 4px;
+}
+
+@media print {
+  body[data-print='payslip'] .sidebar,
+  body[data-print='payslip'] .topbar,
+  body[data-print='payslip'] .page-wrapper {
+    display: none !important;
+  }
+  body[data-print='payslip'] .modal-backdrop {
+    position: static !important;
+    background: none !important;
+    padding: 0 !important;
+    display: block !important;
+  }
+  body[data-print='payslip'] .modal-dialog {
+    box-shadow: none !important;
+    max-width: none !important;
+    width: 100% !important;
+    max-height: none !important;
+  }
+  body[data-print='payslip'] .modal-body {
+    overflow: visible !important;
+    max-height: none !important;
+  }
+  body[data-print='payslip'] .modal-close,
+  body[data-print='payslip'] .modal-footer {
+    display: none !important;
+  }
+}
+
 .emp-ticker-card {
   padding: var(--space-2);
 }

@@ -22,7 +22,8 @@ export const NAV = [
       { key: 'analytics', href: 'analytics.html', text: 'Analytics', icon: 'barChart' },
       { key: 'employees', href: 'employees.html', text: 'Employees', icon: 'users' },
       { key: 'attendance', href: 'attendance.html', text: 'Attendance', icon: 'clock' },
-      { key: 'leave', href: 'leave.html', text: 'Leave', icon: 'palm' }
+      { key: 'leave', href: 'leave.html', text: 'Leave', icon: 'palm' },
+      { key: 'payroll', href: 'payroll.html', text: 'Payroll', icon: 'wallet' }
     ]
   }
 ];
