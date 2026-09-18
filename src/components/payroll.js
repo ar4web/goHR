@@ -46,6 +46,50 @@ let booted = false;
 let dataTable = null;
 let dataTableMounting = null;
 
+// ── Stage 2 state: line adjustments (OT/extras) + run history ──
+// Both persist locally per period — same overlay philosophy as imported rows.
+const ADJ_KEY = 'hr:payroll-adj:v1';
+const RUNS_KEY = 'hr:payroll-runs:v1';
+
+function loadMap(key) {
+  try {
+    return JSON.parse(localStorage.getItem(key) || '{}');
+  } catch (_e) {
+    return {};
+  }
+}
+function saveMap(key, obj) {
+  try {
+    localStorage.setItem(key, JSON.stringify(obj));
+  } catch (_e) {
+    /* quota */
+  }
+}
+function adjustmentsFor(month) {
+  return loadMap(ADJ_KEY)[month] || {};
+}
+function setAdjustment(month, code, patch) {
+  const all = loadMap(ADJ_KEY);
+  all[month] = { ...(all[month] || {}) };
+  all[month][code] = { ...all[month][code], ...patch };
+  saveMap(ADJ_KEY, all);
+}
+function isClosed(month) {
+  return loadMap(RUNS_KEY)[month]?.status === 'closed';
+}
+function closedRun(month) {
+  return loadMap(RUNS_KEY)[month] || null;
+}
+function setRun(month, snapshot) {
+  const all = loadMap(RUNS_KEY);
+  if (snapshot) {
+    all[month] = snapshot;
+  } else {
+    delete all[month];
+  }
+  saveMap(RUNS_KEY, all);
+}
+
 // ── Period helpers ──
 
 function months() {
@@ -99,8 +143,10 @@ function runPayroll(month) {
     .filter(e => e.st !== 'exited')
     .slice()
     .sort((a, b) => String(a.code).localeCompare(String(b.code)));
+  const adj = adjustmentsFor(month);
   return emps.map(e => {
-    const line = calcPayLine(e, { at: `${month}-15` });
+    const a = adj[e.code] || {};
+    const line = calcPayLine(e, { otH: Number(a.ot) || 0, extras: Number(a.extras) || 0, at: `${month}-15` });
     const ud = unpaidDaysInPeriod(e.code, start, end);
     const unpaidAmt = round2(line.daily * ud);
     const net = round2(line.net - unpaidAmt);
@@ -117,6 +163,8 @@ function runPayroll(month) {
       transport: Number(e.transport) || 0,
       bank: e.bank || '',
       iban: e.iban || '',
+      nid: e.nid || '',
+      iqama: e.iqama || '',
       unpaidDays: ud,
       unpaidAmt,
       net
@@ -247,12 +295,14 @@ function renderRows(lines) {
       </td>
       <td style="font-size:12.5px">${esc(deptName(l.dept))}</td>
       <td class="cell-mono" style="font-size:12.5px">${esc(fmtSAR(l.gross))}</td>
+      <td class="cell-mono" style="font-size:12.5px">${l.otH ? `<div class="cell-strong">${fmtInt(l.otH)}h</div><div style="font-size:11px;color:var(--text-muted)">${esc(fmtSAR(l.otPay))}</div>` : '—'}</td>
       <td class="cell-mono" style="font-size:12.5px">${l.unpaidDays ? fmtInt(l.unpaidDays) : '—'}</td>
       <td class="cell-mono" style="font-size:12.5px">${l.unpaidAmt ? esc(fmtSAR(l.unpaidAmt)) : '—'}</td>
       <td class="cell-mono" style="font-size:12.5px">${gosiCell}</td>
       <td class="cell-mono" style="font-size:13px;font-weight:600">${esc(fmtSAR(l.net))}</td>
       <td style="font-size:12px"><div class="cell-strong">${esc(l.bank || '—')}</div><div style="font-size:11px;color:var(--text-muted)" dir="ltr">${esc(maskIban(l.iban))}</div></td>
       <td class="emp-actions-cell">
+        <button class="card-opt-btn" data-pr-adjust="${esc(l.emp)}" aria-label="${esc(`${t('pay.adjust')} · ${l.emp}`)}" data-tooltip="${t('pay.adjust')}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 3a2.8 2.8 0 014 4L7.5 20.5 2 22l1.5-5.5z"/></svg></button>
         <button class="card-opt-btn" data-pr-slip="${esc(l.emp)}" aria-label="${esc(`${t('pay.payslip')} · ${l.emp}`)}" data-tooltip="${t('pay.payslip')}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg></button>
       </td>
     </tr>`;
@@ -266,6 +316,7 @@ function renderAll() {
   renderStats(lines);
   renderChart(lines);
   renderRows(lines);
+  renderPeriodBar(lines);
   return lines;
 }
 
@@ -301,6 +352,8 @@ function openPayslip(empCode) {
             <tr><td>${esc(t('pay.basic'))}</td><td>${esc(fmtSAR(l.basic))}</td></tr>
             <tr><td>${esc(t('pay.housing'))}</td><td>${esc(fmtSAR(l.housing))}</td></tr>
             <tr><td>${esc(t('pay.transport'))}</td><td>${esc(fmtSAR(l.transport))}</td></tr>
+            ${l.otH ? `<tr><td>${esc(t('pay.otPay'))} · ${fmtInt(l.otH)}h</td><td>${esc(fmtSAR(l.otPay))}</td></tr>` : ''}
+            ${l.extras ? `<tr><td>${esc(t('pay.extrasLine'))}</td><td>${esc(fmtSAR(l.extras))}</td></tr>` : ''}
             <tr class="payslip-sub"><td>${esc(t('pay.gross'))}</td><td>${esc(fmtSAR(l.gross))}</td></tr>
           </tbody>
         </table>
@@ -354,14 +407,21 @@ function downloadText(filename, text) {
 function downloadSif(lines) {
   // Employees without an IBAN can't be filed — skip them and say so; Mudad
   // accepts partial SIF batches and a single gap shouldn't block the run.
-  const fileable = lines.filter(l => l.iban && l.net > 0);
+  const fileable = lines.filter(l => l.iban && l.net > 0 && (l.nid || l.iqama));
   const skipped = lines.length - fileable.length;
   if (!fileable.length) {
-    const missing = lines.find(l => !l.iban || !(l.net > 0));
-    showToast(t('pay.sifErrors').replace('{err}', missing ? `${missing.emp}: IBAN` : '—'), { variant: 'warning' });
+    const missing = lines.find(l => !l.iban || !(l.net > 0) || !(l.nid || l.iqama));
+    showToast(t('pay.sifErrors').replace('{err}', missing ? `${missing.emp}: IBAN/ID` : '—'), { variant: 'warning' });
     return;
   }
-  const sif = sifBuild(period, fileable.map(l => ({ emp: l.emp, iban: l.iban, net: l.net })));
+  // idType: 1 = national ID (Saudis), 2 = Iqama (expats) — see sifBuild v1.1.
+  const sif = sifBuild(period, fileable.map(l => ({
+    emp: l.emp,
+    iban: l.iban,
+    net: l.net,
+    idType: l.saudi ? '1' : '2',
+    idNum: l.saudi ? l.nid : l.iqama
+  })));
   downloadText(`SIF-${period.replace('-', '')}.sif`, sif.text);
   if (skipped) {
     showToast(t('pay.sifMissing').replace('{n}', fmtInt(skipped)).replace('{code}', lines.find(l => !l.iban || l.net <= 0).emp), { variant: 'warning' });
@@ -381,13 +441,111 @@ function populatePeriods() {
   }
   const current = period;
   sel.innerHTML = months()
-    .map(m => `<option value="${m}">${esc(monthLabel(m))}</option>`)
+    .map(m => `<option value="${m}">${esc(monthLabel(m))}${isClosed(m) ? ' ✓' : ''}</option>`)
     .join('');
   sel.value = current;
   const dl = document.getElementById('pr-wps-deadline');
   if (dl) {
     dl.textContent = fmtDate(wpsDeadline(period));
   }
+}
+
+// ── Render: run-state bar (draft vs closed) ──
+
+function renderPeriodBar(lines) {
+  const badge = document.getElementById('pr-status');
+  const btn = document.getElementById('pr-close');
+  const caption = document.getElementById('pr-closed-at');
+  const closed = closedRun(period);
+  if (badge) {
+    if (closed) {
+      badge.textContent = `✓ ${t('pay.statusClosed')}`;
+      badge.hidden = false;
+    } else {
+      badge.hidden = true;
+    }
+  }
+  if (btn) {
+    btn.textContent = closed ? t('pay.reopen') : t('pay.closeRun');
+    btn.classList.toggle('btn-outline', !closed);
+    btn.classList.toggle('btn-primary', !!closed);
+  }
+  if (caption) {
+    if (closed) {
+      caption.textContent = t('pay.closedAt')
+        .replace('{date}', fmtDate(closed.at.slice(0, 10)))
+        .replace('{net}', fmtSAR(closed.totals?.net || 0));
+      caption.hidden = false;
+    } else {
+      caption.hidden = true;
+    }
+  }
+}
+
+function closeRun(lines) {
+  setRun(period, {
+    status: 'closed',
+    at: new Date().toISOString(),
+    totals: {
+      head: lines.length,
+      gross: round2(lines.reduce((a, l) => a + l.gross, 0)),
+      net: round2(lines.reduce((a, l) => a + l.net, 0))
+    }
+  });
+  populatePeriods();
+  renderPeriodBar(lines);
+  showToast(t('act.savedShort'), { variant: 'success' });
+}
+
+function reopenRun(lines) {
+  setRun(period, null);
+  populatePeriods();
+  renderPeriodBar(lines);
+  showToast(t('act.savedShort'), { variant: 'success' });
+}
+
+// ── Adjust line (OT hours + extras) ──
+
+function openAdjustModal(empCode) {
+  if (isClosed(period)) {
+    showToast(t('pay.editLocked'), { variant: 'warning' });
+    return;
+  }
+  const l = runPayroll(period).find(x => x.emp === empCode);
+  if (!l) {
+    return;
+  }
+  const a = adjustmentsFor(period)[empCode] || {};
+  showModal({
+    title: t('pay.adjustTitle').replace('{name}', l.name).replace('{month}', monthLabel(period)),
+    body: `
+      <div class="modal-form-row"><label>${t('pay.otHours')}</label>
+        <input type="number" class="form-control" id="pa-ot" min="0" step="0.5" value="${Number(a.ot) || 0}"></div>
+      <div class="modal-form-row" style="margin-bottom:0"><label>${t('pay.extras')}</label>
+        <input type="number" class="form-control" id="pa-extras" min="0" step="1" value="${Number(a.extras) || 0}"></div>
+      <div data-pa-err style="font-size:12px;color:var(--red);margin-top:8px"></div>
+      <div style="font-size:12px;color:var(--text-secondary);margin-top:6px">${esc(t('pay.wage'))}: ${esc(fmtSAR(l.basic + l.housing + l.transport))} · 1h = ${esc(fmtSAR(l.daily / 8 * 1.5))}</div>`,
+    actions: [
+      { label: t('common.cancel'), variant: 'ghost' },
+      {
+        label: t('common.save'),
+        variant: 'primary',
+        action: ({ body, close }) => {
+          const err = body.querySelector('[data-pa-err]');
+          const ot = Number(body.querySelector('#pa-ot').value);
+          const extras = Number(body.querySelector('#pa-extras').value);
+          if (!Number.isFinite(ot) || ot < 0 || !Number.isFinite(extras) || extras < 0) {
+            err.textContent = t('pay.badNumber');
+            return false;
+          }
+          setAdjustment(period, empCode, { ot, extras });
+          renderAll();
+          close();
+          showToast(t('act.savedShort'), { variant: 'success' });
+        }
+      }
+    ]
+  });
 }
 
 // ── Boot ──
@@ -417,6 +575,15 @@ export function initPayroll() {
     e.stopPropagation();
     downloadSif(runPayroll(period));
   });
+  document.getElementById('pr-close')?.addEventListener('click', e => {
+    e.stopPropagation();
+    const lines = runPayroll(period);
+    if (isClosed(period)) {
+      reopenRun(lines);
+    } else {
+      closeRun(lines);
+    }
+  });
   document.getElementById('pr-export')?.addEventListener('click', e => {
     e.preventDefault();
     e.stopPropagation();
@@ -428,6 +595,13 @@ export function initPayroll() {
       e.stopPropagation();
       e.preventDefault();
       openPayslip(slip.dataset.prSlip);
+      return;
+    }
+    const adj = e.target.closest('[data-pr-adjust]');
+    if (adj) {
+      e.stopPropagation();
+      e.preventDefault();
+      openAdjustModal(adj.dataset.prAdjust);
     }
   });
   root.querySelectorAll('thead th').forEach(th => {

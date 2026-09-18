@@ -435,8 +435,10 @@ export function wpsDeadline(month) {
   return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
 }
 
-// SIF working format v1 (pipe-delimited). Confirm the final fixed-width Mudad
-// layout with the bank/finance before first live filing — the backend emits it.
+// SIF working format v1.1 (pipe-delimited). Rows append optional ID fields
+// when provided — idType: 1 = national ID (Saudis), 2 = Iqama (expats) —
+// which Mudad expects per employee. Confirm the final fixed-width layout
+// with the bank/finance before first live filing; the backend emits it.
 export function sifBuild(month, lines) {
   const errors = [];
   const rows = (lines || []).map(l => {
@@ -447,13 +449,17 @@ export function sifBuild(month, lines) {
       errors.push(`${l.emp}: non-positive net payable`);
     }
     const fils = Math.round((Number(l.net) || 0) * 100);
-    return [
+    const row = [
       'SAL',
       String(month).replace('-', ''),
       l.iban || 'NOIBAN',
       String(fils).padStart(12, '0'),
       l.emp
-    ].join('|');
+    ];
+    if (l.idType && l.idNum) {
+      row.push(String(l.idType), String(l.idNum));
+    }
+    return row.join('|');
   });
   const total = round2((lines || []).reduce((s, l) => s + (Number(l.net) || 0), 0));
   const head = ['SIF', 'V1', month, rows.length, Math.round(total * 100)].join('|');

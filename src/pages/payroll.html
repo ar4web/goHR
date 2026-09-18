@@ -29,7 +29,10 @@
         <select class="form-control" id="pr-month"></select>
       </div>
       <div class="emp-toolbar-right">
+        <span class="caption-muted" id="pr-closed-at" hidden></span>
+        <span class="badge badge-teal" id="pr-status" hidden></span>
         <span class="caption-muted"><span data-i18n="pay.wpsDeadline">WPS deadline</span>: <span id="pr-wps-deadline"></span></span>
+        <button class="btn btn-outline btn-sm" id="pr-close" type="button">Close run</button>
       </div>
     </div>
   </div>
@@ -85,6 +88,7 @@
               <th data-i18n="dash.employee">Employee</th>
               <th data-i18n="file.department">Department</th>
               <th data-i18n="pay.wage">Monthly wage</th>
+              <th data-i18n="pay.ot">Overtime (h)</th>
               <th data-i18n="pay.unpaidDays">Unpaid days</th>
               <th data-i18n="pay.unpaidDed">Unpaid leave</th>
               <th data-i18n="pay.gosiEmp">GOSI (employee)</th>
