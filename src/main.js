@@ -84,7 +84,8 @@ const PAGES = {
   'employee-file': () => import('./components/employee-detail.js').then((m) => m.initEmployeeDetail()),
   'attendance': () => import('./components/attendance.js').then((m) => m.initAttendance()),
   'leave': () => import('./components/leave.js').then((m) => m.initLeave()),
-  'payroll': () => import('./components/payroll.js').then((m) => m.initPayroll())
+  'payroll': () => import('./components/payroll.js').then((m) => m.initPayroll()),
+  'eosb': () => import('./components/eosb.js').then((m) => m.initEosb())
 };
 const normalizePage = (key) => (key || '').replace(/^hr_/, '').replace(/_/g, '-');
 const pageKey = normalizePage(document.body?.dataset.page);

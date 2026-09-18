@@ -23,7 +23,8 @@ export const NAV = [
       { key: 'employees', href: 'employees.html', text: 'Employees', icon: 'users' },
       { key: 'attendance', href: 'attendance.html', text: 'Attendance', icon: 'clock' },
       { key: 'leave', href: 'leave.html', text: 'Leave', icon: 'palm' },
-      { key: 'payroll', href: 'payroll.html', text: 'Payroll', icon: 'wallet' }
+      { key: 'payroll', href: 'payroll.html', text: 'Payroll', icon: 'wallet' },
+      { key: 'eosb', href: 'eosb.html', text: 'End of Service', icon: 'award' }
     ]
   }
 ];
@@ -43,6 +44,8 @@ export const ICONS = {
   palm: '<svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 21v-9"/><path d="M12 12C8 12 5 10 4 6c4 0 7 2 8 4 1-2 4-4 8-4-1 4-4 6-8 6z"/><path d="M12 12c0-3 1-5 4-6"/></svg>',
   wallet:
     '<svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>',
+  award:
+    '<svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="5.5"/><path d="M8.5 12.5L7 21l5-2.5L17 21l-1.5-8.5"/></svg>',
   settings:
     '<svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg>'
 };
