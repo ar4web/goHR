@@ -981,7 +981,22 @@ export async function initCharts() {
 
   const mounted = []; // { el, factory, instance }
 
+  // Same progressive-enhancement policy as chart-helper.js: without a real
+  // canvas 2D context (jsdom, print, restricted environments) skip painting
+  // instead of crashing inside ECharts. Elements keep their markup.
+  const canvasOk = (() => {
+    try {
+      const c = document.createElement('canvas');
+      return !!(c.getContext && c.getContext('2d'));
+    } catch (_e) {
+      return false;
+    }
+  })();
+
   const buildAll = () => {
+    if (!canvasOk) {
+      return;
+    }
     const t = tokens();
     elements.forEach((el) => {
       const factory = charts[el.dataset.chart];
