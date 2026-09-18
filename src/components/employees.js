@@ -11,17 +11,7 @@ import { openImportModal } from './import-modal.js';
 import { showModal } from './modal.js';
 import { showToast } from './toast.js';
 import { DEPARTMENTS, PROFESSIONS, CLIENTS, SITES } from './hr-seed.js';
-import { escapeHtml as esc } from './markup.js';
-
-const AV = {
-  primary: 'var(--avatar-teal)',
-  azure: 'var(--avatar-azure)',
-  purple: 'var(--avatar-purple)',
-  yellow: 'var(--avatar-yellow)',
-  red: 'var(--avatar-red)',
-  green: 'var(--avatar-green)',
-  blue: 'var(--avatar-blue)'
-};
+import { escapeHtml as esc, AVATAR_BG } from './markup.js';
 
 const EXPORT_COLS = [
   { key: 'code', label: 'Code / الرمز' },
@@ -564,7 +554,7 @@ function renderRows() {
       <td class="cell-mono">${esc(e.code)}</td>
       <td style="min-width:160px">
         <div class="cell-customer">
-          <div class="cell-avatar" style="background:${AV[e.av] || 'var(--avatar-teal)'};color:white">${esc(initialsOf(e.nameEn))}</div>
+          <div class="cell-avatar" style="background:${AVATAR_BG[e.av] || 'var(--avatar-teal)'};color:white">${esc(initialsOf(e.nameEn))}</div>
           <div>
             <div class="cell-strong"><button type="button" class="emp-name-btn" style="white-space:nowrap" data-emp-view="${esc(e.code)}">${esc(currentLang() === 'ar' ? e.nameAr || e.nameEn : e.nameEn)}</button></div>
           </div>

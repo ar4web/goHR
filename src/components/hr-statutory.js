@@ -11,10 +11,8 @@ import {
   GOSI_HAZARDS,
   GOSI_CAP,
   GOSI_CUTOFF,
-  LEVY_TABLE,
   LEAVE_TYPES,
-  BLOCKED_DEDUCTIONS,
-  SEED_EOSB
+  BLOCKED_DEDUCTIONS
 } from './hr-seed.js';
 
 export const SETTINGS_KEY = 'hr:settings:v1';
@@ -150,134 +148,6 @@ export function saveSettings(next) {
   return getSettings();
 }
 
-// ── Multi-company + letters API ────────────────────────────────────────────
-export function getCompanies() {
-  return asCompanyList(getSettings().companies);
-}
-
-function persistCompanies(companies, activeCompanyId) {
-  const s = getSettings();
-  return saveSettings({
-    companies,
-    activeCompanyId: activeCompanyId || s.activeCompanyId
-  });
-}
-
-export function setActiveCompany(id) {
-  const list = getCompanies();
-  if (!list.some(c => c.id === id)) {return getSettings();}
-  return persistCompanies(list, id);
-}
-
-let uidN = 0;
-function uid(prefix) {
-  uidN += 1;
-  return `${prefix}-${Date.now().toString(36)}-${uidN}`;
-}
-
-export function addCompany(over = {}) {
-  const list = getCompanies();
-  const id = uid('co');
-  const co = blankCompany(id, over);
-  return { settings: persistCompanies([...list, co], id), id };
-}
-
-export function removeCompany(id) {
-  const list = getCompanies();
-  if (list.length <= 1) {return { settings: getSettings(), removed: false };}
-  const rest = list.filter(c => c.id !== id);
-  if (rest.length === list.length) {return { settings: getSettings(), removed: false };}
-  const s = getSettings();
-  const active = s.activeCompanyId === id ? rest[0].id : s.activeCompanyId;
-  return { settings: persistCompanies(rest, active), removed: true };
-}
-
-export function saveCompany(id, patch) {
-  const list = getCompanies().map(c => (c.id === id ? { ...c, ...patch } : c));
-  return persistCompanies(list);
-}
-
-/** Seller header for documents (invoices, payslips, settlements, contracts):
- *  always the ACTIVE company, seed fallback when unset. */
-export function sellerProfile() {
-  const c = getActiveCompany();
-  return {
-    nameEn: c.nameEn || SEED_COMPANY.nameEn,
-    nameAr: c.nameAr || SEED_COMPANY.nameAr,
-    cr: c.cr || SEED_COMPANY.crNo,
-    vat: c.vat || '',
-    address: c.address || SEED_COMPANY.addressEn
-  };
-}
-
-export const LETTER_MAX_BYTES = 2 * 1024 * 1024;
-
-export function addLetter(companyId, { name, kind, size, dataUrl }) {
-  const list = getCompanies().map(c => {
-    if (c.id !== companyId) {return c;}
-    const letters = asCompanyList(c.letters);
-    const first = letters.length === 0;
-    return {
-      ...c,
-      letters: [
-        ...letters,
-        {
-          id: uid('lt'),
-          name: name || 'letter',
-          kind: kind || '',
-          size: size || 0,
-          dataUrl: dataUrl || '',
-          addedAt: new Date().toISOString().slice(0, 10),
-          isDefault: first
-        }
-      ]
-    };
-  });
-  return persistCompanies(list);
-}
-
-export function removeLetter(companyId, letterId) {
-  const list = getCompanies().map(c => {
-    if (c.id !== companyId) {return c;}
-    const rest = asCompanyList(c.letters).filter(l => l.id !== letterId);
-    if (rest.length && !rest.some(l => l.isDefault)) {
-      rest[0] = { ...rest[0], isDefault: true };
-    }
-    return { ...c, letters: rest };
-  });
-  return persistCompanies(list);
-}
-
-export function setDefaultLetter(companyId, letterId) {
-  const list = getCompanies().map(c => {
-    if (c.id !== companyId) {return c;}
-    return {
-      ...c,
-      letters: asCompanyList(c.letters).map(l => ({ ...l, isDefault: l.id === letterId }))
-    };
-  });
-  return persistCompanies(list);
-}
-
-export function getStatutoryConfig() {
-  const s = storedSettings();
-  return {
-    levy: { ...LEVY_TABLE, ...(s.levy || {}) },
-    nitaqat: s.nitaqat || {},
-    licence: {
-      scope: (s.licence && s.licence.scope) || 'both',
-      strictAjeerGuards: !s.licence || s.licence.strictAjeer !== false
-    },
-    leave: LEAVE_TYPES
-  };
-}
-
-// EOSB wage basis + cap + pay-day clocks (counsel-configured in Settings).
-export function getEosbConfig() {
-  const s = storedSettings();
-  return { ...SEED_EOSB, ...(s.eosb || {}) };
-}
-
 // ── Dates ────────────────────────────────────────────────────────────────
 
 export function daysUntil(iso, fromIso) {
@@ -285,6 +155,11 @@ export function daysUntil(iso, fromIso) {
   from.setHours(0, 0, 0, 0);
   const to = new Date(`${iso}T00:00:00`);
   return Math.round((to - from) / 86400000);
+}
+
+// Whole calendar days between two ISO dates, inclusive of both ends.
+export function daysBetween(a, b) {
+  return Math.round((new Date(`${b}T00:00:00`) - new Date(`${a}T00:00:00`)) / 86400000) + 1;
 }
 
 export function yearsBetween(fromIso, toIso) {
@@ -781,88 +656,6 @@ export function invoiceDue(month, billingDay) {
 // Template bodies use {{name}} placeholders drawn from records (no retyping).
 // lintTemplate blocks saves with unbalanced braces or unknown names.
 
-export const KNOWN_PLACEHOLDERS = [
-  'company_en',
-  'company_ar',
-  'company_cr',
-  'today_date',
-  'worker_name',
-  'worker_name_ar',
-  'id_no',
-  'nationality',
-  'job_title',
-  'job_title_ar',
-  'wage_basic',
-  'wage_housing',
-  'wage_transport',
-  'wage_total',
-  'salary_total',
-  'start_date',
-  'end_date',
-  'duration_months',
-  'probation_days',
-  'notice_days',
-  'hours_note',
-  'work_location',
-  'equipment_note',
-  'sla_note',
-  'bonus_note',
-  'client_name',
-  'client_name_ar',
-  'client_cr',
-  'site_name',
-  'service_type',
-  'professions',
-  'rate_monthly',
-  'payment_terms',
-  'period_text',
-  'validity_date',
-  'request_ref',
-  'assignment_ref',
-  'ajeer_ref',
-  'ticket_note',
-  'reason_text',
-  'tenure_text',
-  'last_role',
-  'appeal_note',
-  'settlement_total',
-  'sign_date',
-  'issuer_name',
-  'issuer_title'
-];
-
-export function lintTemplate(text) {
-  const errors = [];
-  const src = String(text || '');
-  const opens = (src.match(/\{\{/g) || []).length;
-  const closes = (src.match(/\}\}/g) || []).length;
-  if (opens !== closes) {
-    errors.push('unbalanced-braces');
-  }
-  if (/\{\{\s*\}\}/.test(src)) {
-    errors.push('empty-placeholder');
-  }
-  const names = [...src.matchAll(/\{\{\s*([A-Za-z0-9_]+)\s*\}\}/g)].map(m => m[1]);
-  for (const n of new Set(names)) {
-    if (!KNOWN_PLACEHOLDERS.includes(n)) {
-      errors.push(`unknown:${n}`);
-    }
-  }
-  return { errors, placeholders: [...new Set(names)] };
-}
-
-export function renderTemplate(body, values = {}) {
-  return String(body || '').replace(/\{\{\s*([A-Za-z0-9_]+)\s*\}\}/g, (m, k) => {
-    const v = values[k];
-    return v === undefined || v === null || v === '' ? '……' : String(v);
-  });
-}
-
-function fmtYMD(d) {
-  const p = n => String(n).padStart(2, '0');
-  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
-}
-
 export function addDays(iso, n) {
   const d = new Date(`${iso}T00:00:00`);
   d.setDate(d.getDate() + Number(n || 0));
@@ -878,27 +671,6 @@ export function addMonths(iso, n) {
 }
 
 // Probation must be stated in the contract and may not exceed 180 days (§0.4).
-export function probationOk(days) {
-  const n = Number(days);
-  return Number.isFinite(n) && n > 0 && n <= 180;
-}
-
-export function contractEnd(start, months) {
-  return addMonths(start, months);
-}
-
-// SAR 4,000/month floor for a Saudi to count toward Nitaqat (§0.8).
-export function nitaqatWageFloor() {
-  return 4000;
-}
-
-export function nitaqatWageOk(isSaudi, basic) {
-  if (!isSaudi) {
-    return true;
-  }
-  return (Number(basic) || 0) >= nitaqatWageFloor();
-}
-
 // ── T2 dashboard windows (pure; todayIso injectable so tests never rot) ───
 
 // Vacation pipeline buckets for approved annual leaves. returning = anyone
@@ -960,121 +732,6 @@ export function tenureBuckets(employees, todayIso) {
     }
   }
   return out;
-}
-
-// ── T2 executive money (Zone A). Pure; formula documented in UI footnote ───
-// margin = deployment billing − (payroll + expat levy + GOSI employer share)
-// Payroll/levy/GOSI cover payable headcount only (exited + huroob excluded).
-// Levy uses the reduced band only when a Nitaqat target is configured AND met;
-// otherwise the standard band (conservative, flagged in the footnote).
-export function execMoney({ employees, assignments, invoices, targetPct, todayIso } = {}) {
-  const today = todayIso || new Date().toISOString().slice(0, 10);
-  const payable = (employees || []).filter(e => e.st !== 'exited' && e.st !== 'huroob');
-  const payOf = e => (e.basic || 0) + (e.housing || 0) + (e.transport || 0);
-  const active = (assignments || []).filter(a => a.status === 'active');
-  const gosiOf = e =>
-    calcGosi({
-      basic: e.basic,
-      housing: e.housing,
-      isSaudi: !!e.saudi,
-      enrolledOn: e.gosiOn || null,
-      at: today
-    }).employer;
-
-  const revenue = active.reduce((s, a) => s + (a.rate || 0), 0);
-  const payroll = payable.reduce((s, e) => s + payOf(e), 0);
-  const expatN = payable.filter(e => !e.saudi).length;
-  const nitaqat = nitaqatEstimate(employees, targetPct || 0);
-  const bandOk = (targetPct || 0) > 0 && nitaqat.pct >= (targetPct || 0);
-  const levyHead = levyFor(bandOk);
-  const levy = expatN * levyHead;
-  const gosiEmployer = r2(payable.reduce((s, e) => s + gosiOf(e), 0));
-  const cost = r2(payroll + levy + gosiEmployer);
-  const margin = r2(revenue - cost);
-  const crewCodes = new Set(active.map(a => a.emp));
-  const crew = payable.filter(e => crewCodes.has(e.code));
-  const crewPayroll = crew.reduce((s, e) => s + payOf(e), 0);
-  const crewLevy = crew.filter(e => !e.saudi).length * levyHead;
-  const crewGosi = r2(crew.reduce((s, e) => s + gosiOf(e), 0));
-  const crewCost = r2(crewPayroll + crewLevy + crewGosi);
-  const crewMargin = r2(revenue - crewCost);
-  const overhead = r2(cost - crewCost);
-  const receivables = r2(
-    (invoices || [])
-      .filter(v => v.status !== 'paid')
-      .reduce((s, v) => s + invoiceTotals(v.lines).total, 0)
-  );
-
-  const byClient = {};
-  for (const a of active) {
-    const c = (byClient[a.client] = byClient[a.client] || {
-      revenue: 0,
-      payroll: 0,
-      levy: 0,
-      gosi: 0,
-      heads: 0,
-      seen: new Set()
-    });
-    c.revenue += a.rate || 0;
-    const e = payable.find(x => x.code === a.emp);
-    if (e && !c.seen.has(e.code)) {
-      c.seen.add(e.code);
-      c.heads += 1;
-      c.payroll += payOf(e);
-      if (!e.saudi) {
-        c.levy += levyHead;
-      }
-      c.gosi = r2(c.gosi + gosiOf(e));
-    }
-  }
-  const perClient = Object.entries(byClient)
-    .map(([id, c]) => ({
-      id,
-      heads: c.heads,
-      revenue: c.revenue,
-      cost: r2(c.payroll + c.levy + c.gosi),
-      margin: r2(c.revenue - (c.payroll + c.levy + c.gosi))
-    }))
-    .sort((a, b) => b.margin - a.margin);
-
-  const runway = [];
-  for (let m = 0; m < 6; m++) {
-    const d = new Date(`${today.slice(0, 7)}-01T00:00:00`);
-    d.setMonth(d.getMonth() + m);
-    const from = fmtYMD(d);
-    const to = fmtYMD(new Date(d.getFullYear(), d.getMonth() + 1, 0));
-    const rev = active
-      .filter(a => (!a.start || a.start <= to) && (!a.end || a.end >= from))
-      .reduce((s, a) => s + (a.rate || 0), 0);
-    runway.push({
-      month: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`,
-      revenue: rev,
-      cost
-    });
-  }
-
-  return {
-    revenue,
-    payroll,
-    levy,
-    levyHead,
-    bandOk,
-    expatN,
-    gosiEmployer,
-    cost,
-    margin,
-    marginPct: revenue ? r2((margin / revenue) * 100) : 0,
-    crewCost,
-    crewMargin,
-    crewMarginPct: revenue ? r2((crewMargin / revenue) * 100) : 0,
-    overhead,
-    crewHeads: crew.length,
-    overheadHeads: payable.length - crew.length,
-    receivables,
-    nitaqatPct: nitaqat.pct,
-    perClient,
-    runway
-  };
 }
 
 // ── T2 §1 separation series (pure; fixed window for tests) ─────────────────
@@ -1198,87 +855,6 @@ export function contractsEnding(contracts, withinDays, todayIso) {
     .filter(c => c.status === 'active' && c.end && c.end >= today && c.end <= lim)
     .map(c => ({ id: c.id, party: c.party, partyKind: c.partyKind, end: c.end, days: daysUntil(c.end, today) }))
     .sort((a, b) => (a.end < b.end ? -1 : 1));
-}
-
-// ── T2 §5 performance index (pure) ─────────────────────────────────────────
-// index = attendance 40% + goal progress 30% + praise share 20% + OT
-// discipline 10%. Signals missing for an employee are EXCLUDED and the
-// weights renormalized (documented in the UI footnote); coverage = how many
-// of the 4 signals fired. Ranked cohort = deployed crew (attendance-tracked).
-export function perfIndex(code, data = {}) {
-  const { attendance = [], goals = [], feedback = [], timesheets = [] } = data;
-  const rows = attendance.filter(r => r.emp === code);
-  let att = null;
-  if (rows.length) {
-    const pts = rows.reduce(
-      (s, r) => s + (r.status === 'present' ? 1 : r.status === 'late' ? 0.5 : 0),
-      0
-    );
-    att = (pts / rows.length) * 100;
-  }
-  const mine = goals.filter(g => g.owner === code && g.status !== 'draft' && g.target > 0);
-  let gl = null;
-  if (mine.length) {
-    gl = mine.reduce((s, g) => s + Math.min(100, (g.current / g.target) * 100), 0) / mine.length;
-  }
-  const fb = feedback.filter(f => f.to === code);
-  let fbs = null;
-  if (fb.length) {
-    fbs = (fb.filter(f => f.kind === 'praise').length / fb.length) * 100;
-  }
-  const lines = timesheets
-    .filter(t => t.status !== 'draft')
-    .flatMap(t => (t.lines || []).filter(l => l.emp === code));
-  let ot = null;
-  if (lines.length) {
-    const avg = lines.reduce((s, l) => s + (l.otH || 0), 0) / lines.length;
-    ot = Math.max(0, 100 - Math.max(0, avg - 4) * 8.33);
-  }
-  const parts = [
-    [att, 0.4],
-    [gl, 0.3],
-    [fbs, 0.2],
-    [ot, 0.1]
-  ].filter(([v]) => v !== null);
-  if (!parts.length) {
-    return null;
-  }
-  const wsum = parts.reduce((s, [, w]) => s + w, 0);
-  const index = parts.reduce((s, [v, w]) => s + v * w, 0) / wsum;
-  return {
-    index: Math.round(index * 10) / 10,
-    signals: parts.length,
-    att: att === null ? null : Math.round(att * 10) / 10,
-    goals: gl === null ? null : Math.round(gl * 10) / 10,
-    feedback: fbs === null ? null : Math.round(fbs * 10) / 10,
-    ot: ot === null ? null : Math.round(ot * 10) / 10
-  };
-}
-
-// Ranked crew: employees with attendance rows, scored + sorted desc.
-export function perfRanking(data = {}) {
-  const crew = [...new Set((data.attendance || []).map(r => r.emp))];
-  return crew
-    .map(code => ({ code, ...(perfIndex(code, data) || { index: 0, signals: 0 }) }))
-    .filter(r => r.signals > 0)
-    .sort((a, b) => b.index - a.index || (a.code < b.code ? -1 : 1));
-}
-
-// Daily attendance score per cohort (dates present in the data, ascending).
-export function cohortTrend(codes, attendance = []) {
-  const set = new Set(codes);
-  const byDate = {};
-  attendance
-    .filter(r => set.has(r.emp))
-    .forEach(r => {
-      (byDate[r.date] = byDate[r.date] || []).push(r.status === 'present' ? 100 : r.status === 'late' ? 50 : 0);
-    });
-  return Object.keys(byDate)
-    .sort()
-    .map(d => ({
-      date: d,
-      score: Math.round((byDate[d].reduce((s, v) => s + v, 0) / byDate[d].length) * 10) / 10
-    }));
 }
 
 // ── T2 §6 action-center ticker (pure) ──────────────────────────────────────

@@ -9,20 +9,10 @@ import { calcGosi, calcEOSB, daysUntil, yearsBetween, annualBalance } from './hr
 import { getSeed } from './hr-api.js';
 import { exportData } from './import-export.js';
 import { DEPARTMENTS, PROFESSIONS, SKILLS, SPONSORS, CLIENTS, SITES } from './hr-seed.js';
-import { escapeHtml as esc } from './markup.js';
+import { escapeHtml as esc, AVATAR_BG } from './markup.js';
 
 // Avatar backgrounds — dark variants only, so white initials pass AA.
 // (Bright base hues with white text fail contrast; see _tokens.scss.)
-const AV = {
-  primary: 'var(--avatar-teal)',
-  azure: 'var(--avatar-azure)',
-  purple: 'var(--avatar-purple)',
-  yellow: 'var(--avatar-yellow)',
-  red: 'var(--avatar-red)',
-  green: 'var(--avatar-green)',
-  blue: 'var(--avatar-blue)'
-};
-
 let booted = false;
 
 function requestedCode() {
@@ -121,7 +111,7 @@ function renderHeader(e, info) {
     return;
   }
   if (avatarEl) {
-    avatarEl.style.background = AV[e.av] || 'var(--avatar-teal)';
+    avatarEl.style.background = AVATAR_BG[e.av] || 'var(--avatar-teal)';
     avatarEl.textContent = initialsOf(e.nameEn);
   }
   const displayName = currentLang() === 'ar' ? e.nameAr || e.nameEn : e.nameEn;

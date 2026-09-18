@@ -10,20 +10,10 @@ import { openImportModal } from './import-modal.js';
 import { showModal } from './modal.js';
 import { showToast } from './toast.js';
 import { DEPARTMENTS, LEAVE_TYPES } from './hr-seed.js';
-import { yearsBetween } from './hr-statutory.js';
+import { yearsBetween, daysBetween } from './hr-statutory.js';
 import { renderEchart } from './chart-helper.js';
 import { openMenu } from './menus.js';
-import { escapeHtml as esc } from './markup.js';
-
-const AV = {
-  primary: 'var(--avatar-teal)',
-  azure: 'var(--avatar-azure)',
-  purple: 'var(--avatar-purple)',
-  yellow: 'var(--avatar-yellow)',
-  red: 'var(--avatar-red)',
-  green: 'var(--avatar-green)',
-  blue: 'var(--avatar-blue)'
-};
+import { escapeHtml as esc, AVATAR_BG } from './markup.js';
 
 const fmtInt = n => Number(n || 0).toLocaleString('en-US', { maximumFractionDigits: 0 });
 
@@ -64,9 +54,7 @@ function isoShift(iso, n) {
   d.setDate(d.getDate() + n);
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
-function daysInclusive(a, b) {
-  return Math.max(1, Math.round((new Date(`${b}T00:00:00`) - new Date(`${a}T00:00:00`)) / 86400000) + 1);
-}
+const daysInclusive = (a, b) => Math.max(1, daysBetween(a, b));
 function nameOf(code) {
   const e = getSeed('employees').find(x => x.code === code);
   if (!e) {
@@ -400,7 +388,7 @@ function renderRows() {
       <td class="cell-mono">${esc(r.emp)}</td>
       <td style="min-width:160px">
         <div class="cell-customer">
-          <div class="cell-avatar" style="background:${AV[e?.av] || 'var(--avatar-teal)'};color:white">${esc(initialsOf(e?.nameEn || r.emp))}</div>
+          <div class="cell-avatar" style="background:${AVATAR_BG[e?.av] || 'var(--avatar-teal)'};color:white">${esc(initialsOf(e?.nameEn || r.emp))}</div>
           <div>
             <div class="cell-strong"><button type="button" class="emp-name-btn" style="white-space:nowrap" data-emp-view="${esc(r.emp)}">${esc(nameOf(r.emp))}</button></div>
           </div>

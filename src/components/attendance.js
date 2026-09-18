@@ -11,17 +11,7 @@ import { showModal } from './modal.js';
 import { showToast } from './toast.js';
 import { DEPARTMENTS, SHIFT_START_MIN } from './hr-seed.js';
 import { renderEchart } from './chart-helper.js';
-import { escapeHtml as esc } from './markup.js';
-
-const AV = {
-  primary: 'var(--avatar-teal)',
-  azure: 'var(--avatar-azure)',
-  purple: 'var(--avatar-purple)',
-  yellow: 'var(--avatar-yellow)',
-  red: 'var(--avatar-red)',
-  green: 'var(--avatar-green)',
-  blue: 'var(--avatar-blue)'
-};
+import { escapeHtml as esc, AVATAR_BG } from './markup.js';
 
 const fmtInt = n => Number(n || 0).toLocaleString('en-US', { maximumFractionDigits: 0 });
 
@@ -393,7 +383,7 @@ function renderRows() {
       <td class="cell-mono">${esc(r.emp)}</td>
       <td style="min-width:160px">
         <div class="cell-customer">
-          <div class="cell-avatar" style="background:${AV[e?.av] || 'var(--avatar-teal)'};color:white">${esc(initialsOf(e?.nameEn || r.emp))}</div>
+          <div class="cell-avatar" style="background:${AVATAR_BG[e?.av] || 'var(--avatar-teal)'};color:white">${esc(initialsOf(e?.nameEn || r.emp))}</div>
           <div>
             <div class="cell-strong"><button type="button" class="emp-name-btn" style="white-space:nowrap" data-emp-view="${esc(r.emp)}">${esc(nameOf(r.emp))}</button></div>
           </div>

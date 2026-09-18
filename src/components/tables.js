@@ -3,7 +3,7 @@
 
 import { showToast } from './toast.js';
 import { download, csvCell } from './import-export.js';
-import { t, currentLang, LANG_EVENT } from './i18n.js';
+import { t, LANG_EVENT } from './i18n.js';
 
 const instances = [];
 let DataTableCtor = null;

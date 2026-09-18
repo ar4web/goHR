@@ -9,19 +9,9 @@ import { exportData } from './import-export.js';
 import { showModal } from './modal.js';
 import { showToast } from './toast.js';
 import { DEPARTMENTS } from './hr-seed.js';
-import { calcPayLine, gosiPensionRate, sifBuild, wpsDeadline } from './hr-statutory.js';
+import { calcPayLine, gosiPensionRate, sifBuild, wpsDeadline, daysBetween } from './hr-statutory.js';
 import { renderEchart } from './chart-helper.js';
-import { escapeHtml as esc } from './markup.js';
-
-const AV = {
-  primary: 'var(--avatar-teal)',
-  azure: 'var(--avatar-azure)',
-  purple: 'var(--avatar-purple)',
-  yellow: 'var(--avatar-yellow)',
-  red: 'var(--avatar-red)',
-  green: 'var(--avatar-green)',
-  blue: 'var(--avatar-blue)'
-};
+import { escapeHtml as esc, AVATAR_BG } from './markup.js';
 
 const fmtInt = n => Number(n || 0).toLocaleString('en-US', { maximumFractionDigits: 0 });
 const round2 = n => Math.round((Number(n) || 0) * 100) / 100;
@@ -117,9 +107,7 @@ function monthRange(key) {
   const p = n => String(n).padStart(2, '0');
   return { start: `${key}-01`, end: `${y}-${p(m)}-${p(end.getDate())}` };
 }
-function daysInclusive(a, b) {
-  return Math.max(0, Math.round((new Date(`${b}T00:00:00`) - new Date(`${a}T00:00:00`)) / 86400000) + 1);
-}
+const daysInclusive = (a, b) => Math.max(0, daysBetween(a, b));
 function deptName(code) {
   const d = DEPARTMENTS.find(x => x.code === code);
   if (!d) {
@@ -287,7 +275,7 @@ function renderRows(lines) {
       <td class="cell-mono">${esc(l.emp)}</td>
       <td style="min-width:160px">
         <div class="cell-customer">
-          <div class="cell-avatar" style="background:${AV[l.av] || 'var(--avatar-teal)'};color:white">${esc(initialsOf(l.nameEn || l.emp))}</div>
+          <div class="cell-avatar" style="background:${AVATAR_BG[l.av] || 'var(--avatar-teal)'};color:white">${esc(initialsOf(l.nameEn || l.emp))}</div>
           <div>
             <div class="cell-strong"><button type="button" class="emp-name-btn" style="white-space:nowrap" data-pr-slip="${esc(l.emp)}">${esc(l.name)}</button></div>
           </div>
