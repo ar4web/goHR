@@ -81,7 +81,8 @@ if (document.querySelector('[data-page="dashboard"]')) {
 // employees plus their supporting views.
 const PAGES = {
   'employees': () => import('./components/employees.js').then((m) => m.initEmployees()),
-  'employee-file': () => import('./components/employee-detail.js').then((m) => m.initEmployeeDetail())
+  'employee-file': () => import('./components/employee-detail.js').then((m) => m.initEmployeeDetail()),
+  'attendance': () => import('./components/attendance.js').then((m) => m.initAttendance())
 };
 const normalizePage = (key) => (key || '').replace(/^hr_/, '').replace(/_/g, '-');
 const pageKey = normalizePage(document.body?.dataset.page);

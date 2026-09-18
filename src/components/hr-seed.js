@@ -1299,3 +1299,95 @@ export const AUDIT_LOG = [
     detail: 'Nitaqat target updated'
   }
 ];
+
+// ── Attendance (attendance.html) ──
+// Deterministic demo seed for the last 14 calendar days, working days only
+// (Fri/Sat weekend). mulberry32 keeps the numbers stable across reloads so
+// stats and charts don't jump. Exited employees are not scheduled; huroob is
+// absent; on-leave employees carry leave days. `late` is minutes after the
+// 08:00 shift start; `hours` exclude a 1-hour break.
+export const SHIFT_START_MIN = 8 * 60; // 08:00
+export const SHIFT_END_MIN = 17 * 60; // 17:00
+
+function mulberry32(a) {
+  return function () {
+    a |= 0;
+    a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function pad2(n) {
+  return String(n).padStart(2, '0');
+}
+
+function localIso(d) {
+  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+}
+
+function hhmm(min) {
+  return `${pad2(Math.floor(min / 60))}:${pad2(min % 60)}`;
+}
+
+export const ATTENDANCE = (() => {
+  const rnd = mulberry32(20260918);
+  const days = [];
+  const today = new Date();
+  for (let back = 13; back >= 0; back -= 1) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - back);
+    const wd = d.getDay();
+    if (wd === 5 || wd === 6) {
+      continue; // Fri/Sat weekend — no expected attendance
+    }
+    days.push(localIso(d));
+  }
+  const rows = [];
+  for (const day of days) {
+    for (const e of EMPLOYEES) {
+      if (e.st === 'exited') {
+        continue; // off roster — not scheduled
+      }
+      const base = { id: `${e.code}@${day}`, code: e.code, dept: e.dept, date: day };
+      if (e.st === 'huroob') {
+        rows.push({ ...base, st: 'absent', cin: '', cout: '', hours: 0, late: 0 });
+        continue;
+      }
+      if (e.st === 'on-leave') {
+        rows.push({ ...base, st: 'leave', cin: '', cout: '', hours: 0, late: 0 });
+        continue;
+      }
+      const r = rnd();
+      if (r < 0.04) {
+        rows.push({ ...base, st: 'leave', cin: '', cout: '', hours: 0, late: 0 });
+      } else if (r < 0.07) {
+        rows.push({ ...base, st: 'absent', cin: '', cout: '', hours: 0, late: 0 });
+      } else if (r < 0.15) {
+        const cinMin = SHIFT_START_MIN + 5 + Math.floor(rnd() * 80); // 08:05–09:25
+        const coutMin = SHIFT_END_MIN + Math.floor(rnd() * 20);
+        rows.push({
+          ...base,
+          st: 'late',
+          cin: hhmm(cinMin),
+          cout: hhmm(coutMin),
+          hours: Math.round(((coutMin - cinMin - 60) / 60) * 10) / 10,
+          late: cinMin - SHIFT_START_MIN
+        });
+      } else {
+        const cinMin = SHIFT_START_MIN - Math.floor(rnd() * 20); // 07:40–08:00
+        const coutMin = SHIFT_END_MIN + Math.floor(rnd() * 30);
+        rows.push({
+          ...base,
+          st: 'present',
+          cin: hhmm(cinMin),
+          cout: hhmm(coutMin),
+          hours: Math.round(((coutMin - cinMin - 60) / 60) * 10) / 10,
+          late: 0
+        });
+      }
+    }
+  }
+  return rows;
+})();

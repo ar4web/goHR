@@ -20,7 +20,8 @@ export const NAV = [
     items: [
       { key: 'dashboard', href: 'dashboard.html', text: 'Dashboard', icon: 'dashboard' },
       { key: 'analytics', href: 'analytics.html', text: 'Analytics', icon: 'barChart' },
-      { key: 'employees', href: 'employees.html', text: 'Employees', icon: 'users' }
+      { key: 'employees', href: 'employees.html', text: 'Employees', icon: 'users' },
+      { key: 'attendance', href: 'attendance.html', text: 'Attendance', icon: 'clock' }
     ]
   }
 ];
