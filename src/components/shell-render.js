@@ -21,7 +21,8 @@ export const NAV = [
       { key: 'dashboard', href: 'dashboard.html', text: 'Dashboard', icon: 'dashboard' },
       { key: 'analytics', href: 'analytics.html', text: 'Analytics', icon: 'barChart' },
       { key: 'employees', href: 'employees.html', text: 'Employees', icon: 'users' },
-      { key: 'attendance', href: 'attendance.html', text: 'Attendance', icon: 'clock' }
+      { key: 'attendance', href: 'attendance.html', text: 'Attendance', icon: 'clock' },
+      { key: 'leave', href: 'leave.html', text: 'Leave', icon: 'palm' }
     ]
   }
 ];

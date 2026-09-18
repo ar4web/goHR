@@ -1393,3 +1393,109 @@ export const ATTENDANCE = (() => {
   }
   return rows;
 })();
+
+// ── Leave requests (leave.html) ──
+// Deterministic demo log over the trailing 12 months plus a forward-looking
+// pending queue. Employees whose attendance seed is "on leave" on the latest
+// seeded day get an approved request spanning today, so the attendance board
+// and the leave board tell the same story. `emp` (not `code`) keeps getSeed's
+// overlay key on the composite `id` (employee@from) — approvals, rejections
+// and new requests patch/append per employee+start date.
+export const LEAVES = (() => {
+  const rnd = mulberry32(20260918);
+  const active = EMPLOYEES.filter(e => e.st !== 'exited');
+  const out = [];
+  const today = new Date();
+  const iso = localIso(today);
+  const isoShift = (isoDate, n) => {
+    const d = new Date(`${isoDate}T00:00:00`);
+    d.setDate(d.getDate() + n);
+    return localIso(d);
+  };
+  const inclusive = (a, b) =>
+    Math.max(1, Math.round((new Date(`${b}T00:00:00`) - new Date(`${a}T00:00:00`)) / 86400000) + 1);
+  const pick = arr => arr[Math.floor(rnd() * arr.length)];
+
+  const push = (e, type, from, to, st) => {
+    out.push({
+      id: `${e.code}@${from}`,
+      emp: e.code,
+      dept: e.dept,
+      type,
+      from,
+      to,
+      days: inclusive(from, to),
+      st,
+      note: ''
+    });
+  };
+
+  // Today-spanners — mirror the attendance board's leave rows.
+  const lastAttDay = (() => {
+    const ds = [...new Set(ATTENDANCE.map(r => r.date))].sort();
+    return ds[ds.length - 1] || iso;
+  })();
+  const outToday = [...new Set(
+    ATTENDANCE.filter(r => r.date === lastAttDay && r.st === 'leave').map(r => r.emp)
+  )];
+  for (const code of outToday.slice(0, 4)) {
+    const e = active.find(x => x.code === code);
+    if (e) {
+      push(e, 'annual', isoShift(iso, -3), isoShift(iso, 4), 'approved');
+    }
+  }
+
+  // Trailing 12 months: a handful of requests per month across all types.
+  const weighted = [
+    'annual', 'annual', 'annual', 'annual', 'annual', 'annual',
+    'sick', 'sick', 'sick',
+    'marriage', 'paternity', 'bereavement', 'unpaid', 'hajj'
+  ];
+  const fixedDays = {};
+  for (const t of LEAVE_TYPES) {
+    fixedDays[t.code] = t.days || 7;
+  }
+  for (let back = 11; back >= 0; back -= 1) {
+    const d = new Date(today.getFullYear(), today.getMonth() - back, 1);
+    const y = d.getFullYear();
+    const m = d.getMonth();
+    const nReq = 3 + Math.floor(rnd() * 4); // 3–6
+    for (let i = 0; i < nReq; i += 1) {
+      const e = pick(active);
+      let type = pick(weighted);
+      if (type === 'hajj' && !e.saudi) {
+        type = 'annual'; // Hajj leave is Saudi-only
+      }
+      if (type === 'paternity' && e.gender !== 'M') {
+        type = 'annual';
+      }
+      const start = new Date(y, m, 1 + Math.floor(rnd() * 27));
+      const from = localIso(start);
+      if (from > iso) {
+        continue; // keep the trailing log strictly in the past
+      }
+      let len = fixedDays[type] || 7;
+      if (type === 'annual') {
+        len = 7 + Math.floor(rnd() * 15); // 7–21
+      } else if (type === 'sick') {
+        len = 2 + Math.floor(rnd() * 9); // 2–10
+      } else if (type === 'unpaid') {
+        len = 5 + Math.floor(rnd() * 6);
+      }
+      const to = isoShift(from, len - 1);
+      const r = rnd();
+      const st = r < 0.82 ? 'approved' : r < 0.91 ? 'rejected' : 'cancelled';
+      push(e, type, from, to, st);
+    }
+  }
+
+  // Forward-looking queue: pending requests starting within ~6 weeks.
+  const pendEmps = [...active].sort(() => rnd() - 0.5).slice(0, 6);
+  pendEmps.forEach((e, i) => {
+    const from = isoShift(iso, 3 + i * 6 + Math.floor(rnd() * 4));
+    const len = 5 + Math.floor(rnd() * 12);
+    push(e, i % 3 === 0 ? 'unpaid' : 'annual', from, isoShift(from, len - 1), 'pending');
+  });
+
+  return out;
+})();

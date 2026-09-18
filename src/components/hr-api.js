@@ -15,7 +15,8 @@ import {
   SKILLS,
   COMPANIES,
   SALUTATIONS,
-  ATTENDANCE
+  ATTENDANCE,
+  LEAVES
 } from './hr-seed.js';
 
 const SEED_MAP = {
@@ -31,7 +32,8 @@ const SEED_MAP = {
   skills: SKILLS,
   companies: COMPANIES,
   salutations: SALUTATIONS,
-  attendance: ATTENDANCE
+  attendance: ATTENDANCE,
+  leaves: LEAVES
 };
 
 const API_MAP = {
