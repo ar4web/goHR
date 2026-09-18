@@ -357,6 +357,7 @@ async function mountDataTable() {
       ordering: false,
       order: [],
       language: {
+        emptyTable: t('common.noData'),
         info: t('dt.info'),
         infoEmpty: t('dt.infoEmpty'),
         infoFiltered: t('dt.infoFiltered'),
@@ -407,8 +408,10 @@ function renderRows() {
       <td class="cell-mono" style="font-size:12.5px">${r.late ? fmtInt(r.late) : '—'}</td>
     </tr>`;
       })
-      .join('') ||
-    `<tr><td colspan="9" style="text-align:center;color:var(--text-muted);padding:24px">${t('common.noData')}</td></tr>`;
+      .join('');
+  // On zero results tbody stays EMPTY: DataTables then renders its own
+  // localized emptyTable row. A colspan placeholder written here would be
+  // read as row data and trip the tn/4 unknown-parameter alert.
   void mountDataTable();
 }
 
