@@ -339,6 +339,9 @@ a.topbar-icon-btn { text-decoration: none; }
   height: var(--topbar-icon-size);
   stroke-linecap: round;
   stroke-linejoin: round;
+  /* Sidebar family is drawn at 1.5/20px; at 40px the equivalent weight is
+     3 — keeps the topbar set visually identical to the sidebar set. */
+  stroke-width: 3;
 }
 :root[data-theme='light'] .theme-icon-sun { display: none; }
 :root[data-theme='dark'] .theme-icon-moon { display: none; }
