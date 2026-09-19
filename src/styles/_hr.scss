@@ -3450,15 +3450,6 @@ details.zone .row {
 .godr-badge.info { background: #3b82f6; color: #fff; }
 .godr-badge.muted { background: color-mix(in srgb, var(--text-muted) 22%, transparent); color: var(--text-muted); }
 
-.godr-fixbox {
-  margin-top: 14px; padding: 10px 12px; border-radius: 10px;
-  font-size: 12.5px; line-height: 1.55; display: grid; gap: 6px;
-}
-.godr-fixbox.warn { background: color-mix(in srgb, #f59e0b 9%, transparent); border: 1px solid color-mix(in srgb, #f59e0b 35%, transparent); }
-.godr-fixbox.crit { background: color-mix(in srgb, #f43f5e 9%, transparent); border: 1px solid color-mix(in srgb, #f43f5e 35%, transparent); }
-.godr-fixbox-row { display: flex; gap: 8px; align-items: baseline; }
-.godr-fixbox-row .godr-kv-label { flex: none; margin: 0; min-width: 86px; }
-
 .godr-clear { font-size: 13px; color: var(--text-muted); padding: 6px 0; }
 
 .godr-issue {
@@ -3530,6 +3521,8 @@ details.zone .row {
   margin-top: 14px; padding: 12px 14px; border-radius: 12px;
   display: grid; gap: 6px; font-size: 13px;
 }
+/* [hidden] must beat display:grid (author CSS overrides the UA rule otherwise) */
+.godr-alert[hidden] { display: none; }
 .godr-alert.warn { background: color-mix(in srgb, #f59e0b 8%, transparent); border: 1px solid color-mix(in srgb, #f59e0b 35%, transparent); }
 .godr-alert.crit { background: color-mix(in srgb, #f43f5e 8%, transparent); border: 1px solid color-mix(in srgb, #f43f5e 40%, transparent); }
 .godr-alert-row { display: flex; gap: 10px; align-items: baseline; }

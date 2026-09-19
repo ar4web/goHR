@@ -90,16 +90,15 @@ function collectSeverities(st) {
   st.issues.slice(0, 40).forEach((i) => { const d = diagnose(i); if (d) sevs.push(d.sev); });
   const ci = connIssueFor(st.conn);
   if (ci) sevs.push(diagnose(ci).sev);
-  const rowIssues = [];
   CATALOG.forEach((e) => {
     const pi = probeIssue(e.key, st.probes[e.key], st.visits[e.key]);
-    if (pi) { sevs.push(diagnose(pi).sev); rowIssues.push(pi); }
+    if (pi) sevs.push(diagnose(pi).sev);
   });
-  return { sevs, rowIssues };
+  return { sevs };
 }
 
 // ── KPI cards ───────────────────────────────────────────────────────────
-function renderKpis(st, overall, score, rowIssues) {
+function renderKpis(st, overall, score) {
   const scoreEl = document.getElementById('godr-kpi-score');
   if (scoreEl) {
     scoreEl.textContent = String(score);
@@ -191,7 +190,7 @@ function renderConnAlert(st) {
     bar.hidden = false;
     bar.className = `godr-alert ${d.sev === 'critical' ? 'crit' : 'warn'}`;
     bar.innerHTML =
-      `<div class="godr-alert-row"><span class="godr-badge ${d.sev === 'critical' ? 'err' : 'warn'}">${esc(t('godr.conn.signal'))}</span>` +
+      `<div class="godr-alert-row"><span class="godr-badge ${d.sev === 'critical' ? 'err' : 'warn'}">${esc(t(d.sev === 'critical' ? 'godr.sev.critical' : 'godr.sev.warning'))}</span>` +
       `<span class="godr-alert-prob">${esc(prob)}</span></div>` +
       `<div class="godr-alert-row"><span class="godr-kv-label">${esc(t('godr.conn.fix'))}</span><span>${esc(fix)}</span></div>`;
   } else {

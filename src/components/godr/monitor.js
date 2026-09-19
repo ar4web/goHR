@@ -163,7 +163,9 @@ export function installGoDrMonitor() {
       const po = new PerformanceObserver((list) => {
         list.getEntries().forEach((en) => {
           const st = en.responseStatus;
-          if (st && st >= 400 && !String(en.name).includes('sw.js')) {
+          // .html is the Go Dr. probe's job (probe.js reports page-level);
+          // here we only care about broken sub-resources.
+          if (st && st >= 400 && !String(en.name).includes('sw.js') && !/\.html($|\?)/.test(String(en.name))) {
             store.recordIssue({ code: 'asset.missing', page: pageKey(), url: rel(en.name), status: st });
           }
         });
