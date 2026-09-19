@@ -288,7 +288,18 @@ body.page-leave { opacity: 0; }
   transition: left 220ms cubic-bezier(0.2, 0, 0, 1);
 }
 .topbar-left { display: flex; align-items: center; gap: var(--space-3); }
-.topbar-right { display: flex; align-items: center; gap: var(--space-2); }
+/* Right group (notifications · theme · apps · profile) floats centered in
+   the header — anchored to the fixed topbar. translate(-50%,-50%) is
+   mirror-symmetric, so it stays centered in RTL too. */
+.topbar-right {
+  position: absolute;
+  top: 50%;
+  inset-inline-start: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
 
 // Theme engine toggle (light ⇄ dark). Moon shows in light mode (action:
 // go dark), sun shows in dark mode (action: go light).
