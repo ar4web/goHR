@@ -3168,12 +3168,6 @@ export function initI18n() {
   const lang = currentLang();
   document.documentElement.setAttribute('lang', lang);
   document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
-  // Bind the topbar language toggle (rendered by the shell).
-  const toggle = document.getElementById('lang-toggle');
-  if (toggle && !toggle.dataset.bound) {
-    toggle.dataset.bound = '1';
-    toggle.addEventListener('click', () => setLang(currentLang() === 'ar' ? 'en' : 'ar'));
-  }
   applyI18n(document);
   applyShellI18n();
   applyBranding();

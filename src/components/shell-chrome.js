@@ -182,27 +182,18 @@ function updateBadges() {
 }
 
 function updateChromeStrings() {
-  const ar = currentLang() === 'ar';
   const setLabel = (id, key) => {
     const el = document.getElementById(id);
     if (el) {el.setAttribute('aria-label', t(key));}
   };
-  setLabel('topbar-search', 'common.search');
   setLabel('topbar-notifications', 'nav.notifications');
   setLabel('topbar-apps', 'nav.apps');
   const appsBtn = document.getElementById('topbar-apps');
   if (appsBtn) {
     appsBtn.setAttribute('title', t('nav.apps'));
   }
-  setLabel('lang-toggle', 'common.language');
   setLabel('topbar-user', 'nav.profile');
   setLabel('sidebar-settings', 'nav.settings');
-  const langBtn = document.getElementById('lang-toggle');
-  if (langBtn) {
-    langBtn.setAttribute('title', t('common.language'));
-    // Announce the active language while keeping the icon identical.
-    langBtn.setAttribute('aria-label', ar ? 'اللغة · العربية' : 'Language · English');
-  }
 }
 
 // ── Boot ──────────────────────────────────────────────────────────────────
@@ -210,9 +201,6 @@ export function initShellChrome() {
   if (document.body.dataset.shellChromeBound) {return;}
   document.body.dataset.shellChromeBound = '1';
 
-  document.getElementById('topbar-search')?.addEventListener('click', () => {
-    openCommandPalette();
-  });
   document.getElementById('topbar-notifications')?.addEventListener('click', e => {
     e.stopPropagation();
     openPanel(e.currentTarget, buildNotificationsPanel(), { width: 360 });
