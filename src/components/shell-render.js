@@ -206,10 +206,10 @@ function renderTopbar(activeKey = '') {
         <button class="topbar-icon-btn${activeKey === 'apps' ? ' active' : ''}" id="topbar-apps" type="button" aria-label="Apps" title="Apps">
           ${ICONS.grid}
         </button>
-        <button class="topbar-user" id="topbar-user" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Your profile">
-          <span class="topbar-user-avatar">HA</span>
-        </button>
       </div>
+      <button class="topbar-user" id="topbar-user" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Your profile">
+        <span class="topbar-user-avatar">HA</span>
+      </button>
     </header>
   `;
 }

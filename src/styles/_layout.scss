@@ -310,8 +310,8 @@ body.page-leave { opacity: 0; }
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
+  width: 27px;
+  height: 27px;
   border: 0;
   border-radius: 10px;
   background: transparent;
@@ -339,9 +339,9 @@ a.topbar-icon-btn { text-decoration: none; }
   height: var(--topbar-icon-size);
   stroke-linecap: round;
   stroke-linejoin: round;
-  /* Sidebar family is drawn at 1.5/20px; at 28px the equivalent weight is
-     2.1 — keeps the topbar set visually identical to the sidebar set. */
-  stroke-width: 2.1;
+  /* Sidebar family is drawn at 1.5/20px; at 25px the equivalent weight is
+     1.9 — keeps the topbar set visually identical to the sidebar set. */
+  stroke-width: 1.9;
 }
 :root[data-theme='light'] .theme-icon-sun { display: none; }
 :root[data-theme='dark'] .theme-icon-moon { display: none; }
@@ -372,8 +372,14 @@ a.topbar-icon-btn { text-decoration: none; }
 
 // Profile trigger — avatar only, no chip border/name/chevron.
 .topbar-user {
-  width: 28px;
-  height: 28px;
+  /* Anchored to the header's end edge (RTL-safe) — outside the centered
+     icon group, per design: icons centered, avatar at the right. */
+  position: absolute;
+  top: 50%;
+  inset-inline-end: 24px;
+  transform: translateY(-50%);
+  width: 34px;
+  height: 34px;
   padding: 0;
   border: 0;
   background: transparent;
@@ -386,15 +392,15 @@ a.topbar-icon-btn { text-decoration: none; }
 }
 .topbar-user:hover { background: var(--bg-surface-secondary); }
 .topbar-user-avatar {
-  width: 27px;
-  height: 27px;
+  width: 31px;
+  height: 31px;
   flex-shrink: 0;
   border-radius: 50%;
   /* Solid color first — if gradients are unavailable the disc still renders. */
   background: var(--primary);
   background: linear-gradient(135deg, var(--primary), var(--primary-dk));
   color: var(--on-primary);
-  font-size: 10px;
+  font-size: 11px;
   line-height: 1;
   letter-spacing: 0.02em;
   font-weight: 700;
@@ -406,9 +412,9 @@ a.topbar-icon-btn { text-decoration: none; }
 @media (max-width: 600px) {
   .topbar { gap: 4px; padding-inline: 10px; }
   .topbar-right { gap: 2px; }
-  .topbar-icon-btn { width: 28px; height: 28px; }
-  .topbar-user { width: 26px; height: 26px; }
-  .topbar-user-avatar { width: 24px; height: 24px; font-size: 9px; }
+  .topbar-icon-btn { width: 24px; height: 24px; }
+  .topbar-user { width: 30px; height: 30px; }
+  .topbar-user-avatar { width: 27px; height: 27px; font-size: 10px; }
 }
 
 // ────────────────────────
