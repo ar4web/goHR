@@ -14,8 +14,22 @@ const setMsg = (text, ok) => {
   el.textContent = text || '';
   el.className = `auth-msg${ok ? ' ok' : ' err'}`;
 };
+// Subtitle tracks the active view so the header always reads true
+// (Sign in / Create account / Reset password).
+const SUB_VIEW = {
+  'login-form': 'auth.signIn',
+  'signup-form': 'auth.createAccount',
+  'reset-form': 'auth.resetSubmit'
+};
+let currentForm = 'login-form';
+const updateSub = () => {
+  const el = document.querySelector('.login-sub');
+  if (el) {el.textContent = `${t('auth.center')} — ${t(SUB_VIEW[currentForm])}`;}
+};
 const showForm = (which) => {
+  currentForm = which;
   for (const f of ['login-form', 'signup-form', 'reset-form']) {$(f).hidden = f !== which;}
+  updateSub();
   setMsg('', true);
 };
 
@@ -187,6 +201,8 @@ $('auth-lang').addEventListener('click', () => {
   setLang(currentLang() === 'ar' ? 'en' : 'ar');
   $('auth-lang').textContent = currentLang() === 'ar' ? 'English' : 'العربية';
   applyI18n();
+  updateSub();
 });
 $('auth-lang').textContent = currentLang() === 'ar' ? 'English' : 'العربية';
 applyI18n();
+updateSub();

@@ -11,7 +11,7 @@
     <div class="login-card card">
       <div class="login-brand-center">
         <span class="login-mark" aria-hidden="true">goHR</span>
-        <span class="login-sub" data-i18n="auth.sub">HR Command Center</span>
+        <span class="login-sub">HR Command Center — Sign in</span>
       </div>
 
       <!-- sign in -->
@@ -28,7 +28,7 @@
         </label>
         <label class="auth-field">
           <span class="pw-wrap">
-            <input class="form-control" id="login-pw" type="password" placeholder="Password" autocomplete="current-password" required>
+            <input class="form-control" id="login-pw" type="password" placeholder="Password" autocomplete="current-password" data-i18n-ph="auth.pwPh" required>
             <button class="pw-toggle" id="pw-toggle" type="button" aria-label="Show password" data-i18n-aria="auth.showPw">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"/><circle cx="12" cy="12" r="2.5"/></svg>
             </button>
@@ -75,7 +75,7 @@
         <label class="auth-field">
           <input class="form-control" id="reset-id" type="text" placeholder="ID" required>
         </label>
-        <button class="btn btn-outline" id="reset-send" type="button" data-i18n="auth.sendResetCode">Send reset code</button>
+        <button class="btn btn-primary" id="reset-send" type="button" data-i18n="auth.sendResetCode">Send reset code</button>
         <div class="auth-challenge" id="reset-challenge" hidden>
           <div class="caption-muted" id="reset-hint"></div>
           <label class="auth-field">
@@ -94,7 +94,7 @@
       <div class="auth-msg" id="auth-msg" role="status" hidden></div>
 
       <footer class="login-foot">
-        <span class="caption-muted" style="font-size:11px">© goHR</span>
+        <span class="caption-muted" style="font-size:11px"><bdi>© goHR</bdi></span>
         <div class="login-foot-actions">
           <button class="topbar-icon-btn" id="theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark theme" title="Switch to dark theme">
             <svg class="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.6 14.2A8.6 8.6 0 0 1 9.8 3.4a8.6 8.6 0 1 0 10.8 10.8Z"/></svg>

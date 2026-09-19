@@ -3203,11 +3203,23 @@ details.zone .row {
 }
 .login-card {
   width: min(420px, 100%);
+  min-height: 520px;
   padding: 24px 22px;
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
 }
+// The login card must not inherit the dashboard hover affordance (orange
+// border + lift) — it reads as a glitch on a static auth surface.
+.login-card:hover {
+  border-color: var(--border-color);
+  box-shadow: var(--shadow);
+}
+// Footer pinned to the bottom so switching forms never shifts it.
+.login-card .login-foot { margin-top: auto; padding-top: 14px; }
+// Subtle, symmetric hover for the footer glyph (shared topbar hover is too
+// loud against the card surface in dark mode).
+.login-card .topbar-icon-btn:hover { background: color-mix(in srgb, var(--text-muted) 12%, transparent); }
 .login-head { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--space-3); }
 .login-mark { font-weight: 800; font-size: 22px; color: var(--primary); letter-spacing: -0.02em; }
 .login-foot-actions { display: flex; align-items: center; gap: 6px; }
