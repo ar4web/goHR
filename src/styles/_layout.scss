@@ -383,14 +383,17 @@ a.topbar-icon-btn { text-decoration: none; }
 }
 .topbar-user:hover { background: var(--bg-surface-secondary); }
 .topbar-user-avatar {
-  width: 34px;
-  height: 34px;
-  font-size: 13px;
+  width: 38px;
+  height: 38px;
   flex-shrink: 0;
   border-radius: 50%;
+  /* Solid color first — if gradients are unavailable the disc still renders. */
+  background: var(--primary);
   background: linear-gradient(135deg, var(--primary), var(--primary-dk));
   color: var(--on-primary);
-  font-size: 11px;
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: 0.02em;
   font-weight: 700;
   display: inline-flex;
   align-items: center;
@@ -402,6 +405,7 @@ a.topbar-icon-btn { text-decoration: none; }
   .topbar-right { gap: 2px; }
   .topbar-icon-btn { width: 40px; height: 40px; }
   .topbar-user { width: 38px; height: 38px; }
+  .topbar-user-avatar { width: 34px; height: 34px; font-size: 11px; }
 }
 
 // ────────────────────────
