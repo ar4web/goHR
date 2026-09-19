@@ -4,12 +4,12 @@
 .btn {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  height: 32px;
+  gap: calc(5px * var(--spacing-factor));
+  height: var(--btn-h);
   padding: 0 12px;
   border-radius: var(--radius-sm);
   font: inherit;
-  font-size: 12.5px;
+  font-size: calc(14px * var(--font-factor));
   font-weight: var(--font-weight-medium);
   cursor: pointer;
   border: 1px solid transparent;
@@ -17,10 +17,10 @@
   line-height: 1;
   white-space: nowrap;
 }
-.btn svg { width: 14px; height: 14px; }
+.btn svg { width: var(--btn-icon-size); height: var(--btn-icon-size); }
 // Icon safety net: every inline icon has an explicit size so no SVG can
 // fall back to the 300×150 default (pagination, avatar upload, empty states).
-.page-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+.page-btn svg { width: var(--btn-icon-size); height: var(--btn-icon-size); flex-shrink: 0; }
 .avatar-upload .overlay svg { width: 20px; height: 20px; }
 .empty-state-icon { color: var(--text-disabled); }
 .empty-state-icon svg { width: 48px; height: 48px; }
@@ -45,7 +45,7 @@
   box-shadow: var(--shadow);
 }
 .btn-outline:hover { background: var(--bg-surface-secondary); color: var(--text); }
-.btn-sm { height: 28px; padding: 0 10px; font-size: 12px; }
+.btn-sm { height: calc(var(--btn-h) - 4px); padding: 0 10px; font-size: calc(13px * var(--font-factor)); }
 // Toolbar height language: search boxes (.search-box input, 32px), selects
 // and buttons align at 32px inside card headers, filter rows, toolbars and
 // page actions. Forms keep the roomier 36px .form-control. .btn-sm stays 28px.
@@ -53,7 +53,7 @@
 .users-filters .form-control,
 .page-actions .form-control,
 .toolbar .form-control {
-  height: 32px;
+  height: var(--btn-h);
 }
 
 // Visible keyboard focus everywhere. Component-level :focus rules (higher
@@ -73,7 +73,7 @@
 }
 .card:hover {
   box-shadow: var(--card-shadow-hover);
-  border-color: rgba(26,187,156,0.15);
+  border-color: var(--card-hover-border);
 }
 .card.is-refreshing {
   position: relative;
@@ -84,7 +84,7 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: linear-gradient(90deg, transparent 0%, rgba(26, 187, 156, 0.10) 50%, transparent 100%);
+  background: linear-gradient(90deg, transparent 0%, rgba(var(--primary-rgb), 0.10) 50%, transparent 100%);
   background-size: 200% 100%;
   animation: card-refresh-sweep 700ms ease-out;
   pointer-events: none;
@@ -111,8 +111,8 @@
   min-height: 38px;
 }
 .card-title {
-  font-size: 13px;
-  font-weight: var(--font-weight-bold);
+  font-size: 15px;
+  font-weight: 600;
   color: var(--text);
 }
 .card-subtitle {
@@ -132,7 +132,7 @@
   transition: background 100ms, color 100ms;
 }
 .card-opt-btn:hover { background: var(--body-bg); color: var(--text-secondary); }
-.card-opt-btn svg { width: 14px; height: 14px; }
+.card-opt-btn svg { width: var(--btn-icon-size); height: var(--btn-icon-size); }
 
 .card-body { padding: 16px; }
 .card-body.p-0 { padding: 0; }
@@ -148,14 +148,14 @@ table.table,
 table.hr-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 13px;
+  font-size: calc(13px * var(--font-factor));
   color: var(--text-secondary);
 }
 table.table th,
 table.hr-table th {
   text-align: start;
   padding: 6px var(--space-4);
-  font-size: 11px;
+  font-size: calc(11px * var(--font-factor));
   font-weight: var(--font-weight-bold);
   text-transform: uppercase;
   letter-spacing: 0.4px;
@@ -189,6 +189,28 @@ table.table tbody tr:has(input[type="checkbox"]:checked),
 table.hr-table tbody tr:has(input[type="checkbox"]:checked) {
   background: var(--primary-lt);
 }
+// Studio table-alignment control: one attribute re-aligns every data
+// table. Numeric columns (.num) and trailing action cells stay right-aligned
+// because they host figures/actions regardless of the chosen flow.
+html[data-table-align='center'] table.table th,
+html[data-table-align='center'] table.hr-table th,
+html[data-table-align='center'] table.table td,
+html[data-table-align='center'] table.hr-table td {
+  text-align: center;
+}
+html[data-table-align='end'] table.table th,
+html[data-table-align='end'] table.hr-table th,
+html[data-table-align='end'] table.table td,
+html[data-table-align='end'] table.hr-table td {
+  text-align: end;
+}
+html[data-table-align] table.table .num,
+html[data-table-align] table.hr-table .num,
+html[data-table-align] table.table th.num,
+html[data-table-align] table.hr-table th.num {
+  text-align: end;
+}
+
 table.table .num,
 table.hr-table .num,
 table.table th.num,
@@ -240,7 +262,7 @@ table.hr-table td:last-child .card-opt-btn {
   flex-shrink: 0;
 }
 .status-green {
-  color: #1e7e34;
+  color: var(--ok-ink);
 }
 // Semantic text colors with dark-mode mates (measured 4.5:1+ both modes).
 .text-danger { color: var(--avatar-red); }
@@ -249,7 +271,7 @@ table.hr-table td:last-child .card-opt-btn {
 .status-green::before {
   background: var(--green);
 }
-.status-yellow { color: #b45309; }
+.status-yellow { color: var(--warn-ink); }
 .status-yellow::before { background: var(--yellow); }
 .status-blue { color: var(--blue); }
 .status-blue::before { background: var(--blue); }
@@ -306,6 +328,8 @@ table.hr-table td:last-child .card-opt-btn {
   transition: transform 150ms;
 }
 .toggle.on::after { transform: translateX(16px); }
+// In RTL the knob travels toward the inline end (left).
+[dir='rtl'] .toggle.on::after { transform: translateX(-16px); }
 
 // ────────────────────────
 //  TOAST
@@ -338,6 +362,7 @@ table.hr-table td:last-child .card-opt-btn {
   transition: opacity 180ms ease, transform 180ms cubic-bezier(0.2, 0, 0, 1);
 }
 .toast.show { opacity: 1; transform: translateY(0); }
+.toast { border-inline-start: 3px solid var(--primary); padding-inline-start: 11px; }
 .toast-success { border-inline-start: 3px solid var(--green); padding-inline-start: 11px; }
 .toast-error   { border-inline-start: 3px solid var(--red);   padding-inline-start: 11px; }
 .toast-warning { border-inline-start: 3px solid var(--yellow); padding-inline-start: 11px; }
@@ -371,7 +396,7 @@ table.hr-table td:last-child .card-opt-btn {
   border: none;
   text-align: start;
   font: inherit;
-  font-size: 13px;
+  font-size: calc(13px * var(--font-factor));
   color: var(--text);
   padding: 7px 10px;
   border-radius: var(--radius-sm);
@@ -466,6 +491,60 @@ table.hr-table td:last-child .card-opt-btn {
 .menu-panel .panel-icon-info  { background: var(--blue-lt);   color: var(--blue); }
 .menu-panel .panel-icon-task  { background: var(--primary-lt); color: var(--primary); }
 .menu-panel .panel-icon-alert { background: var(--red-lt);    color: var(--red); }
+.menu-panel .panel-icon-warn  { background: var(--yellow-lt); color: var(--yellow); }
+.menu-panel .panel-icon-ok    { background: var(--green-lt);  color: var(--green); }
+.menu-panel .panel-empty {
+  padding: 30px 16px;
+  text-align: center;
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+// menu-item works as an <a> (full-width) and supports a danger tone.
+a.menu-item {
+  width: 100%;
+  color: inherit;
+  text-decoration: none;
+}
+.menu-item-danger { color: var(--red); }
+.menu-item-danger:hover { background: var(--red-lt); }
+// User chip popover head.
+.user-panel-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border-bottom: 1px solid var(--border-color-light);
+}
+.user-panel-avatar {
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dk));
+  color: var(--on-primary);
+  font-size: 15px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.user-panel-id {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+.user-panel-id strong { font-size: 13.5px; color: var(--text); }
+.user-panel-id span { font-size: 11.5px; color: var(--text-muted); }
+.user-panel-role { margin-top: 2px; }
+// Settings rows show their current value at the far end.
+.panel-row .settings-state {
+  align-self: center;
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--primary);
+}
 .menu-panel .panel-avatar {
   width: 28px; height: 28px;
   border-radius: 50%;
@@ -652,13 +731,13 @@ body.modal-open { overflow: hidden; }
 .modal-form-row textarea,
 .modal-form-row select {
   width: 100%;
-  height: 34px;
+  height: var(--control-h);
   padding: 0 var(--space-2);
   background: var(--bg-surface);
   border: 1px solid var(--border-color);
   border-radius: var(--radius);
   font: inherit;
-  font-size: 13px;
+  font-size: calc(13px * var(--font-factor));
   color: var(--text);
   outline: none;
   transition: border-color 120ms, box-shadow 120ms;
@@ -786,10 +865,10 @@ body.modal-open { overflow: hidden; }
 // ────────────────────────
 //  EXTENDED BUTTONS — color variants, sizes, states, groups
 // ────────────────────────
-.btn-lg { height: 38px; padding: 0 16px; font-size: 13.5px; }
-.btn-icon { width: 32px; padding: 0; justify-content: center; }
-.btn-icon.btn-sm { width: 28px; }
-.btn-icon.btn-lg { width: 38px; }
+.btn-lg { height: calc(var(--btn-h) + 6px); padding: 0 16px; font-size: calc(13.5px * var(--font-factor)); }
+.btn-icon { width: var(--btn-h); padding: 0; justify-content: center; }
+.btn-icon.btn-sm { width: calc(var(--btn-h) - 4px); }
+.btn-icon.btn-lg { width: calc(var(--btn-h) + 6px); }
 .btn-success {
   background: var(--green);
   color: white;
@@ -1515,7 +1594,7 @@ blockquote footer cite {
   border: 0;
   outline: 0;
   font-family: var(--font);
-  font-size: 14px;
+  font-size: calc(14px * var(--font-factor));
   color: var(--text);
 }
 .cmdk-input::placeholder { color: var(--text-muted); }
@@ -1551,7 +1630,7 @@ blockquote footer cite {
   background: transparent;
   border-radius: var(--radius-sm);
   font-family: var(--font);
-  font-size: 13px;
+  font-size: calc(13px * var(--font-factor));
   color: var(--text);
   cursor: pointer;
   text-align: start;
@@ -1572,7 +1651,7 @@ blockquote footer cite {
   justify-content: center;
   flex-shrink: 0;
 }
-.cmdk-item.active .cmdk-item-icon { background: rgba(26, 187, 156, 0.14); color: var(--primary); }
+.cmdk-item.active .cmdk-item-icon { background: rgba(var(--primary-rgb), 0.14); color: var(--primary); }
 .cmdk-item-label { flex: 1; text-align: start; }
 .cmdk-item-kbd {
   font-size: 11px;
@@ -1763,7 +1842,7 @@ body.cmdk-open { overflow: hidden; }
   padding: 12px 16px;
   border-radius: var(--radius);
   background: var(--primary-lt);
-  border: 1px solid rgba(26, 187, 156, 0.18);
+  border: 1px solid rgba(var(--primary-rgb), 0.18);
   font-size: 13px;
   color: var(--text);
 }
@@ -1928,3 +2007,23 @@ body.cmdk-open { overflow: hidden; }
   opacity: 0.5;
 }
 
+
+// ── Typography tiers (Customize → heading / sub-heading / body) ──────────
+// Every font-size in the app is `calc(Npx * var(--font-factor))`. Elements
+// below re-scope --font-factor from --fz-global (the body/base slider) so
+// all buttons and elements follow the tier they belong to — and nested
+// tiers never compound (each refers to --fz-global, not the parent factor).
+h1, h2, h3, h4, h5,
+.page-title, .card-title, .modal-title, .cz-card-title,
+.stat-value, .kpi-value, .appwin-title, .cell-strong {
+  --font-factor: calc(var(--fz-global, 1) * var(--head-factor, 1));
+}
+small, .desc, .cz-card-desc, .set-sub, .card-sub, .hint,
+.caption, .caption-muted, .stat-label, .kpi-label {
+  --font-factor: calc(var(--fz-global, 1) * var(--sub-factor, 1));
+}
+
+// The hidden attribute must always win, even over display:flex/grid classes
+// (login forms, auth panes, challenges). Without this, "hidden" sections
+// still render stacked on the page.
+[hidden] { display: none !important; }

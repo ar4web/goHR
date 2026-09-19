@@ -1,6 +1,7 @@
 // Reusable modal dialog. One open at a time; backdrop click, Escape, and
 // the close button all dismiss. Focus is moved into the dialog on open and
 // restored on close. Tab is trapped inside while open.
+import { t } from './i18n.js';
 
 let openBackdrop = null;
 let previousFocus = null;
@@ -8,9 +9,7 @@ let onCloseHook = null;
 
 const FOCUSABLE = 'button:not([disabled]), [href], input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
-export function isModalOpen() { return !!openBackdrop; }
-
-export function closeModal({ skipHook = false } = {}) {
+function closeModal({ skipHook = false } = {}) {
   if (!openBackdrop) {return;}
   const el = openBackdrop;
   el.classList.remove('show');
@@ -64,7 +63,7 @@ export function showModal({ title, body = '', actions = [], size = 'md', onClose
   header.className = 'modal-header';
   header.innerHTML = `
     <h2 class="modal-title">${title || ''}</h2>
-    <button type="button" class="modal-close" aria-label="Close">
+    <button type="button" class="modal-close" aria-label="${t('common.close')}">
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 3l8 8M11 3l-8 8"/></svg>
     </button>
   `;

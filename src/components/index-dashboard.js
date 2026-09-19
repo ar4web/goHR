@@ -2,8 +2,19 @@
 // Full HR command center: 6 cards with spark/progress + trend + needs attention + recent + expiry + mix + nationality + tasks + nitaqat.
 
 import { getSeed } from './hr-api.js';
+import { t, currentLang, LANG_EVENT } from './i18n.js';
+import { PROFESSIONS } from './hr-seed.js';
 
 let booted = false;
+
+function profName(code) {
+  const p = PROFESSIONS.find(x => x.code === code);
+  return p ? (currentLang() === 'ar' ? p.ar : p.en) : code || '—';
+}
+
+function empName(e) {
+  return currentLang() === 'ar' ? (e.nameAr || e.nameEn) : e.nameEn;
+}
 
 function spark(el, values, color) {
   if (!el) {return;}
@@ -30,12 +41,17 @@ function renderCards() {
     const s = el.querySelector('.stat-subtext'); if (s) {s.textContent = sub;}
     el.style.cursor = 'pointer';
   };
-  set('card-total', total, `${emps.filter(e=>e.saudi).length} Saudi · ${total - emps.filter(e=>e.saudi).length} Expat`);
-  set('card-active', active, `${activePct}% of total · ${emps.filter(e=>e.st==='probation').length} probation`);
-  set('card-rental', distinctDeployed, `${distinctDeployed} deployed`);
-  set('card-vacation', onLeave, 'On leave now');
-  set('card-huroob', huroobCount, huroobCount ? 'Action required' : 'All clear');
-  set('card-bench', bench, 'Ready to deploy');
+  const saudiCount = emps.filter(e => e.saudi).length;
+  set('card-total', total, t('dash.saudiExpatSub')
+    .replace('{saudi}', saudiCount)
+    .replace('{expat}', total - saudiCount));
+  set('card-active', active, t('dash.activeSub')
+    .replace('{pct}', activePct)
+    .replace('{n}', emps.filter(e => e.st === 'probation').length));
+  set('card-rental', distinctDeployed, t('dash.deployedSub').replace('{n}', distinctDeployed));
+  set('card-vacation', onLeave, t('dash.onLeaveNow'));
+  set('card-huroob', huroobCount, huroobCount ? t('dash.actionRequired') : t('dash.allClear'));
+  set('card-bench', bench, t('dash.readyDeploy'));
 
   // spark bars — HR trend (last 10 half-month buckets, deterministic)
   spark(document.getElementById('spark-total'), [40,55,45,60,50,70,65,80,75,90], 'var(--primary)');
@@ -52,7 +68,13 @@ function renderCards() {
   bar('bar-bench', benchPct);
 
   const meta = document.getElementById('dash-meta');
-  if (meta) {meta.textContent = `${total} total · ${active} active · ${distinctDeployed} deployed · ${onLeave} on leave`;}
+  if (meta) {
+    meta.textContent = t('dash.meta')
+      .replace('{total}', total)
+      .replace('{active}', active)
+      .replace('{deployed}', distinctDeployed)
+      .replace('{leave}', onLeave);
+  }
 
   // Workforce Trend stat — accurate 6M hired vs exited
   const trendStat = document.getElementById('trend-stat');
@@ -65,7 +87,11 @@ function renderCards() {
     const net6 = hired6 - exited6;
     const netColor = net6 >= 0 ? 'var(--green)' : 'var(--red)';
     const arrow = net6 >= 0 ? '↑' : '↓';
-    trendStat.innerHTML = `${hired6} hired · ${exited6} exited · <span style="font-size:13px;font-weight:600;color:${netColor}">${arrow} ${net6>=0?'+':''}${net6} net</span> · 6M`;
+    trendStat.innerHTML = t('dash.trendStat')
+      .replace('{hired}', hired6)
+      .replace('{exited}', exited6)
+      .replace('{net}', `${net6>=0?'+':''}${net6}`)
+      .replace('{arrow}', `<span style="font-size:13px;font-weight:600;color:${netColor}">${arrow}</span>`);
   }
 
   // click handlers
@@ -83,13 +109,18 @@ function renderTodo() {
   const list = document.getElementById('todo-list');
   const counter = document.querySelector('[data-todo-counter]');
   if (!list) {return;}
-  const rows = tasks.slice(0,6).map(t => {
-    const done = t.done;
-    const prio = t.priority === 'high' ? 'var(--red)' : t.priority === 'medium' ? 'var(--yellow)' : 'var(--green)';
-    return `<div class="todo-row${done?' done':''}"><div class="todo-cb${done?' done':''}">${done?'<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2.5 6l2.5 3 5-6"/></svg>':''}</div><span class="todo-text">${t.titleEn}</span><span class="todo-prio" style="background:${prio}"></span><span class="todo-date">${t.due? t.due.slice(5):''}</span></div>`;
+  const rows = tasks.slice(0,6).map(task => {
+    const done = task.done;
+    const prio = task.priority === 'high' ? 'var(--red)' : task.priority === 'medium' ? 'var(--yellow)' : 'var(--green)';
+    const title = currentLang() === 'ar' ? (task.titleAr || task.titleEn) : task.titleEn;
+    return `<div class="todo-row${done?' done':''}"><div class="todo-cb${done?' done':''}">${done?'<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2.5 6l2.5 3 5-6"/></svg>':''}</div><span class="todo-text">${title}</span><span class="todo-prio" style="background:${prio}"></span><span class="todo-date">${task.due? task.due.slice(5):''}</span></div>`;
   }).join('');
-  list.innerHTML = rows || '<div class="caption-muted" style="padding:12px">No tasks</div>';
-  if (counter) { const rem = tasks.filter(t=>!t.done).length; counter.textContent = `${rem} of ${tasks.length} remaining`; }
+  list.innerHTML = rows || `<div class="caption-muted" style="padding:12px">${t('dash.noTasks')}</div>`;
+  if (counter) {
+    counter.textContent = t('common.ofRemaining')
+      .replace('{remaining}', tasks.filter(task => !task.done).length)
+      .replace('{total}', tasks.length);
+  }
 }
 
 function renderNeedsAttention() {
@@ -100,10 +131,10 @@ function renderNeedsAttention() {
   const expiring = emps.filter(e=> e.iqamaExp && e.iqamaExp < '2026-11-01' && e.st==='active').slice(0,3);
   const probation = emps.filter(e=>e.st==='probation').slice(0,2);
   const items = [];
-  if (huroob.length) {items.push(`<li class="activity-item"><div class="activity-avatar" style="background:var(--red)">!</div><div><div class="activity-body"><strong>${huroob.length} Huroob</strong> — ${huroob[0].nameEn} needs file update</div><div class="activity-time">Today</div></div></li>`);}
-  if (expiring.length) {items.push(`<li class="activity-item"><div class="activity-avatar" style="background:var(--yellow)">◷</div><div><div class="activity-body"><strong>${expiring.length} Iqama</strong> expiring < 30d — ${expiring[0].nameEn}</div><div class="activity-time">This week</div></div></li>`);}
-  if (probation.length) {items.push(`<li class="activity-item"><div class="activity-avatar" style="background:var(--blue)">P</div><div><div class="activity-body"><strong>${probation.length} Probation</strong> reviews due</div><div class="activity-time">This week</div></div></li>`);}
-  if (!items.length) {items.push('<li class="activity-item"><div class="activity-avatar" style="background:var(--green)">✓</div><div><div class="activity-body"><strong>All clear</strong> — no urgent HR flags</div><div class="activity-time">Just now</div></div></li>');}
+  if (huroob.length) {items.push(`<li class="activity-item"><div class="activity-avatar" style="background:#f43f5e">!</div><div><div class="activity-body"><strong>${t('status.huroob')} (${huroob.length})</strong> — ${t('dash.huroobAlert').replace('{n}', huroob.length).replace('{name}', empName(huroob[0]))}</div><div class="activity-time">${t('dash.today')}</div></div></li>`);}
+  if (expiring.length) {items.push(`<li class="activity-item"><div class="activity-avatar" style="background:#f59e0b">◷</div><div><div class="activity-body">${t('dash.iqamaAlert').replace('{n}', expiring.length).replace('{name}', empName(expiring[0]))}</div><div class="activity-time">${t('dash.thisWeek')}</div></div></li>`);}
+  if (probation.length) {items.push(`<li class="activity-item"><div class="activity-avatar" style="background:var(--blue)">P</div><div><div class="activity-body">${t('dash.probationAlert').replace('{n}', probation.length)}</div><div class="activity-time">${t('dash.thisWeek')}</div></div></li>`);}
+  if (!items.length) {items.push(`<li class="activity-item"><div class="activity-avatar" style="background:var(--green)">✓</div><div><div class="activity-body"><strong>${t('dash.allClear')}</strong> — ${t('dash.allClearBody')}</div><div class="activity-time">${t('dash.justNow')}</div></div></li>`);}
   el.innerHTML = `<ul class="activity-list">${items.join('')}</ul>`;
 }
 
@@ -112,7 +143,10 @@ function renderRecentEmployees() {
   if (!tbody) {return;}
   const emps = (getSeed('employees')||[]).slice(-5).reverse();
   const stMap = { active:'green', probation:'blue', 'on-leave':'yellow', huroob:'red', exited:'grey' };
-  tbody.innerHTML = emps.map(e => `<tr><td class="cell-mono">${e.code}</td><td><div class="cell-customer"><div class="cell-avatar" style="background:var(--${e.av||'primary'})">${e.nameEn.slice(0,2).toUpperCase()}</div><span class="cell-strong">${e.nameEn}</span></div></td><td>${e.prof||e.titleEn||'-'}</td><td><span class="status status-${stMap[e.st]||'grey'}">${e.st}</span></td><td>${e.join||e.entry||'-'}</td></tr>`).join('');
+  tbody.innerHTML = emps.map(e => {
+    const name = empName(e);
+    return `<tr><td class="cell-mono">${e.code}</td><td><div class="cell-customer"><div class="cell-avatar" style="background:var(--${e.av||'primary'})">${e.nameEn.slice(0,2).toUpperCase()}</div><span class="cell-strong">${name}</span></div></td><td>${profName(e.prof) || e.titleEn || '-'}</td><td><span class="status status-${stMap[e.st]||'grey'}">${t(`status.${e.st}`) || e.st}</span></td><td>${e.join||e.entry||'-'}</td></tr>`;
+  }).join('') || `<tr><td colspan="5" class="caption-muted" style="padding:16px;text-align:center">${t('dash.loading')}</td></tr>`;
 }
 
 function renderExpiry() {
@@ -130,9 +164,9 @@ function renderExpiry() {
   const bar = document.getElementById('expiry-bar');
   if (bar) {bar.innerHTML = `<div style="width:${p7}%;background:var(--red)"></div><div style="width:${p30}%;background:var(--yellow)"></div><div style="width:${p90}%;background:var(--green)"></div><div style="width:${100-p7-p30-p90}%;background:var(--border-color)"></div>`;}
   const sub = document.getElementById('expiry-sub');
-  if (sub) {sub.textContent = `${c7} ≤7d · ${c30} ≤30d · ${c90} ≤90d`;}
+  if (sub) {sub.textContent = `${c7} ${t('dash.le7')} · ${c30} ${t('dash.le30')} · ${c90} ${t('dash.le90')}`;}
   const legend = document.getElementById('expiry-legend');
-  if (legend) {legend.innerHTML = `<div class="storage-legend-item"><span class="dot" style="background:var(--red)"></span> ≤7 days <span class="val">${c7}</span></div><div class="storage-legend-item"><span class="dot" style="background:var(--yellow)"></span> ≤30 days <span class="val">${c30}</span></div><div class="storage-legend-item"><span class="dot" style="background:var(--green)"></span> ≤90 days <span class="val">${c90}</span></div><div class="storage-legend-item"><span class="dot" style="background:var(--border-color)"></span> Safe <span class="val">${total-c7-c30-c90}</span></div>`;}
+  if (legend) {legend.innerHTML = `<div class="storage-legend-item"><span class="dot" style="background:var(--red)"></span> ${t('dash.le7')} <span class="val">${c7}</span></div><div class="storage-legend-item"><span class="dot" style="background:var(--yellow)"></span> ${t('dash.le30')} <span class="val">${c30}</span></div><div class="storage-legend-item"><span class="dot" style="background:var(--green)"></span> ${t('dash.le90')} <span class="val">${c90}</span></div><div class="storage-legend-item"><span class="dot" style="background:var(--border-color)"></span> ${t('dash.safe')} <span class="val">${total-c7-c30-c90}</span></div>`;}
 }
 
 function renderMix() {
@@ -145,7 +179,7 @@ function renderMix() {
     const totalActive = emps.filter(e=>e.st==='active').length || 1;
     const pDeployed = Math.round((deployed/totalActive)*100);
     const pBench = 100 - pDeployed;
-    legend.innerHTML = `<div class="donut-legend-item"><span class="dot" style="background:var(--primary)"></span> Deployed <span class="pct">${pDeployed}%</span></div><div class="donut-legend-item"><span class="dot" style="background:var(--purple)"></span> Bench <span class="pct">${pBench}%</span></div><div class="donut-legend-item"><span class="dot" style="background:var(--yellow)"></span> On leave <span class="pct">${Math.round((emps.filter(e=>e.st==='on-leave').length/totalActive)*100)}%</span></div>`;
+    legend.innerHTML = `<div class="donut-legend-item"><span class="dot" style="background:var(--primary)"></span> ${t('status.deployed')} <span class="pct">${pDeployed}%</span></div><div class="donut-legend-item"><span class="dot" style="background:var(--purple)"></span> ${t('status.bench')} <span class="pct">${pBench}%</span></div><div class="donut-legend-item"><span class="dot" style="background:var(--yellow)"></span> ${t('dash.onLeave')} <span class="pct">${Math.round((emps.filter(e=>e.st==='on-leave').length/totalActive)*100)}%</span></div>`;
   }
 }
 
@@ -153,15 +187,16 @@ function renderNationality() {
   const el = document.getElementById('nationality-mix');
   if (!el) {return;}
   const emps = getSeed('employees')||[];
+  const unknown = t('dash.unknown');
   const counts = {};
-  emps.forEach(e=> { counts[e.nat||'Unknown'] = (counts[e.nat||'Unknown']||0)+1; });
+  emps.forEach(e=> { const k = e.nat || unknown; counts[k] = (counts[k]||0)+1; });
   const sorted = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,6);
   const total = emps.length || 1;
   const flag = { Saudi:'🇸🇦', India:'🇮🇳', Pakistan:'🇵🇰', Philippines:'🇵🇭', Bangladesh:'🇧🇩', Egypt:'🇪🇬' };
   el.innerHTML = sorted.map(([nat,c])=> {
     const pct = Math.round((c/total)*100);
     return `<div class="visitor-row"><span class="visitor-flag">${flag[nat]||'🏳️'}</span><span class="visitor-name">${nat}</span><span class="visitor-pct">${pct}%</span><div class="visitor-bar"><div class="fill" style="width:${pct}%;background:var(--primary)"></div></div></div>`;
-  }).join('') || '<div class="caption-muted" style="padding:12px">No data</div>';
+  }).join('') || `<div class="caption-muted" style="padding:12px">${t('dash.noData')}</div>`;
 }
 
 function renderNitaqat() {
@@ -172,12 +207,18 @@ function renderNitaqat() {
   const badge = document.getElementById('nitaqat-badge');
   if (badge) { badge.textContent = pct+'%'; badge.className = 'badge badge-'+band; }
   const box = document.getElementById('nitaqat-box');
-  if (box) {box.innerHTML = `<div style="display:flex;align-items:center;gap:12px"><div style="flex:1"><div class="storage-bar"><div style="width:${Math.min(pct,100)}%;background:var(--${band})"></div></div><div class="caption-muted" style="margin-top:6px">${saudi} Saudi / ${emps.length} total</div></div><div style="font-size:22px;font-weight:700;color:var(--${band})">${pct}%</div></div><div class="caption-muted" style="margin-top:8px">Target 30% · ${pct>=25?'Platinum':'Need '+ (25-pct) +'% to green'}</div>`;}
+  if (box) {box.innerHTML = `<div style="display:flex;align-items:center;gap:12px"><div style="flex:1"><div class="storage-bar"><div style="width:${Math.min(pct,100)}%;background:var(--${band})"></div></div><div class="caption-muted" style="margin-top:6px">${t('dash.saudiTotal').replace('{n}', saudi).replace('{total}', emps.length)}</div></div><div style="font-size:22px;font-weight:700;color:var(--${band})">${pct}%</div></div><div class="caption-muted" style="margin-top:8px">${pct>=25 ? t('dash.targetPlatinum') : t('dash.needPct').replace('{n}', 25-pct)}</div>`;}
+}
+
+function renderAll() {
+  renderCards(); renderTodo(); renderNeedsAttention(); renderRecentEmployees(); renderExpiry(); renderMix(); renderNationality(); renderNitaqat();
 }
 
 export function initIndexDashboard() {
   if (!document.querySelector('[data-page="dashboard"]')) {return;}
-  renderCards(); renderTodo(); renderNeedsAttention(); renderRecentEmployees(); renderExpiry(); renderMix(); renderNationality(); renderNitaqat();
-  if (booted) {return;} booted = true;
-  window.addEventListener('storage', e=> { if(e.key && e.key.startsWith('hr:')) { renderCards(); renderTodo(); } });
+  renderAll();
+  if (booted) {return;}
+  booted = true;
+  window.addEventListener('storage', e=> { if(e.key && e.key.startsWith('hr:')) { renderAll(); } });
+  window.addEventListener(LANG_EVENT, renderAll);
 }

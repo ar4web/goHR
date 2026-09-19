@@ -1,4 +1,4 @@
-// HR + Operations ΓÇö shared file-import modal (Excel / CSV).
+// HR + Operations — shared file-import modal (Excel / CSV).
 // One helper for every list page: template download + validated parse + save.
 // `onImport(rows)` saves, re-renders and returns the saved count
 // (or false to abort with its own message).
@@ -31,13 +31,13 @@ export function openImportModal({ titleEn, titleAr, filename, schema, example, o
         action: ({ body, close }) => {
           const pending = body._pending;
           if (!pending || !pending.rows.length) {
-            showToast(lang === 'ar' ? '╪º╪«╪¬╪▒ ┘à┘ä┘ü┘ï╪º ╪╡╪º┘ä╪¡┘ï╪º ╪ú┘ê┘ä┘ï╪º' : 'Choose a valid file first', {
+            showToast(t('imp.chooseValid'), {
               variant: 'warning'
             });
             return false;
           }
           if (pending.errors.length) {
-            showToast(lang === 'ar' ? '╪ú╪╡┘ä╪¡ ╪º┘ä╪ú╪«╪╖╪º╪í ╪ú┘ê┘ä┘ï╪º' : 'Fix validation errors first', {
+            showToast(t('imp.fixErrors'), {
               variant: 'warning'
             });
             return false;
@@ -46,7 +46,7 @@ export function openImportModal({ titleEn, titleAr, filename, schema, example, o
           if (n === false) {
             return false;
           }
-          showToast(lang === 'ar' ? `╪¬┘à ╪º╪│╪¬┘è╪▒╪º╪» ${n} ╪╡┘ü┘ï╪º` : `Imported ${n} rows`, {
+          showToast(t('imp.importedRows').replace('{n}', n), {
             variant: 'success'
           });
           close();
@@ -74,7 +74,7 @@ export function openImportModal({ titleEn, titleAr, filename, schema, example, o
       return;
     }
     const box = dlg.querySelector('[data-imp-result]');
-    box.textContent = 'ΓÇª';
+    box.textContent = '…';
     try {
       const res = await importFile(input.files[0], schema);
       const bodyEl = dlg.querySelector('.modal-body');
@@ -82,16 +82,21 @@ export function openImportModal({ titleEn, titleAr, filename, schema, example, o
         bodyEl._pending = res;
       }
       if (!res.rows.length) {
-        box.innerHTML = '<span class="status status-red">0 rows</span>';
+        box.innerHTML = `<span class="status status-red">${t('imp.zeroRows')}</span>`;
         return;
       }
       const errHtml = res.errors
         .slice(0, 10)
-        .map(e => `<div>row ${esc(e.row)} ┬╖ ${esc(e.field)} ┬╖ ${esc(e.message)}</div>`)
+        .map(e => `<div>${t('imp.rowDetail')
+            .replace('{row}', esc(e.row))
+            .replace('{field}', esc(e.field))
+            .replace('{message}', esc(e.message))}</div>`)
         .join('');
-      box.innerHTML = `<span class="status status-${res.errors.length ? 'red' : 'green'}">${res.rows.length} rows ┬╖ ${res.errors.length} errors</span><div style="margin-top:8px;color:var(--text-muted)">${errHtml}</div>`;
+      box.innerHTML = `<span class="status status-${res.errors.length ? 'red' : 'green'}">${t('imp.rowsErrors')
+        .replace('{rows}', res.rows.length)
+        .replace('{errors}', res.errors.length)}</span><div style="margin-top:8px;color:var(--text-muted)">${errHtml}</div>`;
     } catch (_err) {
-      box.innerHTML = '<span class="status status-red">parse-error</span>';
+      box.innerHTML = `<span class="status status-red">${t('imp.parseError')}</span>`;
     }
   });
 }

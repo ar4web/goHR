@@ -31,3 +31,10 @@ JQUERY_ELIMINATION_PLAN.md
 # (uploaded to GitHub repo settings directly, not referenced from any committed file)
 docs/social-preview.png
 scripts/social-preview.mjs
+# Auth API runtime store (seeded on first run)
+server/data/
+
+# Runtime databases (seeds live in code)
+server/data/*.sqlite
+server/data/*.sqlite-wal
+server/data/*.sqlite-shm

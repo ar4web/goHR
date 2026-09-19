@@ -1,6 +1,19 @@
 // goHR — entry
 // Self-contained dashboard skin. Loads the core design system.
 
+// Self-hosted webfonts (Fontsource woff2, bundled by Vite) — no external
+// CDN at runtime, so Arabic (IBM Plex Sans Arabic) renders even where
+// fonts.googleapis.com is blocked. Only the latin/arabic subsets and the
+// weights the UI uses are emitted.
+import '@fontsource/inter/latin-400.css';
+import '@fontsource/inter/latin-500.css';
+import '@fontsource/inter/latin-600.css';
+import '@fontsource/inter/latin-700.css';
+import '@fontsource/ibm-plex-sans-arabic/arabic-400.css';
+import '@fontsource/ibm-plex-sans-arabic/arabic-500.css';
+import '@fontsource/ibm-plex-sans-arabic/arabic-600.css';
+import '@fontsource/ibm-plex-sans-arabic/arabic-700.css';
+
 import './styles/main.scss';
 import { mountShell } from './components/shell.js';
 import { initCharts } from './components/charts.js';
@@ -8,10 +21,27 @@ import { initTables } from './components/tables.js';
 import { openMenu, DEFAULT_CARD_MENU } from './components/menus.js';
 import { initCommandPalette } from './components/command-palette.js';
 import { initPageActions } from './components/page-actions.js';
-import { initI18n } from './components/i18n.js';
+import { initI18n, t } from './components/i18n.js';
+import { initCustomize } from './components/customize.js';
+import { initTheme } from './components/theme.js';
+import { initShellChrome } from './components/shell-chrome.js';
+import { initSession } from './components/session.js';
+import { installGoDrMonitor } from './components/godr/monitor.js';
 
 mountShell();
+initTheme();
+initShellChrome();
 initI18n();
+// Session guard + identity paint for admin-shell pages (login page opts out:
+// it has no data-shell and boots its own flow via login.js).
+if (document.body.dataset.shell === 'admin') {
+  initSession();
+}
+initCustomize();
+// Go Dr. — passive monitoring instrumentation on every page (JS errors,
+// failed fetches, offline events, per-page load times). Lightweight; the
+// dashboard itself stays lazy via the PAGES registry below.
+installGoDrMonitor();
 // Heavy last: charts (echarts) + grids (datatables) mount after first paint
 // so shell, text and LCP settle first. Skeletons cover the wait; idle fires
 // ASAP when the main thread is free, setTimeout covers jsdom/no-idle.
@@ -37,6 +67,21 @@ if ('serviceWorker' in navigator && import.meta.env.PROD) {
   });
 }
 
+// DEV self-heal: an older build may have registered a service worker on this
+// origin. A stale SW (or its pre-cached assets) can make the dev server look
+// like it is "not loading" even though the server responds fine. Remove any
+// registered SW and stale caches whenever we run in development.
+if (import.meta.env.DEV && 'serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.getRegistrations().then(regs => {
+      regs.forEach(r => r.unregister());
+    }).catch(() => { /* ignore */ });
+    if (window.caches && window.caches.keys) {
+      window.caches.keys().then(keys => keys.forEach(k => window.caches.delete(k))).catch(() => {});
+    }
+  });
+}
+
 // goHR main dashboard (index.html)
 if (document.querySelector('[data-page="dashboard"]')) {
   import('./components/index-dashboard.js').then(m => m.initIndexDashboard());
@@ -47,7 +92,22 @@ if (document.querySelector('[data-page="dashboard"]')) {
 // employees plus their supporting views.
 const PAGES = {
   'employees': () => import('./components/employees.js').then((m) => m.initEmployees()),
-  'employee-file': () => import('./components/employee-detail.js').then((m) => m.initEmployeeDetail())
+  'employee-file': () => import('./components/employee-detail.js').then((m) => m.initEmployeeDetail()),
+  'attendance': () => import('./components/attendance.js').then((m) => m.initAttendance()),
+  'leave': () => import('./components/leave.js').then((m) => m.initLeave()),
+  'payroll': () => import('./components/payroll.js').then((m) => m.initPayroll()),
+  'invoices': () => import('./components/invoices.js').then((m) => m.initInvoices()),
+  'eosb': () => import('./components/eosb.js').then((m) => m.initEosb()),
+  'renewals': () => import('./components/renewals.js').then((m) => m.initRenewals()),
+  'documents': () => import('./components/docs.js').then((m) => m.initDocs()),
+  'files': () => import('./components/files.js').then((m) => m.initFiles()),
+  'recruitment': () => import('./components/recruit.js').then((m) => m.initRecruit()),
+  'profitability': () => import('./components/profitability.js').then((m) => m.initProfit()),
+  'expenses': () => import('./components/expenses.js').then((m) => m.initExpenses()),
+  'settings': () => import('./components/settings.js').then((m) => m.initSettings()),
+  'apps': () => import('./components/apps.js').then((m) => m.initApps()),
+  'users': () => import('./components/users.js').then((m) => m.initUsers()),
+  'go-dr': () => import('./components/godr/page.js').then((m) => m.initGoDr())
 };
 const normalizePage = (key) => (key || '').replace(/^hr_/, '').replace(/_/g, '-');
 const pageKey = normalizePage(document.body?.dataset.page);
@@ -83,7 +143,9 @@ document.addEventListener('click', (e) => {
   const done = card.querySelectorAll('.todo-row.done');
   const remaining = all.length - done.length;
   // Format: "<remaining> of <total> remaining" — matches existing copy.
-  counter.textContent = `${remaining} of ${all.length} remaining`;
+  counter.textContent = t('common.ofRemaining')
+    .replace('{remaining}', remaining)
+    .replace('{total}', all.length);
 });
 
 // Tab groups: works for any container of .chart-tab buttons (chart cards,
@@ -149,7 +211,7 @@ document.addEventListener('submit', (e) => {
   // see the submit event, so reaching here means the form is already valid.
   e.preventDefault();
   const submitBtn = form.querySelector('button[type="submit"], input[type="submit"]');
-  const label = (submitBtn?.textContent || submitBtn?.value || 'Saved').trim();
+  const label = (submitBtn?.textContent || submitBtn?.value || t('act.savedShort')).trim();
   import('./components/toast.js').then(({ showToast }) => showToast(`${label} ✓`, { variant: 'success' }));
   if (form.dataset.resetOnSubmit !== 'false') {form.reset();}
 });

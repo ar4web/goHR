@@ -1,14 +1,14 @@
-// HR + Operations ΓÇö locale helpers (SAR money, Gregorian + Hijri dates).
-// No hand-formatted dates or money anywhere else ΓÇö import from here.
+// HR + Operations — locale helpers (SAR money, Gregorian + Hijri dates).
+// No hand-formatted dates or money anywhere else — import from here.
 
 import { currentLang } from './i18n.js';
 
-// Bilingual picker ΓÇö one copy. Was copy-pasted in ~50 page modules.
+// Bilingual picker — one copy. Was copy-pasted in ~50 page modules.
 export function L(en, ar) {
   return currentLang() === 'ar' ? ar : en;
 }
 
-// Null-safe text setter ΓÇö one copy. Was copy-pasted in ~38 page modules.
+// Null-safe text setter — one copy. Was copy-pasted in ~38 page modules.
 export function setText(id, v) {
   const el = document.getElementById(id);
   if (el) {
@@ -16,14 +16,7 @@ export function setText(id, v) {
   }
 }
 
-// Null-safe HTML setter ΓÇö for the few pages that render markup (contracts, reviews, reports).
-export function setHtml(id, v) {
-  const el = document.getElementById(id);
-  if (el) {
-    el.innerHTML = v;
-  }
-}
-
+// Null-safe HTML setter — for the few pages that render markup (contracts, reviews, reports).
 export function fmtSAR(amount, opts = {}) {
   const lang = opts.lang || currentLang();
   const locale = lang === 'ar' ? 'ar-SA' : 'en-SA';
@@ -38,20 +31,9 @@ export function fmtSAR(amount, opts = {}) {
   }
 }
 
-export function fmtNum(amount, opts = {}) {
-  const lang = opts.lang || currentLang();
-  try {
-    return new Intl.NumberFormat(lang === 'ar' ? 'ar-SA' : 'en-SA', {
-      maximumFractionDigits: opts.dp ?? 0
-    }).format(amount || 0);
-  } catch (_e) {
-    return String(amount || 0);
-  }
-}
-
 export function fmtDate(iso, opts = {}) {
   if (!iso) {
-    return 'ΓÇö';
+    return '—';
   }
   const lang = opts.lang || currentLang();
   const locale = lang === 'ar' ? 'ar-SA' : 'en-GB';
@@ -68,7 +50,7 @@ export function fmtDate(iso, opts = {}) {
 
 export function fmtHijri(iso, opts = {}) {
   if (!iso) {
-    return 'ΓÇö';
+    return '—';
   }
   const lang = opts.lang || currentLang();
   const locale = (lang === 'ar' ? 'ar-SA' : 'en-SA') + '-u-ca-islamic-umalqura';
@@ -83,23 +65,6 @@ export function fmtHijri(iso, opts = {}) {
   }
 }
 
-export function fmtDateTime(iso) {
-  if (!iso) {
-    return 'ΓÇö';
-  }
-  const lang = currentLang();
-  try {
-    return new Intl.DateTimeFormat(lang === 'ar' ? 'ar-SA' : 'en-GB', {
-      day: 'numeric',
-      month: 'short',
-      hour: '2-digit',
-      minute: '2-digit'
-    }).format(new Date(iso));
-  } catch (_e) {
-    return iso;
-  }
-}
-
 export function initialsOf(name) {
   return (name || '?')
     .split(' ')
@@ -111,11 +76,11 @@ export function initialsOf(name) {
 
 export function maskIban(iban) {
   if (!iban) {
-    return 'ΓÇö';
+    return '—';
   }
   const clean = iban.replace(/\s+/g, '');
   if (clean.length < 8) {
     return iban;
   }
-  return `${clean.slice(0, 4)} ΓÇóΓÇóΓÇóΓÇó ${clean.slice(-4)}`;
+  return `${clean.slice(0, 4)} •••• ${clean.slice(-4)}`;
 }

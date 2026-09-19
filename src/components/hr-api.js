@@ -1,21 +1,7 @@
 // goHR — data access. Seed mode (default) merges hr-seed.js with any
 // locally imported rows (localStorage overlay). API mode (?api=1) uses httpAdapter.
 
-import { useApiMode, seedAdapter, httpAdapter } from './data-adapter.js';
-import {
-  EMPLOYEES,
-  CLIENTS,
-  SITES,
-  ORG_LINKS,
-  DEPARTMENTS,
-  ROLES,
-  ROLE_SCOPES,
-  AUDIT_LOG,
-  TASKS,
-  SKILLS,
-  COMPANIES,
-  SALUTATIONS
-} from './hr-seed.js';
+import { EMPLOYEES, CLIENTS, SITES, ORG_LINKS, DEPARTMENTS, ROLES, ROLE_SCOPES, AUDIT_LOG, TASKS, SKILLS, COMPANIES, SALUTATIONS, ATTENDANCE, LEAVES, SECONDMENTS, INVOICES, DOC_TEMPLATES, DOCUMENTS, FILE_ENTRIES, VACANCIES, CANDIDATES, MEETINGS, MAILS, CHAT_CHANNELS, CHAT_MESSAGES, EXPENSES } from './hr-seed.js';
 
 const SEED_MAP = {
   employees: EMPLOYEES,
@@ -29,7 +15,21 @@ const SEED_MAP = {
   tasks: TASKS,
   skills: SKILLS,
   companies: COMPANIES,
-  salutations: SALUTATIONS
+  salutations: SALUTATIONS,
+  attendance: ATTENDANCE,
+  leaves: LEAVES,
+  secondments: SECONDMENTS,
+  invoices: INVOICES,
+  doctemplates: DOC_TEMPLATES,
+  documents: DOCUMENTS,
+  fileentries: FILE_ENTRIES,
+  vacancies: VACANCIES,
+  candidates: CANDIDATES,
+  meetings: MEETINGS,
+  expenses: EXPENSES,
+  mails: MAILS,
+  chatChannels: CHAT_CHANNELS,
+  chatMessages: CHAT_MESSAGES
 };
 
 const API_MAP = {
@@ -71,28 +71,6 @@ export function saveImportedRows(name, rows) {
   writeOverlay(name, prev.concat(rows));
 }
 
-export function clearImportedRows(name) {
-  try {
-    localStorage.removeItem(`hr:import:${name}`);
-  } catch (_e) {
-    /* ignore */
-  }
-}
-
-/** Upsert a patch into the overlay. `row` carries the key (code/id/emp/no). */
-export function patchSeedRow(name, row, patch) {
-  const rows = overlayRows(name);
-  const k = keyOf(row);
-  const merged = { ...row, ...patch };
-  const i = rows.findIndex(r => keyOf(r) === k);
-  if (i >= 0) {
-    rows[i] = { ...rows[i], ...merged };
-  } else {
-    rows.push(merged);
-  }
-  writeOverlay(name, rows);
-}
-
 /** Seeds merged with local overlay (seed mode only). Overlay rows whose key
  *  matches a seed row act as patches; unknown keys append as new rows. */
 export function getSeed(name) {
@@ -116,28 +94,4 @@ export function getSeed(name) {
     }
   }
   return out;
-}
-
-const adapters = {};
-
-export function hrAdapter(name) {
-  if (adapters[name]) {
-    return adapters[name];
-  }
-  let b;
-  if (useApiMode() && API_MAP[name]) {
-    b = httpAdapter(API_MAP[name].path, { listKey: API_MAP[name].listKey });
-  } else {
-    b = seedAdapter(getSeed(name));
-  }
-  adapters[name] = b;
-  return b;
-}
-
-export async function hrList(name, query = {}) {
-  return hrAdapter(name).list(query);
-}
-
-export function isApi() {
-  return useApiMode();
 }

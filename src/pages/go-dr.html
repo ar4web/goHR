@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Go Dr. | goHR</title>
+  <script type="module" src="/src/main.js"></script>
+</head>
+<body data-shell="admin" data-page="go-dr" data-breadcrumb="Home > Settings > Go Dr.">
+  <main class="main" data-own-actions>
+  <div class="page-wrapper">
+  <div class="page-header">
+    <div class="page-header-row">
+      <div>
+        <div class="page-pretitle" data-i18n="set.title">Settings</div>
+        <h1 class="page-title"><svg class="godr-title-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6 6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"/><path d="M8 15v1a6 6 0 0 0 6 6 6 6 0 0 0 6-6v-4"/><circle cx="20" cy="10" r="2"/></svg><span data-i18n="godr.title">Go Dr.</span></h1>
+      </div>
+      <div class="page-header-actions">
+        <button class="btn btn-primary btn-sm" id="godr-check" type="button" data-i18n="godr.checkNow">Check now</button>
+      </div>
+    </div>
+    <div class="godr-sub" data-i18n="godr.sub">System health, connection and page status — auto-refreshes every 30 s</div>
+  </div>
+
+    <!-- KPI cards -->
+    <div class="godr-kpis">
+      <div class="godr-kpi">
+        <div class="godr-kpi-top">
+          <span class="godr-kpi-ico ico-health"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></svg></span>
+          <span class="godr-kpi-label" data-i18n="godr.kpi.health">System health</span>
+        </div>
+        <div class="godr-kpi-val"><span id="godr-kpi-score">—</span><span class="godr-kpi-unit">/100</span></div>
+        <div class="godr-kpi-sub" id="godr-kpi-status">…</div>
+      </div>
+      <div class="godr-kpi">
+        <div class="godr-kpi-top">
+          <span class="godr-kpi-ico ico-pages"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M17.5 14.5v6M14.5 17.5h6"/></svg></span>
+          <span class="godr-kpi-label" data-i18n="godr.kpi.pages">Pages OK</span>
+        </div>
+        <div class="godr-kpi-val"><span id="godr-kpi-pages">—</span></div>
+        <div class="godr-kpi-sub" id="godr-kpi-pages-sub">…</div>
+      </div>
+      <div class="godr-kpi">
+        <div class="godr-kpi-top">
+          <span class="godr-kpi-ico ico-avg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+          <span class="godr-kpi-label" data-i18n="godr.kpi.avgLoad">Avg page load</span>
+        </div>
+        <div class="godr-kpi-val"><span id="godr-kpi-avg">—</span></div>
+        <div class="godr-kpi-sub" id="godr-kpi-avg-sub">…</div>
+      </div>
+      <div class="godr-kpi">
+        <div class="godr-kpi-top">
+          <span class="godr-kpi-ico ico-conn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13a10 10 0 0 1 14 0"/><path d="M8.5 16.5a5 5 0 0 1 7 0"/><path d="M2 8.8a15 15 0 0 1 20 0"/><path d="M12 20h.01"/></svg></span>
+          <span class="godr-kpi-label" data-i18n="godr.kpi.conn">Connection</span>
+        </div>
+        <div class="godr-kpi-val"><span id="godr-kpi-rtt">—</span></div>
+        <div class="godr-kpi-sub" id="godr-kpi-rtt-sub">…</div>
+      </div>
+      <div class="godr-kpi">
+        <div class="godr-kpi-top">
+          <span class="godr-kpi-ico ico-issues"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4M12 17h.01"/></svg></span>
+          <span class="godr-kpi-label" data-i18n="godr.kpi.issues">Open issues</span>
+        </div>
+        <div class="godr-kpi-val"><span id="godr-kpi-issues">—</span></div>
+        <div class="godr-kpi-sub" id="godr-kpi-issues-sub">…</div>
+      </div>
+    </div>
+
+    <!-- Connection alert (reason + fix) -->
+    <div class="godr-alert" id="godr-alert" role="alert" hidden></div>
+
+    <!-- Charts row: speedometer | RTT trend | severity donut -->
+    <div class="godr-charts3">
+      <div class="card">
+        <div class="card-header"><div class="card-title" data-i18n="godr.chart.health">Health score</div><span class="godr-dot" id="godr-dot"></span></div>
+        <div class="card-body">
+          <div class="godr-chart godr-chart-sq" id="godr-gauge"></div>
+          <div class="godr-meta" id="godr-meta"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title" data-i18n="godr.chart.rtt">RTT trend</div></div>
+        <div class="card-body">
+          <div class="godr-chart godr-chart-sq" id="godr-line"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title" data-i18n="godr.chart.sev">Issues by severity</div></div>
+        <div class="card-body">
+          <div class="godr-chart godr-chart-sq" id="godr-donut"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Page load times bar chart -->
+    <div class="card" style="margin-top:16px">
+      <div class="card-header"><div class="card-title" data-i18n="godr.chart.loads">Page load times</div></div>
+      <div class="card-body">
+        <div class="godr-chart godr-chart-wide" id="godr-bars"></div>
+      </div>
+    </div>
+
+    <!-- Per-page status table -->
+    <div class="card" style="margin-top:16px">
+      <div class="card-header">
+        <div class="card-title" data-i18n="godr.pages.title">Per-page status</div>
+        <span class="caption-muted" id="godr-count"></span>
+      </div>
+      <div class="card-body">
+        <div class="table-wrap">
+          <table class="table godr-table">
+            <thead>
+              <tr>
+                <th data-i18n="godr.col.page">Page</th>
+                <th data-i18n="godr.col.status">Status</th>
+                <th data-i18n="godr.col.load">Load time</th>
+                <th data-i18n="godr.col.errors">Errors</th>
+                <th data-i18n="godr.col.problem">Problem</th>
+                <th data-i18n="godr.col.fix">Suggested fix</th>
+              </tr>
+            </thead>
+            <tbody id="godr-pages"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Detected problems — LAST -->
+    <div class="card" style="margin-top:16px">
+      <div class="card-header">
+        <div class="card-title" data-i18n="godr.problems.title">Detected problems</div>
+        <span class="caption-muted" id="godr-problem-count"></span>
+      </div>
+      <div class="card-body">
+        <div id="godr-problems"><div class="godr-clear">…</div></div>
+      </div>
+    </div>
+  </div>
+  </main>
+</body>
+</html>

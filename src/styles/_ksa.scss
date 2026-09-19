@@ -1,9 +1,6 @@
 // HR + Operations — Saudi/KSA presentation (Arabic type, SAR numerals, Hijri).
-
-// Arabic-first font stack when the app language is Arabic.
-html[lang="ar"] body {
-  font-family: "IBM Plex Sans Arabic", "Inter", "Segoe UI", Tahoma, sans-serif;
-}
+// The Arabic font stack itself lives in _tokens.scss (html[lang='ar'] → --font)
+// so inputs, the command palette and popovers inherit it too.
 
 // SAR money: tabular numerals so columns align in both languages.
 .sar {

@@ -154,12 +154,12 @@ table.dataTable thead th:hover .dt-column-order { opacity: 1; }
 // Active ascending
 table.dataTable thead th.dt-ordering-asc .dt-column-order {
   opacity: 1;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 14'%3E%3Cpath fill='%231ABB9C' d='M5 1L1 5h8z'/%3E%3Cpath fill='%23d8dee5' d='M5 13L1 9h8z'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 14'%3E%3Cpath fill='%23f97316' d='M5 1L1 5h8z'/%3E%3Cpath fill='%23d8dee5' d='M5 13L1 9h8z'/%3E%3C/svg%3E");
 }
 // Active descending
 table.dataTable thead th.dt-ordering-desc .dt-column-order {
   opacity: 1;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 14'%3E%3Cpath fill='%23d8dee5' d='M5 1L1 5h8z'/%3E%3Cpath fill='%231ABB9C' d='M5 13L1 9h8z'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 14'%3E%3Cpath fill='%23d8dee5' d='M5 1L1 5h8z'/%3E%3Cpath fill='%23f97316' d='M5 13L1 9h8z'/%3E%3C/svg%3E");
 }
 // Subtle bg + clear focus on the order span (it has tabindex=0)
 .dt-column-order:focus-visible {

@@ -21,10 +21,10 @@
 .form-control {
   display: block;
   width: 100%;
-  height: 34px;
+  height: var(--control-h);
   padding: 0 var(--space-3);
   font: inherit;
-  font-size: 13px;
+  font-size: calc(14px * var(--font-factor));
   color: var(--text);
   background: var(--bg-surface);
   border: 1px solid var(--border-color);
@@ -385,7 +385,7 @@ input[type="range"].slider:focus-visible {
   cursor: pointer;
   opacity: 0.65;
 }
-.tag-input .tag-pill button:hover { opacity: 1; background: rgba(26, 187, 156, 0.18); }
+.tag-input .tag-pill button:hover { opacity: 1; background: rgba(var(--primary-rgb), 0.18); }
 .tag-input input {
   flex: 1;
   min-width: 100px;

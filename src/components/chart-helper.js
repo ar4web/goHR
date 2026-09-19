@@ -32,16 +32,12 @@ function tokens() {
   };
 }
 
-export function chartTokens() {
-  return tokens();
-}
-
 // Pure + node-safe: RTL mirroring policy for cartesian charts.
 //  - 'hbar' (horizontal bars, values on x): mirror so bars grow right-to-left.
 //  - 'time' (chronological x): NEVER mirrored — time flows left-to-right in
 //    both locales; flipping it would lie about trends.
 //  - null/other: untouched (pies, donuts, rings have no reading direction).
-export function applyRtl(option, dir, mode) {
+function applyRtl(option, dir, mode) {
   if (dir !== 'ar' || mode !== 'hbar') {
     return option;
   }
@@ -76,6 +72,7 @@ async function loadEcharts() {
         charts.PieChart,
         charts.BarChart,
         charts.LineChart,
+        charts.GaugeChart,
         components.TitleComponent,
         components.TooltipComponent,
         components.LegendComponent,
@@ -189,15 +186,3 @@ export function renderEchart(el, build, summary, opts = {}) {
   return entry;
 }
 
-export function disposeEchart(el) {
-  const i = mounted.findIndex(m => m.el === el);
-  if (i < 0) {
-    return;
-  }
-  try {
-    mounted[i].instance && mounted[i].instance.dispose();
-  } catch (_e) {
-    /* noop */
-  }
-  mounted.splice(i, 1);
-}
