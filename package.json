@@ -17,9 +17,12 @@
     "vite": "^8.2.0"
   },
   "dependencies": {
+    "@fontsource/ibm-plex-sans-arabic": "^5.0.13",
+    "@fontsource/inter": "^5.0.19",
     "datatables.net": "^3.0.1",
     "echarts": "^6.1.0",
     "leaflet": "^1.9.4",
+    "qrcode-generator": "^2.0.4",
     "xlsx": "^0.18.5"
   }
 }

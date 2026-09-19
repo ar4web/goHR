@@ -54,7 +54,7 @@
 }
 
 .sidebar-brand-row {
-  height: 56px;
+  height: var(--topbar-h);
   display: flex;
   align-items: center;
   gap: 4px;
@@ -66,7 +66,7 @@
   flex: 1 1 auto;
   min-width: 0;
   height: 100%;
-  padding-inline-start: 16px;
+  padding-inline-start: 24px;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -75,14 +75,14 @@
 .brand-icon {
   width: 28px; height: 28px;
   background: var(--primary);
-  border-radius: 6px;
+  border-radius: var(--radius);
   display: flex; align-items: center; justify-content: center;
   color: var(--on-primary);
   font-weight: 700;
   font-size: 13px;
 }
 .brand-name {
-  font-size: 15px;
+  font-size: calc(15px * var(--font-factor));
   font-weight: 600;
   color: #fff;
   letter-spacing: -0.2px;
@@ -97,36 +97,80 @@
 .sidebar-nav {
   flex: 1;
   overflow-y: auto;
-  padding: 8px 0;
+  padding: 0 0 12px;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.12) transparent;
 }
-.sidebar-nav::-webkit-scrollbar { width: 3px; }
-.sidebar-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 3px; }
+.sidebar-nav::-webkit-scrollbar { width: 4px; }
+.sidebar-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 4px; }
 
-.nav-group { padding: 0 8px; margin-bottom: 14px; }
-.nav-group + .nav-group { margin-top: 6px; }
+// ── Sidebar search (12px under the logo row, 16px above the first item) ──
+.sidebar-search {
+  margin: 12px 24px 16px;
+  height: 38px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid transparent;
+  border-radius: 10px;
+  transition: border-color 120ms;
+}
+.sidebar-search:focus-within { border-color: rgba(255, 255, 255, 0.14); }
+.sidebar-search svg { width: 16px; height: 16px; color: var(--sidebar-text-muted); flex-shrink: 0; }
+.sidebar-search input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  background: none;
+  border: 0;
+  outline: none;
+  color: var(--sidebar-text-active);
+  font: inherit;
+  font-size: 13px;
+}
+.sidebar-search input::placeholder { color: var(--sidebar-text-muted); }
+.sidebar-search input::-webkit-search-cancel-button { -webkit-appearance: none; }
+
+.nav-group { padding: 0 24px; margin-bottom: 0; }
+.nav-group + .nav-group { margin-top: 0; }
+.nav-group[hidden] { display: none; }
 .nav-label {
-  padding: 16px 12px 4px;
-  font-size: 10px;
+  margin: 24px 0 10px;
+  padding: 0 12px;
+  font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: #98a5b8;
+  letter-spacing: 0.05em;
+  color: var(--sidebar-text-muted);
 }
 
 .nav-link {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 6px 12px;
-  border-radius: var(--radius-sm);
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
   color: var(--sidebar-text);
-  font-size: 13px;
-  font-weight: var(--font-weight-normal);
+  font-size: calc(14px * var(--font-factor));
+  line-height: 1.5;
+  font-weight: var(--font-weight-medium);
   text-decoration: none;
   cursor: pointer;
   transition: background 120ms, color 120ms;
-  margin-bottom: 1px;
-  min-height: 32px;
+  margin-bottom: 4px;
+  min-height: 44px;
+  position: relative;
+}
+.nav-link[hidden] { display: none; }
+.nav-link .icon {
+  width: 20px;
+  height: 20px;
+  opacity: 0.9;
+  flex-shrink: 0;
 }
 .nav-link:hover {
   color: var(--sidebar-text-hover);
@@ -138,12 +182,17 @@
   background: var(--sidebar-active);
   font-weight: var(--font-weight-medium);
 }
-.nav-link .icon {
-  width: 18px; height: 18px;
-  opacity: 0.75;
-  flex-shrink: 0;
+.nav-link.active::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 0;
+  top: 9px;
+  bottom: 9px;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--primary);
 }
-.nav-link:hover .icon, .nav-link.active .icon { opacity: 0.85; }
+.nav-link:hover .icon, .nav-link.active .icon { opacity: 1; }
 .nav-link .badge {
   margin-inline-start: auto;
   font-size: 10px;
@@ -181,12 +230,12 @@ body.page-leave { opacity: 0; }
   display: flex;
   flex-direction: column;
   position: relative;
-  padding: 2px 0 8px 28px;
+  padding: 2px 0 8px 44px;
 }
 .nav-pages::before {
   content: '';
   position: absolute;
-  inset-inline-start: 19px;
+  inset-inline-start: 35px;
   top: 2px;
   bottom: 10px;
   width: 1px;
@@ -196,14 +245,17 @@ body.page-leave { opacity: 0; }
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 12px;
-  font-size: 12.5px;
+  padding: 8px 12px;
+  font-size: calc(13px * var(--font-factor));
   color: var(--sidebar-text);
-  border-radius: var(--radius-sm);
+  border-radius: 8px;
   text-decoration: none;
-  margin: 1px 0;
+  margin: 0;
+  min-height: 36px;
   transition: background 120ms, color 120ms;
 }
+.nav-page + .nav-page { margin-top: 4px; }
+.nav-page[hidden] { display: none; }
 .nav-page:hover {
   color: var(--sidebar-text-hover);
   background: var(--sidebar-hover);
@@ -231,8 +283,8 @@ body.page-leave { opacity: 0; }
   top: 0;
   inset-inline-start: var(--sidebar-w);
   inset-inline-end: 0;
-  height: 56px;
-  background: rgba(255,255,255,0.85);
+  height: var(--topbar-h);
+  background: var(--topbar-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border-color);
@@ -244,6 +296,145 @@ body.page-leave { opacity: 0; }
   transition: left 220ms cubic-bezier(0.2, 0, 0, 1);
 }
 .topbar-left { display: flex; align-items: center; gap: var(--space-3); }
+.topbar-right { display: flex; align-items: center; gap: var(--space-2); }
+
+// Theme engine toggle (light ⇄ dark). Moon shows in light mode (action:
+// go dark), sun shows in dark mode (action: go light).
+// Icon-only ghost buttons — no border, no filled circle; only a soft tint
+// on hover. Search, theme, bell, language and the Apps link share this
+// treatment; the active Apps link tints orange (color only, no pill).
+.topbar-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: color 120ms, background 120ms, transform 120ms;
+}
+.topbar-icon-btn:hover {
+  color: var(--primary);
+  background: var(--bg-surface-secondary);
+}
+a.topbar-icon-btn { text-decoration: none; }
+.topbar-icon-btn.active {
+  color: var(--primary);
+}
+.topbar-icon-btn:active { transform: scale(0.94); }
+.topbar-icon-btn:focus-visible {
+  outline: 2px solid var(--primary-dk);
+  outline-offset: 1px;
+}
+// Every topbar glyph shares one size, stroke and round caps so the set
+// reads as a single icon pack.
+.topbar-icon-btn svg {
+  width: var(--topbar-icon-size);
+  height: var(--topbar-icon-size);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+:root[data-theme='light'] .theme-icon-sun { display: none; }
+:root[data-theme='dark'] .theme-icon-moon { display: none; }
+:root[data-theme='dark'] .theme-icon-sun { color: var(--yellow); }
+
+// Count bubbles on bell / mail icons.
+.topbar-alert-btn { position: relative; }
+.topbar-btn-dot {
+  position: absolute;
+  top: 2px;
+  inset-inline-end: 2px;
+  min-width: 15px;
+  height: 15px;
+  padding: 0 3px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: var(--red);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
+  border: 2px solid var(--topbar-bg);
+  pointer-events: none;
+}
+.topbar-btn-dot-blue { background: var(--blue); }
+
+// Profile trigger — avatar only, no chip border/name/chevron.
+.topbar-user {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  border-radius: 50%;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 120ms;
+}
+.topbar-user:hover { background: var(--bg-surface-secondary); }
+.topbar-user-avatar {
+  width: 34px;
+  height: 34px;
+  font-size: 13px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dk));
+  color: var(--on-primary);
+  font-size: 11px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 600px) {
+  .topbar { gap: 4px; padding-inline: 10px; }
+  .topbar-right { gap: 2px; }
+  .topbar-icon-btn { width: 40px; height: 40px; }
+  .topbar-user { width: 38px; height: 38px; }
+}
+
+// ────────────────────────
+//  SIDEBAR FOOTER — settings gear pinned to the bottom-left corner
+// ────────────────────────
+.sidebar-footer {
+  flex-shrink: 0;
+  padding: 24px;
+  border-top: 1px solid var(--sidebar-border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.sidebar-footer .nav-link { margin-bottom: 0; }
+.sidebar-footer .settings-toggle { flex: 1 1 auto; }
+// Icon-only sign out beside Settings
+.sidebar-logout {
+  flex: 0 0 auto;
+  width: 44px;
+  min-height: 44px;
+  padding: 0;
+  justify-content: center;
+  color: #6b7280;
+}
+.sidebar-logout .icon { color: #6b7280; opacity: 1; width: 20px; height: 20px; }
+.sidebar-logout:hover { color: var(--sidebar-text-hover); }
+.sidebar-logout:hover .icon { color: var(--sidebar-text-hover); }
+button.settings-toggle.nav-link {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+  text-align: start;
+}
+.settings-toggle .icon { width: 20px; height: 20px; opacity: 0.9; }
+.settings-toggle:hover .icon { opacity: 1; }
 
 // Sidebar toggle lives in the dark sidebar brand row — same 34px target,
 // tinted for the dark rail so it aligns with the rail width, not the topbar.
@@ -264,6 +455,26 @@ body.page-leave { opacity: 0; }
   flex-shrink: 0;
 }
 .sidebar-brand-row .sidebar-toggle:hover { background: var(--sidebar-hover); color: var(--sidebar-text-active); }
+
+// The collapse toggle hides into the logo row: it fades in when you hover
+// (or keyboard-focus) the brand row, so the expanded sidebar reads as pure
+// navigation. Always visible in the collapsed rail (it is the expand
+// control) and on touch devices (no hover).
+@media (min-width: 769px) and (hover: hover) {
+  body:not(.sidebar-rail) .sidebar-brand-row .sidebar-toggle {
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 150ms ease, transform 180ms cubic-bezier(0.2, 0, 0, 1), background 120ms, color 120ms;
+  }
+  body:not(.sidebar-rail) .sidebar-brand-row:hover .sidebar-toggle,
+  body:not(.sidebar-rail) .sidebar-brand-row:focus-within .sidebar-toggle {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sidebar-brand-row .sidebar-toggle { transition: none; }
+}
 // Mobile-only drawer opener in the topbar (desktop uses the sidebar toggle).
 .topbar-menu {
   display: none;
@@ -279,7 +490,7 @@ body.page-leave { opacity: 0; }
   transition: background 120ms, color 120ms;
 }
 .topbar-menu:hover { background: var(--body-bg); color: var(--text); }
-.topbar-menu svg { width: 22px; height: 22px; }
+.topbar-menu svg { width: 26px; height: 26px; }
 .sidebar-toggle svg { width: 22px; height: 22px; }
 // Gemini-style crossfade: both icons stack, opacity/scale animates on swap.
 .sidebar-toggle { position: relative; }
@@ -305,13 +516,13 @@ body.page-leave { opacity: 0; }
 }
 .search-box input {
   width: 100%;
-  height: 32px;
+  height: var(--btn-h);
   padding: 0 10px 0 32px;
   background: var(--body-bg);
   border: 1px solid var(--border-color);
   border-radius: var(--radius);
   font: inherit;
-  font-size: 13px;
+  font-size: calc(13px * var(--font-factor));
   color: var(--text);
   outline: none;
   transition: border-color 150ms, box-shadow 150ms;
@@ -347,7 +558,7 @@ body.page-leave { opacity: 0; }
 // ────────────────────────
 .main {
   margin-inline-start: var(--sidebar-w);
-  padding-top: 56px;
+  padding-top: var(--topbar-h);
   min-height: 100vh;
   transition: margin-left 220ms cubic-bezier(0.2, 0, 0, 1);
 }
@@ -409,7 +620,8 @@ body.page-leave { opacity: 0; }
   .col-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 768px) {
-  .sidebar {
+.sidebar {
+    width: min(var(--sidebar-w), 84vw);
     transform: translateX(-100%);
     transition: transform 220ms ease;
     will-change: transform;
@@ -440,7 +652,7 @@ body.page-leave { opacity: 0; }
 // the drawer instead.
 @media (min-width: 769px) {
   body.sidebar-rail {
-    --sidebar-w: 64px;
+    --sidebar-w: 76px;
   }
   body.sidebar-rail .sidebar { overflow: visible; }
   body.sidebar-rail .sidebar-brand-row {
@@ -454,7 +666,20 @@ body.page-leave { opacity: 0; }
     justify-content: center;
   }
   body.sidebar-rail .brand-name { display: none; }
-  body.sidebar-rail .nav-group { padding: 0 8px; }
+  body.sidebar-rail .nav-group { padding: 0 12px; }
+  body.sidebar-rail .sidebar-search { display: none; }
+  body.sidebar-rail .sidebar-footer {
+    flex-direction: column;
+    padding: 16px 0;
+    gap: 4px;
+  }
+  body.sidebar-rail .sidebar-footer .settings-toggle,
+  body.sidebar-rail .sidebar-logout {
+    flex: 0 0 auto;
+    width: 44px;
+    padding: 0;
+    justify-content: center;
+  }
   body.sidebar-rail .nav-label { display: none; }
   body.sidebar-rail .nav-link {
     justify-content: center;
@@ -475,15 +700,15 @@ body.page-leave { opacity: 0; }
   body.sidebar-rail .nav-link[data-rail-label]::after {
     content: attr(data-rail-label);
     position: absolute;
-    inset-inline-start: calc(100% + 12px);
+    inset-inline-start: calc(100% + 8px);
     top: 50%;
     transform: translateY(-50%) translateX(-4px);
     background: var(--text);
     color: var(--bg-surface);
-    font-size: 11.5px;
+    font-size: 12px;
     font-weight: var(--font-weight-medium);
-    padding: 5px 9px;
-    border-radius: var(--radius-sm);
+    padding: 12px;
+    border-radius: 6px;
     white-space: nowrap;
     pointer-events: none;
     opacity: 0;

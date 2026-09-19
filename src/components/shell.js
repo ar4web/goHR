@@ -5,6 +5,7 @@
 // file), render it from the same string templates. Either way, mountShell()
 // always wires up runtime behavior (mobile drawer, desktop rail).
 
+import { signOut } from './session.js';
 import { renderShell } from './shell-render.js';
 
 function injectShellIfMissing() {
@@ -273,6 +274,43 @@ function bindSidebarToggle() {
  * (the common case), this only wires up runtime behavior — mobile drawer,
  * desktop rail, link prefetch.
  */
+// Sidebar search — filters sections live; Esc clears. Hides non-matching
+// links and any group left empty.
+function bindSidebarSearch() {
+  const input = document.getElementById('sidebar-search');
+  const nav = document.querySelector('.sidebar-nav');
+  if (!input || !nav) {
+    return;
+  }
+  const apply = () => {
+    const q = input.value.trim().toLowerCase();
+    nav.querySelectorAll('.nav-group').forEach(group => {
+      let visible = 0;
+      group.querySelectorAll('.nav-link, .nav-page').forEach(link => {
+        const text = link.querySelector('.nav-text')?.textContent.toLowerCase() || '';
+        const show = !q || text.includes(q);
+        link.hidden = !show;
+        if (show) {visible += 1;}
+      });
+      group.hidden = visible === 0;
+    });
+  };
+  input.addEventListener('input', apply);
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      input.value = '';
+      apply();
+    }
+  });
+}
+
+// Sidebar footer sign out — same session teardown as the topbar panel.
+function bindSidebarLogout() {
+  document.getElementById('sidebar-logout')?.addEventListener('click', () => {
+    signOut();
+  });
+}
+
 export function mountShell() {
   const body = document.body;
   if (body.dataset.shell !== 'admin') {
@@ -283,4 +321,6 @@ export function mountShell() {
   migrateStorageKeys();
   bindLinkPrefetch();
   bindSidebarToggle();
+  bindSidebarSearch();
+  bindSidebarLogout();
 }

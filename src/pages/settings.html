@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="nav.settings">Settings | goHR</title>
+<link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
+<script type="module" src="/src/main.js"></script>
+</head>
+<body data-shell="admin" data-page="settings" data-breadcrumb="Home > Settings">
+
+<main class="main">
+<div class="page-wrapper" data-hr-settings>
+
+  <div class="page-header">
+    <div class="page-header-row">
+      <div>
+        <div class="page-pretitle" data-i18n="hr.ui.pretitle">HR &amp; Operations</div>
+        <h1 class="page-title" data-i18n="nav.settings">Settings</h1>
+      </div>
+    </div>
+  </div>
+
+  <div class="set-layout">
+    <nav class="set-rail" role="tablist" aria-label="Settings sections">
+    <div class="set-rail-grp" data-grp="org">
+      <button class="set-rail-group" type="button" data-grp-toggle="org" aria-expanded="true">
+        <span class="set-rail-gicon" data-rail-icon="users"></span>
+        <span class="set-rail-glabel" data-i18n="set.groupOrg">Organization</span>
+        <svg class="set-rail-chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="set-rail-items">
+      <button class="set-rail-item active" data-set-sec="app" role="tab" aria-selected="true" type="button"><span data-i18n="set.system">System &amp; app</span></button>
+      <button class="set-rail-item" data-set-sec="general" role="tab" aria-selected="false" type="button"><span data-i18n="set.general">Company</span></button>
+      </div>
+    </div>
+    <div class="set-rail-grp" data-grp="prefs">
+      <button class="set-rail-group" type="button" data-grp-toggle="prefs" aria-expanded="true">
+        <span class="set-rail-gicon" data-rail-icon="settings"></span>
+        <span class="set-rail-glabel" data-i18n="set.groupPrefs">Preferences</span>
+        <svg class="set-rail-chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="set-rail-items">
+      <button class="set-rail-item" data-set-sec="appearance" role="tab" aria-selected="false" type="button"><span data-i18n="set.appearance">Appearance</span></button>
+      <button class="set-rail-item" data-set-sec="theme" role="tab" aria-selected="false" type="button"><span data-i18n="set.theme">Theme studio</span></button>
+      <button class="set-rail-item" data-set-sec="notifications" role="tab" aria-selected="false" type="button"><span data-i18n="set.notifications">Notifications</span></button>
+      </div>
+    </div>
+    <div class="set-rail-grp" data-grp="modules">
+      <button class="set-rail-group" type="button" data-grp-toggle="modules" aria-expanded="true">
+        <span class="set-rail-gicon" data-rail-icon="grid"></span>
+        <span class="set-rail-glabel" data-i18n="set.groupModules">Modules</span>
+        <svg class="set-rail-chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="set-rail-items">
+      <button class="set-rail-item" data-set-sec="saudization" role="tab" aria-selected="false" type="button"><span data-i18n="set.saudization">Saudization &amp; licence</span></button>
+      <button class="set-rail-item" data-set-sec="leave" role="tab" aria-selected="false" type="button"><span data-i18n="nav.leave">Leave</span></button>
+      <button class="set-rail-item" data-set-sec="payroll" role="tab" aria-selected="false" type="button"><span data-i18n="nav.payroll">Payroll</span></button>
+      <button class="set-rail-item" data-set-sec="attendance" role="tab" aria-selected="false" type="button"><span data-i18n="nav.attendance">Attendance</span></button>
+      <button class="set-rail-item" data-set-sec="invoicing" role="tab" aria-selected="false" type="button"><span data-i18n="nav.invoices">Invoicing</span></button>
+      <button class="set-rail-item" data-set-sec="expenses" role="tab" aria-selected="false" type="button"><span data-i18n="nav.expenses">Expenses</span></button>
+      <button class="set-rail-item" data-set-sec="files" role="tab" aria-selected="false" type="button"><span data-i18n="nav.files">Files</span></button>
+      <button class="set-rail-item" data-set-sec="apps" role="tab" aria-selected="false" type="button"><span data-i18n="nav.apps">Apps</span></button>
+      </div>
+    </div>
+    <div class="set-rail-grp" data-grp="data">
+      <button class="set-rail-group" type="button" data-grp-toggle="data" aria-expanded="true">
+        <span class="set-rail-gicon" data-rail-icon="refresh"></span>
+        <span class="set-rail-glabel" data-i18n="set.groupData">Data</span>
+        <svg class="set-rail-chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="set-rail-items">
+      <button class="set-rail-item" data-set-sec="data" role="tab" aria-selected="false" type="button"><span data-i18n="set.data">Data</span></button>
+      </div>
+    </div>
+    </nav>
+
+    <div class="set-panes">
+      <!-- SYSTEM & APP -->
+      <section class="set-sec" data-set-panel="app">
+        <div class="card">
+          <div class="card-header"><div class="card-title" data-i18n="set.system">System &amp; app</div></div>
+          <div class="card-body">
+            <div class="set-sub" data-i18n="set.systemSub">The product identity shown in the sidebar and browser tab — separate from the company's legal identity used on documents</div>
+            <label class="modal-form-row"><span data-i18n="set.appName">App name</span><input type="text" class="form-control" id="set-app-name" placeholder="goHR"></label>
+            <div class="set-row">
+              <div><div class="cell-strong" data-i18n="set.appLogo">System logo</div><div class="caption-muted" style="font-size:11.5px" data-i18n="set.appLogoSub">Square mark, PNG or SVG, up to 300 KB</div></div>
+              <div class="set-inline">
+                <span class="set-logo-preview" id="set-app-logo-preview"></span>
+                <label class="btn btn-outline btn-sm" style="cursor:pointer;margin:0" data-i18n="set.uploadLogo">Upload<input type="file" id="set-app-logo" accept="image/png,image/jpeg,image/svg+xml" hidden></label>
+                <button class="btn btn-ghost btn-sm" id="set-app-logo-reset" type="button" data-i18n="set.resetLogo">Reset</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- COMPANY -->
+      <section class="set-sec" data-set-panel="general" hidden>
+        <div class="card">
+          <div class="card-header"><div class="card-title" data-i18n="set.general">Company</div></div>
+          <div class="card-body">
+            <div class="set-sub" data-i18n="set.generalSub">Shown in the sidebar, documents and ZATCA invoices</div>
+            <div class="set-row">
+              <div><div class="cell-strong" data-i18n="set.activeCompany">Active company</div><div class="caption-muted" style="font-size:11.5px" data-i18n="set.activeCompanySub">Up to 3 companies; branding follows the active one</div></div>
+              <div class="set-inline">
+                <select class="form-control" id="set-company" style="min-width:170px"></select>
+                <button class="btn btn-outline btn-sm" id="set-company-add" type="button" data-i18n="set.addCompany">Add company</button>
+              </div>
+            </div>
+            <div class="set-row">
+              <div><div class="cell-strong" data-i18n="set.language">Default language</div><div class="caption-muted" style="font-size:11.5px" data-i18n="set.languageSub">Used when the visitor has not chosen yet</div></div>
+              <select class="form-control" id="set-language" style="min-width:130px"><option value="en">English</option><option value="ar">العربية</option></select>
+            </div>
+            <div class="dc-form-2col">
+              <label class="modal-form-row"><span data-i18n="set.companyName">Name (English)</span><input type="text" class="form-control" id="set-name-en"></label>
+              <label class="modal-form-row"><span data-i18n="set.companyNameAr">Name (Arabic)</span><input type="text" class="form-control" id="set-name-ar"></label>
+            </div>
+            <div class="dc-form-2col">
+              <label class="modal-form-row"><span data-i18n="set.cr">CR number</span><input type="text" class="form-control" id="set-cr"></label>
+              <label class="modal-form-row"><span data-i18n="set.vatNo">VAT number</span><input type="text" class="form-control" id="set-vat"></label>
+            </div>
+            <div class="dc-form-2col">
+              <label class="modal-form-row"><span data-i18n="set.phone">Phone</span><input type="text" class="form-control" id="set-phone"></label>
+              <label class="modal-form-row"><span data-i18n="set.email">Email</span><input type="email" class="form-control" id="set-email"></label>
+            </div>
+            <label class="modal-form-row"><span data-i18n="set.address">Address</span><input type="text" class="form-control" id="set-address"></label>
+            <div class="set-row" style="border-bottom:0">
+              <div><div class="cell-strong" data-i18n="set.companyLogo">Company logo</div><div class="caption-muted" style="font-size:11.5px" data-i18n="set.companyLogoSub">Printed on letters, invoices and payslips — up to 500 KB</div></div>
+              <div class="set-inline">
+                <span class="set-logo-preview set-logo-preview-lg" id="set-co-logo-preview"></span>
+                <label class="btn btn-outline btn-sm" style="cursor:pointer;margin:0" data-i18n="set.uploadLogo">Upload<input type="file" id="set-co-logo" accept="image/png,image/jpeg,image/svg+xml" hidden></label>
+                <button class="btn btn-ghost btn-sm" id="set-co-logo-reset" type="button" data-i18n="set.resetLogo">Reset</button>
+              </div>
+            </div>
+            <div class="form-error" id="set-general-err" hidden></div>
+            <div class="set-actions"><button class="btn btn-primary btn-sm" id="set-general-save" type="button" data-i18n="common.save">Save</button></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- APPEARANCE -->
+      <section class="set-sec" data-set-panel="theme" hidden>
+        <div class="card">
+          <div class="card-header"><div class="card-title" data-i18n="set.theme">Theme studio</div></div>
+          <div class="card-body">
+            <div class="set-sub" data-i18n="set.themeSub">One brand theme for the app, papers, payslips, email signature and pop-ups — preview every element live.</div>
+            <div class="set-row">
+              <div><div class="cell-strong" data-i18n="set.accentBrand">Brand accent</div><div class="caption-muted" style="font-size:11.5px" data-i18n="set.accentBrandSub">Buttons, links, papers, payslips, signature, notifications</div></div>
+              <span class="set-inline">
+                <span class="set-swatches" id="set-theme-swatches"></span>
+                <input type="color" class="form-control" style="width:44px;height:32px;padding:2px" id="set-theme-accent" value="#f97316" aria-label="Accent">
+              </span>
+            </div>
+            <div class="set-row">
+              <div><div class="cell-strong" data-i18n="set.docFont">Paper font</div><div class="caption-muted" style="font-size:11.5px" data-i18n="set.docFontSub">Documents, payslips and invoices</div></div>
+              <select class="form-control" id="set-theme-docfont" style="max-width:180px">
+                <option value="sans" data-i18n="set.docSans">Sans (modern)</option>
+                <option value="serif" data-i18n="set.docSerif">Serif (classic)</option>
+              </select>
+            </div>
+            <div class="set-row">
+              <div><div class="cell-strong" data-i18n="set.signStyle">Signature style</div><div class="caption-muted" style="font-size:11.5px" data-i18n="set.signStyleSub">Email signature layout</div></div>
+              <select class="form-control" id="set-theme-signstyle" style="max-width:180px">
+                <option value="modern" data-i18n="set.signModern">Modern</option>
+                <option value="classic" data-i18n="set.signClassic">Classic</option>
+                <option value="minimal" data-i18n="set.signMinimal">Minimal</option>
+              </select>
+            </div>
+            <div class="set-row">
+              <div><div class="cell-strong" data-i18n="set.signLang">Signature language</div><div class="caption-muted" style="font-size:11.5px" data-i18n="set.signLangSub">Which name and address lines to include</div></div>
+              <select class="form-control" id="set-theme-signlang" style="max-width:180px">
+                <option value="both" data-i18n="set.signBoth">Bilingual</option>
+                <option value="en" data-i18n="set.signEn">English</option>
+                <option value="ar" data-i18n="set.signAr">Arabic</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title" data-i18n="set.themeSign">Email signature</div></div>
+          <div class="card-body">
+            <div id="set-sign-preview" class="sign-preview"></div>
+            <div class="set-actions set-inline">
+              <button class="btn btn-outline btn-sm" id="set-sign-copy" type="button" data-i18n="set.signCopy">Copy HTML</button>
+              <button class="btn btn-outline btn-sm" id="set-sign-download" type="button" data-i18n="set.signDownload">Download .html</button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title" data-i18n="set.themePaper">Paper preview</div></div>
+          <div class="card-body">
+            <div id="set-docmock" class="doc-mock" dir="auto"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title" data-i18n="set.themeKit">Elements &amp; buttons preview</div></div>
+          <div class="card-body theme-gallery">
+            <div>
+              <div class="theme-kit-sec-label" data-i18n="set.kitButtons">Buttons</div>
+              <div class="theme-kit-row">
+                <button class="btn btn-primary" type="button" data-i18n="set.kitPrimary">Primary</button>
+                <button class="btn btn-outline" type="button" data-i18n="set.kitOutline">Outline</button>
+                <button class="btn btn-ghost" type="button" data-i18n="set.kitGhost">Ghost</button>
+                <button class="btn btn-primary btn-sm" type="button" data-i18n="set.kitSmall">Small</button>
+                <button class="btn btn-primary btn-lg" type="button" data-i18n="set.kitLarge">Large</button>
+                <button class="btn btn-primary" type="button" disabled data-i18n="set.kitDisabled">Disabled</button>
+              </div>
+            </div>
+            <div>
+              <div class="theme-kit-sec-label" data-i18n="set.kitForms">Forms</div>
+              <div class="theme-kit-row">
+                <input class="form-control" type="text" style="max-width:200px" placeholder="Text input" aria-label="Text input">
+                <select class="form-control" style="max-width:160px" aria-label="Select"><option>Select</option><option>Option B</option></select>
+                <label class="theme-kit-row" style="gap:6px"><input type="checkbox" checked> <span style="font-size:13px">Checkbox</span></label>
+                <label class="theme-kit-row" style="gap:6px"><input type="radio" checked> <span style="font-size:13px">Radio</span></label>
+              </div>
+            </div>
+            <div>
+              <div class="theme-kit-sec-label" data-i18n="set.kitType">Typography</div>
+              <div class="theme-kit-type">
+                <h1 data-i18n="set.kitH1">Heading 1</h1>
+                <h2 data-i18n="set.kitH2">Heading 2</h2>
+                <h3 data-i18n="set.kitH3">Heading 3</h3>
+                <p style="margin:0;font-size:calc(13px * var(--font-factor,1))" data-i18n="set.kitBody">Body text — the quick brown fox jumps over the lazy dog.</p>
+                <small class="caption-muted" data-i18n="set.kitCaption">Sub-heading / caption text</small>
+              </div>
+            </div>
+            <div>
+              <div class="theme-kit-sec-label" data-i18n="set.kitMisc">Chips, table &amp; cards</div>
+              <div class="theme-kit-row" style="margin-bottom:10px">
+                <span class="chip active">Active</span>
+                <span class="chip">Default</span>
+                <a href="#" onclick="return false" style="font-size:13px">A link</a>
+              </div>
+              <table class="theme-kit-table">
+                <thead><tr><th>Employee</th><th>Status</th><th style="text-align:end">Amount</th></tr></thead>
+                <tbody>
+                  <tr><td>Ahmad Ali</td><td><span class="chip active">Active</span></td><td style="text-align:end">10,175</td></tr>
+                  <tr><td>Sara Hassan</td><td><span class="chip">On leave</span></td><td style="text-align:end">8,400</td></tr>
+                </tbody>
+              </table>
+              <div class="theme-kit-card" style="margin-top:10px">
+                <div class="cell-strong">Card title</div>
+                <div class="caption-muted" style="font-size:12px">Supporting text that sits inside a hoverable card surface.</div>
+              </div>
+            </div>
+            <div>
+              <div class="theme-kit-sec-label" data-i18n="set.kitFeedback">Notifications</div>
+              <div class="theme-kit-row">
+                <button class="btn btn-outline btn-sm" id="set-kit-toast-ok" type="button" data-i18n="set.tryToastOk">Success toast</button>
+                <button class="btn btn-outline btn-sm" id="set-kit-toast-warn" type="button" data-i18n="set.tryToastWarn">Warning toast</button>
+                <button class="btn btn-outline btn-sm" id="set-kit-toast-err" type="button" data-i18n="set.tryToastErr">Error toast</button>
+                <button class="btn btn-outline btn-sm" id="set-kit-toast-info" type="button" data-i18n="set.tryToast">Brand toast</button>
+                <button class="btn btn-ghost btn-sm" id="set-kit-dialog" type="button" data-i18n="set.sampleDialog">Open sample dialog</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="set-sec" data-set-panel="appearance" hidden>
+        <div class="card">
+          <div class="card-header"><div class="card-title" data-i18n="set.appearance">Appearance</div></div>
+          <div class="card-body">
+            <div class="set-sub" data-i18n="set.appearanceSub">Fonts, density, radius and colors — theme lives in the header</div>
+            <div class="set-row" style="border-bottom:0;padding-bottom:0">
+              <div><div class="cell-strong" data-i18n="set.customize">Customize</div><div class="caption-muted" style="font-size:11.5px" data-i18n="set.customizeSub">Font &amp; icon size, accent color, radius, density, tables, sidebar width, logo</div></div>
+              <button class="btn btn-primary btn-sm" id="set-open-cz" type="button" data-i18n="set.openCustomize">Open Customize</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SAUDIZATION & LICENCE -->
+      <section class="set-sec" data-set-panel="saudization" hidden>
+        <div class="card">
+          <div class="card-header"><div class="card-title" data-i18n="set.saudization">Saudization &amp; licence</div></div>
+          <div class="card-body">
+            <div class="set-sub" data-i18n="set.saudizationSub">Drives the dashboard Nitaqat gauge and hiring targets</div>
+            <div class="dc-form-2col">
+              <label class="modal-form-row"><span data-i18n="set.activity">Activity</span><input type="text" class="form-control" id="set-nx-activity"></label>
+              <label class="modal-form-row"><span data-i18n="set.sizeClass">Size class</span><input type="text" class="form-control" id="set-nx-size"></label>
+            </div>
+            <label class="modal-form-row"><span data-i18n="set.target">Nitaqat target %</span><input type="number" min="0" max="100" step="1" class="form-control" id="set-nx-target"></label>
+            <div class="set-row" style="border-bottom:0">
+              <div><div class="cell-strong" data-i18n="set.strictAjeer">Strict Ajeer guardrails</div><div class="caption-muted" style="font-size:11.5px" data-i18n="set.strictAjeerSub">Block secondments without consent or an Ajeer reference</div></div>
+              <label class="lg-toggle"><input type="checkbox" id="set-licence-ajeer" checked></label>
+            </div>
+            <div class="form-error" id="set-nx-err" hidden></div>
+            <div class="set-actions"><button class="btn btn-primary btn-sm" id="set-nx-save" type="button" data-i18n="common.save">Save</button></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- NOTIFICATIONS -->
+      <section class="set-sec" data-set-panel="notifications" hidden>
+        <div class="card">
+          <div class="card-header"><div class="card-title" data-i18n="set.notifications">Notifications</div></div>
+          <div class="card-body">
+            <div class="set-sub" data-i18n="set.notifSub">Choose what rings the bell in the topbar</div>
+            <div class="set-row"><div><div class="cell-strong" data-i18n="set.notifHuroob">Huroob alerts</div><div class="caption-muted" style="font-size:11.5px" data-i18n="set.notifHuroobSub">Workers reported absent by Ajeer</div></div><label class="lg-toggle"><input type="checkbox" id="set-nt-huroob"></label></div>
+            <div class="set-row"><div><div class="cell-strong" data-i18n="set.notifDocs">Document expiry</div><div class="caption-muted" style="font-size:11.5px" data-i18n="set.notifDocsSub">Iqama / passport reminders</div></div><label class="lg-toggle"><input type="checkbox" id="set-nt-docs" checked></label></div>
+            <div class="set-row" style="border-bottom:0"><div><div class="cell-strong" data-i18n="set.notifQiwa">Qiwa drafts</div><div class="caption-muted" style="font-size:11.5px" data-i18n="set.notifQiwaSub">Contracts waiting to be sent</div></div><label class="lg-toggle"><input type="checkbox" id="set-nt-qiwa" checked></label></div>
+            <label class="modal-form-row"><span data-i18n="set.docWindow">Remind me before expiry</span>
+              <select class="form-control" id="set-nt-window">
+                <option value="7" data-i18n="set.win7">7 days</option>
+                <option value="15" data-i18n="set.win15">15 days</option>
+                <option value="30" data-i18n="set.win30">30 days</option>
+                <option value="45" data-i18n="set.win45">45 days</option>
+                <option value="60" data-i18n="set.win60">60 days</option>
+              </select>
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <!-- LEAVE -->
+      <section class="set-sec" data-set-panel="leave" hidden>
+        <div class="card">
+          <div class="card-header"><div class="card-title" data-i18n="nav.leave">Leave</div></div>
+          <div class="card-body">
+            <div class="set-sub" data-i18n="set.leaveSub">Annual entitlement used by leave balances and the leave page</div>
+            <div class="dc-form-2col">
+              <label class="modal-form-row"><span data-i18n="set.annualBase">Annual days (first 5 years)</span><input type="number" min="1" max="60" step="1" class="form-control" id="set-lv-base"></label>
+              <label class="modal-form-row"><span data-i18n="set.annualAfter5">Annual days (after 5 years)</span><input type="number" min="1" max="90" step="1" class="form-control" id="set-lv-after5"></label>
+            </div>
+            <div class="form-error" id="set-lv-err" hidden></div>
+            <div class="set-actions"><button class="btn btn-primary btn-sm" id="set-lv-save" type="button" data-i18n="common.save">Save</button></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PAYROLL -->
+      <section class="set-sec" data-set-panel="payroll" hidden>
+        <div class="card">
+          <div class="card-header"><div class="card-title" data-i18n="nav.payroll">Payroll</div></div>
+          <div class="card-body">
+            <div class="set-sub" data-i18n="set.payrollSub">Overtime pricing used when adjusting payslips</div>
+            <label class="modal-form-row"><span data-i18n="set.otMultiplier">Overtime multiplier (× hourly rate)</span><input type="number" min="1" max="3" step="0.05" class="form-control" id="set-pr-ot"></label>
+            <div class="caption-muted" style="font-size:11.5px" data-i18n="set.payrollNote">Statutory default is 1.5× — GOSI rates stay statutory and are not editable</div>
+            <div class="form-error" id="set-pr-err" hidden></div>
+            <div class="set-actions"><button class="btn btn-primary btn-sm" id="set-pr-save" type="button" data-i18n="common.save">Save</button></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ATTENDANCE -->
+      <section class="set-sec" data-set-panel="attendance" hidden>
+        <div class="card">
+          <div class="card-header"><div class="card-title" data-i18n="nav.attendance">Attendance</div></div>
+          <div class="card-body">
+            <div class="set-sub" data-i18n="set.attendanceSub">Grace period before a check-in counts as late</div>
+            <label class="modal-form-row"><span data-i18n="set.graceMin">Late grace (minutes after 08:00)</span><input type="number" min="0" max="120" step="5" class="form-control" id="set-at-grace"></label>
+            <div class="form-error" id="set-at-err" hidden></div>
+            <div class="set-actions"><button class="btn btn-primary btn-sm" id="set-at-save" type="button" data-i18n="common.save">Save</button></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- INVOICING -->
+      <section class="set-sec" data-set-panel="invoicing" hidden>
+        <div class="card">
+          <div class="card-header"><div class="card-title" data-i18n="nav.invoices">Invoicing</div></div>
+          <div class="card-body">
+            <div class="set-sub" data-i18n="set.invoicingSub">VAT rate and payment terms used when invoices are generated</div>
+            <div class="dc-form-2col">
+              <label class="modal-form-row"><span data-i18n="set.vatRate">VAT rate (%)</span><input type="number" min="0" max="100" step="0.5" class="form-control" id="set-iv-vat"></label>
+              <label class="modal-form-row"><span data-i18n="set.dueDays">Payment terms (days after billing date)</span><input type="number" min="0" max="120" step="1" class="form-control" id="set-iv-due"></label>
+            </div>
+            <div class="caption-muted" style="font-size:11.5px" data-i18n="set.invoicingNote">Statutory VAT is 15% — ZATCA QR codes follow this rate</div>
+            <div class="form-error" id="set-iv-err" hidden></div>
+            <div class="set-actions"><button class="btn btn-primary btn-sm" id="set-iv-save" type="button" data-i18n="common.save">Save</button></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- EXPENSES -->
+      <section class="set-sec" data-set-panel="expenses" hidden>
+        <div class="card">
+          <div class="card-header"><div class="card-title" data-i18n="nav.expenses">Expenses</div></div>
+          <div class="card-body">
+            <div class="set-sub" data-i18n="set.expensesSub">The month card on the Expenses page tracks this budget</div>
+            <label class="modal-form-row"><span data-i18n="set.monthlyBudget">Monthly budget (SAR)</span><input type="number" min="0" step="500" class="form-control" id="set-xp-budget"></label>
+            <div class="form-error" id="set-xp-err" hidden></div>
+            <div class="set-actions"><button class="btn btn-primary btn-sm" id="set-xp-save" type="button" data-i18n="common.save">Save</button></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FILES -->
+      <section class="set-sec" data-set-panel="files" hidden>
+        <div class="card">
+          <div class="card-header"><div class="card-title" data-i18n="nav.files">Files</div></div>
+          <div class="card-body">
+            <div class="set-sub" data-i18n="set.filesSub">Upload guard for employee documents</div>
+            <label class="modal-form-row"><span data-i18n="set.maxUpload">Max upload size (MB)</span><input type="number" min="0.5" max="10" step="0.5" class="form-control" id="set-fm-max"></label>
+            <div class="form-error" id="set-fm-err" hidden></div>
+            <div class="set-actions"><button class="btn btn-primary btn-sm" id="set-fm-save" type="button" data-i18n="common.save">Save</button></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- APPS -->
+      <section class="set-sec" data-set-panel="apps" hidden>
+        <div class="card">
+          <div class="card-header"><div class="card-title" data-i18n="nav.apps">Apps</div></div>
+          <div class="card-body">
+            <div class="set-sub" data-i18n="set.appsSub">Defaults for the workspace apps (meetings, mail, chat, assistant)</div>
+            <label class="modal-form-row"><span data-i18n="set.meetingDur">Default meeting length</span>
+              <select class="form-control" id="set-ap-dur">
+                <option value="15">15</option>
+                <option value="30">30</option>
+                <option value="45">45</option>
+                <option value="60">60</option>
+              </select>
+            </label>
+            <div class="caption-muted" style="font-size:11.5px" data-i18n="set.minutes">minutes</div>
+            <label class="modal-form-row" style="margin-top:var(--space-3)"><span data-i18n="set.signature">Mail signature</span><textarea class="form-control" id="set-ap-sig" rows="3" placeholder="HR Department · goHR"></textarea></label>
+            <div class="caption-muted" style="font-size:11.5px" data-i18n="set.signatureSub">Appended to every message you send from Mail</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- DATA -->
+      <section class="set-sec" data-set-panel="data" hidden>
+        <div class="card">
+          <div class="card-header"><div class="card-title" data-i18n="set.data">Data</div></div>
+          <div class="card-body">
+            <div class="set-sub" data-i18n="set.dataSub">Back up your configuration; employee data imports live in each module</div>
+            <div class="set-row" style="border-bottom:0;padding-bottom:0">
+              <div><div class="cell-strong" data-i18n="set.exportJson">Settings backup</div><div class="caption-muted" style="font-size:11.5px" data-i18n="set.exportJsonSub">Download all settings as a JSON file</div></div>
+              <button class="btn btn-outline btn-sm" id="set-export" type="button" data-i18n="set.export">Export</button>
+            </div>
+            <div class="set-row" style="border-bottom:0;padding-bottom:0">
+              <div><div class="cell-strong" data-i18n="set.importJson">Restore backup</div><div class="caption-muted" style="font-size:11.5px" data-i18n="set.importJsonSub">Load a previously exported settings JSON</div></div>
+              <label class="btn btn-outline btn-sm" style="cursor:pointer;margin:0" data-i18n="set.import">Import<input type="file" id="set-import" accept=".json" hidden></label>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+</div>
+</main>
+
+</body>
+</html>

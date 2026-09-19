@@ -1,4 +1,4 @@
-// Lazy Leaflet site map (T2 ┬º3). CircleMarkers only (no image assets, so no
+// Lazy Leaflet site map (T2 §3). CircleMarkers only (no image assets, so no
 // bundler icon-URL pitfalls); markers + popups render even when tiles can't
 // load (offline-tolerant). jsdom-safe: marker DATA is exposed synchronously
 // via data attributes + a text summary, the Leaflet canvas is best-effort.
@@ -32,12 +32,12 @@ export function renderSiteMap(el, cfg = {}) {
   const ar = document.documentElement.lang === 'ar' || document.documentElement.dir === 'rtl';
   const L2 = cfg.labels || { sites: 'Sites', clients: 'Clients', workers: 'workers' };
 
-  // Synchronous, testable, screen-reader honest ΓÇö always rendered.
+  // Synchronous, testable, screen-reader honest — always rendered.
   const total = sites.reduce((s, x) => s + headcountOf(x.id), 0);
   el.setAttribute('data-marker-count', String(sites.length));
   el.setAttribute('data-client-pins', String(clients.length));
   el.setAttribute('role', 'img');
-  const summary = `${L2.sites}: ${sites.length} ┬╖ ${total} ${L2.workers}`;
+  const summary = `${L2.sites}: ${sites.length} · ${total} ${L2.workers}`;
   el.setAttribute('aria-label', summary);
   let sr = el.querySelector(':scope > .sr-only');
   if (!sr) {
@@ -70,11 +70,11 @@ export function renderSiteMap(el, cfg = {}) {
           leaflet
             .circleMarker([s2.lat, s2.lng], {
               radius: radiusFor(n),
-              color: css.getPropertyValue('--primary').trim() || '#1ABB9C',
+              color: css.getPropertyValue('--primary').trim() || '#f97316',
               weight: 2,
               fillOpacity: 0.25
             })
-            .bindTooltip(`${nm} ┬╖ ${n}`, { direction: 'top' })
+            .bindTooltip(`${nm} · ${n}`, { direction: 'top' })
             .on('click', () => cfg.onSelect && cfg.onSelect(s2.id))
             .addTo(siteLayer);
         });

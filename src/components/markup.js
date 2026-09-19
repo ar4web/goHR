@@ -15,3 +15,15 @@ export function escapeHtml(value) {
   }
   return String(value).replace(/[&<>"']/g, (c) => ESC[c]);
 }
+
+// Shared avatar background palette (roster, dossier, attendance, leave,
+// payroll rows all color-code employees from `emp.av`).
+export const AVATAR_BG = {
+  primary: 'var(--avatar-teal)',
+  azure: 'var(--avatar-azure)',
+  purple: 'var(--avatar-purple)',
+  yellow: 'var(--avatar-yellow)',
+  red: 'var(--avatar-red)',
+  green: 'var(--avatar-green)',
+  blue: 'var(--avatar-blue)'
+};

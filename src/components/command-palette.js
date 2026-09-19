@@ -8,6 +8,7 @@ import { NAV } from './shell-render.js';
 import { showToast } from './toast.js';
 import { escapeHtml } from './markup.js';
 import { showModal } from './modal.js';
+import { t, currentLang, LANG_EVENT } from './i18n.js';
 
 let host = null;
 let inputEl = null;
@@ -43,16 +44,18 @@ function buildItems() {
   // Inline actions
   const actions = [
     {
-      label: 'Sign out',
-      keywords: 'sign out logout exit',
+      label: t('common.signOut'),
+      keywords: currentLang() === 'ar'
+        ? 'تسجيل الخروج خروج إغلاق sign out logout exit'
+        : 'sign out logout exit',
       action: () => showModal({
-        title: 'Sign out?',
+        title: t('act.signOutQ'),
         size: 'sm',
-        body: '<p style="font-size:13px;color:var(--text-secondary);line-height:1.6;margin:0">You\'ll need to sign back in to access your dashboard.</p>',
+        body: `<p style="font-size:13px;color:var(--text-secondary);line-height:1.6;margin:0">${escapeHtml(t('act.signOutBody'))}</p>`,
         actions: [
-          { label: 'Cancel', variant: 'ghost' },
-          { label: 'Sign out', variant: 'primary', action: () => {
-            showToast('Signed out', { variant: 'success' });
+          { label: t('common.cancel'), variant: 'ghost' },
+          { label: t('common.signOut'), variant: 'primary', action: () => {
+            showToast(t('act.signedOut'), { variant: 'success' });
             setTimeout(() => { window.location.href = 'login.html'; }, 600);
           } }
         ]
@@ -109,13 +112,13 @@ function applyFilter() {
 
 function renderList() {
   if (!filtered.length) {
-    listEl.innerHTML = '<div class="cmdk-empty">No results</div>';
+    listEl.innerHTML = `<div class="cmdk-empty">${t('cmdk.noResults')}</div>`;
     return;
   }
   // Group results by section while preserving sort order.
   const seen = new Set();
   const html = filtered.map((it, i) => {
-    const sectionLabel = it.kind === 'action' ? 'Actions' : it.section;
+    const sectionLabel = it.kind === 'action' ? t('cmdk.actions') : it.section;
     let header = '';
     if (!seen.has(sectionLabel)) {
       seen.add(sectionLabel);
@@ -166,14 +169,14 @@ function open() {
     <div class="cmdk-dialog" role="dialog" aria-modal="true" aria-label="Command palette">
       <div class="cmdk-input-wrap">
         <svg class="cmdk-search-icon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="7" cy="7" r="5"/><path d="M11 11l3.5 3.5"/></svg>
-        <input class="cmdk-input" type="text" placeholder="Search pages or run a command…" autocomplete="off" spellcheck="false" aria-label="Search">
+        <input class="cmdk-input" type="text" placeholder="${escapeHtml(t('common.searchPh'))}" autocomplete="off" spellcheck="false" aria-label="${escapeHtml(t('common.search'))}">
         <kbd class="cmdk-esc">esc</kbd>
       </div>
       <div class="cmdk-list" role="listbox"></div>
       <div class="cmdk-footer">
-        <span><kbd>↑</kbd><kbd>↓</kbd> navigate</span>
-        <span><kbd>↵</kbd> select</span>
-        <span><kbd>esc</kbd> close</span>
+        <span><kbd>↑</kbd><kbd>↓</kbd> ${escapeHtml(t('cmdk.navigate'))}</span>
+        <span><kbd>↵</kbd> ${escapeHtml(t('cmdk.select'))}</span>
+        <span><kbd>esc</kbd> ${escapeHtml(t('common.close'))}</span>
       </div>
     </div>
   `;
@@ -201,6 +204,22 @@ function open() {
   renderList();
   inputEl.focus();
 }
+
+// If the language is toggled while the palette is open, re-translate its
+// visible chrome (placeholder + footer hints).
+function localizeOpenPalette() {
+  if (!host || !inputEl) {return;}
+  inputEl.setAttribute('placeholder', t('common.searchPh'));
+  inputEl.setAttribute('aria-label', t('common.search'));
+  const footer = host.querySelector('.cmdk-footer');
+  if (footer) {
+    footer.innerHTML = `
+      <span><kbd>↑</kbd><kbd>↓</kbd> ${escapeHtml(t('cmdk.navigate'))}</span>
+      <span><kbd>↵</kbd> ${escapeHtml(t('cmdk.select'))}</span>
+      <span><kbd>esc</kbd> ${escapeHtml(t('common.close'))}</span>`;
+  }
+}
+document.addEventListener(LANG_EVENT, localizeOpenPalette);
 
 function close() {
   if (!host) {return;}

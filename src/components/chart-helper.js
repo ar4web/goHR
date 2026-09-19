@@ -76,6 +76,7 @@ async function loadEcharts() {
         charts.PieChart,
         charts.BarChart,
         charts.LineChart,
+        charts.GaugeChart,
         components.TitleComponent,
         components.TooltipComponent,
         components.LegendComponent,

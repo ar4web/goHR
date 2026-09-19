@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="nav.invoices">Invoicing | goHR</title>
+<link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
+<script type="module" src="/src/main.js"></script>
+</head>
+<body data-shell="admin" data-page="invoices" data-breadcrumb="Home > Invoicing">
+
+<main class="main">
+<div class="page-wrapper" data-hr-invoices>
+
+  <div class="page-header">
+    <div class="page-header-row">
+      <div>
+        <div class="page-pretitle" data-i18n="hr.ui.pretitle">HR &amp; Operations</div>
+        <h1 class="page-title" data-i18n="nav.invoices">Invoicing</h1>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="inv-tabs" role="tablist">
+    <button class="inv-tab active" data-tab="invoices" role="tab" aria-selected="true" type="button"><span data-i18n="inv.tabInvoices">Invoices</span> <span class="inv-tab-badge" id="iv-tabcount-inv"></span></button>
+    <button class="inv-tab" data-tab="clients" role="tab" aria-selected="false" type="button"><span data-i18n="inv.tabClients">Clients</span> <span class="inv-tab-badge" id="iv-tabcount-cl"></span></button>
+    <button class="inv-tab" data-tab="ledger" role="tab" aria-selected="false" type="button"><span data-i18n="inv.tabLedger">Sales ledger</span></button>
+    <button class="inv-tab" data-tab="insights" role="tab" aria-selected="false" type="button"><span data-i18n="inv.tabInsights">Insights</span></button>
+  </div>
+
+  <!-- ══ TAB: INVOICES ══ -->
+  <section data-tabpanel="invoices">
+    <div class="row pr-stats">
+      <div class="card">
+        <div class="stat">
+          <div class="stat-icon teal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1z"/><path d="M8 7h8M8 11h8M8 15h5"/></svg></div>
+          <div class="stat-content"><div class="stat-label" data-i18n="inv.billed">Invoiced this month</div><div class="stat-value-row"><span class="stat-value" id="iv-stat-billed">0</span></div><div class="stat-subtext" data-i18n="inv.billedSub">Total incl. VAT</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="stat">
+          <div class="stat-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></div>
+          <div class="stat-content"><div class="stat-label" data-i18n="inv.outstanding">Outstanding</div><div class="stat-value-row"><span class="stat-value" id="iv-stat-out">0</span></div><div class="stat-subtext" data-i18n="inv.outstandingSub">Sent, awaiting payment</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="stat">
+          <div class="stat-icon red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 15.5v.5"/></svg></div>
+          <div class="stat-content"><div class="stat-label" data-i18n="inv.overdue">Overdue</div><div class="stat-value-row"><span class="stat-value" id="iv-stat-overdue">0</span></div><div class="stat-subtext" data-i18n="inv.overdueSub">Past the due date</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="stat">
+          <div class="stat-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 6L9 17l-5-5"/></svg></div>
+          <div class="stat-content"><div class="stat-label" data-i18n="inv.clients">Active contracts</div><div class="stat-value-row"><span class="stat-value" id="iv-stat-clients">0</span></div><div class="stat-subtext" data-i18n="inv.clientsSub">Clients with deployed staff</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card emp-toolbar">
+      <div class="card-body emp-toolbar-row">
+        <div class="emp-toolbar-left" style="display:flex;gap:var(--space-3);align-items:center">
+          <input type="month" class="form-control" id="iv-month" style="width:auto" aria-label="Month">
+          <span class="caption-muted" id="iv-count"></span>
+        </div>
+        <div class="emp-toolbar-right" role="toolbar" aria-label="Invoicing actions">
+          <button class="btn btn-ghost btn-sm" id="iv-export" type="button" data-i18n-aria="common.export" aria-label="Export"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></svg></button>
+          <button class="btn btn-primary btn-sm" id="iv-generate" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12h14"/></svg> <span data-i18n="inv.generate">Generate</span></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card emp-table-card">
+      <div class="card-body p-0 emp-table-wrap">
+        <div class="table-responsive">
+          <table class="table emp-table" data-page-length="10">
+            <thead>
+              <tr>
+                <th data-i18n="inv.invoiceH">Invoice</th>
+                <th data-i18n="inv.clientH">Client</th>
+                <th data-i18n="inv.headsH">Heads</th>
+                <th data-i18n="inv.subH">Subtotal</th>
+                <th data-i18n="inv.vatH">VAT 15%</th>
+                <th data-i18n="inv.totalH">Total</th>
+                <th data-i18n="inv.dueH">Due date</th>
+                <th data-i18n="common.status">Status</th>
+                <th class="emp-actions-col" data-i18n="common.actions">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="iv-rows"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ TAB: CLIENTS ══ -->
+  <section data-tabpanel="clients" hidden>
+    <div class="card emp-table-card">
+      <div class="card-body p-0 emp-table-wrap">
+        <div class="table-responsive">
+          <table class="table emp-table" data-page-length="10">
+            <thead>
+              <tr>
+                <th data-i18n="inv.clientH">Client</th>
+                <th data-i18n="inv.clientVat">VAT number</th>
+                <th data-i18n="doc.crNo">CR number</th>
+                <th data-i18n="doc.address">Address</th>
+                <th data-i18n="inv.clientBillingDay">Billing day</th>
+                <th data-i18n="inv.clientHeads">Deployed</th>
+                <th data-i18n="inv.clientBilled">Billed</th>
+                <th data-i18n="inv.clientOpen">Outstanding</th>
+                <th class="emp-actions-col" data-i18n="common.actions">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="iv-cl-rows"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ TAB: LEDGER ══ -->
+  <section data-tabpanel="ledger" hidden>
+    <div class="row pr-stats">
+      <div class="card"><div class="stat"><div class="stat-icon teal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1z"/></svg></div><div class="stat-content"><div class="stat-label" data-i18n="lg.sumIssued">Issued</div><div class="stat-value-row"><span class="stat-value" id="lg-stat-issued">0</span></div></div></div></div>
+      <div class="card"><div class="stat"><div class="stat-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 6L9 17l-5-5"/></svg></div><div class="stat-content"><div class="stat-label" data-i18n="lg.sumCollected">Collected</div><div class="stat-value-row"><span class="stat-value" id="lg-stat-collected">0</span></div></div></div></div>
+      <div class="card"><div class="stat"><div class="stat-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></div><div class="stat-content"><div class="stat-label" data-i18n="lg.sumOpen">Open balance</div><div class="stat-value-row"><span class="stat-value" id="lg-stat-open">0</span></div></div></div></div>
+    </div>
+    <div class="card emp-toolbar">
+      <div class="card-body emp-toolbar-row">
+        <div class="emp-toolbar-left" style="display:flex;gap:var(--space-3);align-items:center;flex-wrap:wrap">
+          <select class="form-control" id="lg-client" style="width:auto"></select>
+          <label class="lg-toggle"><input type="checkbox" id="lg-open"> <span data-i18n="lg.openOnly">Unpaid only</span></label>
+          <span class="caption-muted" id="lg-count"></span>
+        </div>
+        <div class="emp-toolbar-right" role="toolbar" aria-label="Ledger actions">
+          <button class="btn btn-ghost btn-sm" id="lg-export" type="button" data-i18n-aria="common.export" aria-label="Export"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></svg></button>
+          <button class="btn btn-ghost btn-sm" id="lg-print" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg></button>
+        </div>
+      </div>
+    </div>
+    <div class="card emp-table-card">
+      <div class="card-body p-0 emp-table-wrap">
+        <div class="table-responsive">
+          <table class="table emp-table" data-page-length="10">
+            <thead>
+              <tr>
+                <th data-i18n="lg.seqH">No.</th>
+                <th data-i18n="lg.dateH">Issued</th>
+                <th data-i18n="lg.invoiceH">Invoice</th>
+                <th data-i18n="inv.clientH">Client</th>
+                <th data-i18n="lg.debitH">Debit</th>
+                <th data-i18n="lg.creditH">Credit</th>
+                <th data-i18n="lg.balanceH">Balance</th>
+                <th data-i18n="common.status">Status</th>
+              </tr>
+            </thead>
+            <tbody id="lg-rows"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ TAB: INSIGHTS ══ -->
+  <section data-tabpanel="insights" hidden>
+    <div class="row pr-stats">
+      <div class="card"><div class="stat"><div class="stat-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.1V12a10 10 0 11-5.9-9.1"/><path d="M22 4L12 14l-3-3"/></svg></div><div class="stat-content"><div class="stat-label" data-i18n="in.collRate">Collection rate</div><div class="stat-value-row"><span class="stat-value" id="in-stat-coll">0%</span></div><div class="stat-subtext" data-i18n="in.collSub">Paid share of all billing</div></div></div></div>
+      <div class="card"><div class="stat"><div class="stat-icon teal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1z"/><path d="M8 7h8M8 11h8M8 15h5"/></svg></div><div class="stat-content"><div class="stat-label" data-i18n="in.avgInv">Avg invoice</div><div class="stat-value-row"><span class="stat-value" id="in-stat-avg">0</span></div><div class="stat-subtext" data-i18n="in.avgSub">All invoices incl. VAT</div></div></div></div>
+      <div class="card"><div class="stat"><div class="stat-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></div><div class="stat-content"><div class="stat-label" data-i18n="in.vatPayable">VAT declared</div><div class="stat-value-row"><span class="stat-value" id="in-stat-vat">0</span></div><div class="stat-subtext" data-i18n="in.vatSub">Issued invoices (sent + paid)</div></div></div></div>
+      <div class="card"><div class="stat"><div class="stat-icon yellow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="stat-content"><div class="stat-label" data-i18n="in.compliance">Ajeer compliance</div><div class="stat-value-row"><span class="stat-value" id="in-stat-comp">0%</span></div><div class="stat-subtext" data-i18n="in.compSub">Billed heads with valid Ajeer</div></div></div></div>
+    </div>
+    <div class="row col-2 stack-gap">
+      <div class="card"><div class="card-header"><div class="card-title" data-i18n="in.byMonth">Billing by month</div></div><div class="card-body"><div class="chart-box chart-sm" id="chart-iv-month"></div></div></div>
+      <div class="card"><div class="card-header"><div class="card-title" data-i18n="in.aging">Receivables aging</div></div><div class="card-body"><div class="chart-box chart-sm" id="chart-iv-aging"></div></div></div>
+    </div>
+    <div class="row col-2 stack-gap">
+      <div class="card"><div class="card-header"><div class="card-title" data-i18n="in.byClient">Billing by client</div></div><div class="card-body"><div class="chart-box chart-sm" id="chart-iv-client"></div></div></div>
+    </div>
+  </section>
+
+</div>
+</main>
+
+</body>
+</html>

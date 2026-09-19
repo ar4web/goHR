@@ -59,7 +59,7 @@
 .alert strong { font-weight: var(--font-weight-medium); }
 .alert-info    { color: var(--blue);   border-color: rgba(6,111,209,0.2);   background: var(--blue-lt); }
 .alert-success { color: var(--green);  border-color: rgba(47,179,68,0.2);   background: var(--green-lt); }
-.alert-warning { color: #b45309;       border-color: rgba(245,159,0,0.2);   background: var(--yellow-lt); }
+.alert-warning { color: var(--warn-ink);       border-color: rgba(245,159,0,0.2);   background: var(--yellow-lt); }
 .alert-error   { color: var(--red);    border-color: rgba(214,57,57,0.2);   background: var(--red-lt); }
 
 // ────────────────────────
@@ -79,10 +79,10 @@
   border-radius: 11px;
   white-space: nowrap;
 }
-.chip-primary { color: var(--primary); background: var(--primary-lt); border-color: rgba(26,187,156,0.2); }
+.chip-primary { color: var(--primary); background: var(--primary-lt); border-color: rgba(var(--primary-rgb),0.2); }
 .chip-blue    { color: var(--blue);    background: var(--blue-lt);    border-color: rgba(6,111,209,0.2); }
 .chip-green   { color: var(--green);   background: var(--green-lt);   border-color: rgba(47,179,68,0.2); }
-.chip-yellow  { color: #b45309;        background: var(--yellow-lt);  border-color: rgba(245,159,0,0.2); }
+.chip-yellow  { color: var(--warn-ink);        background: var(--yellow-lt);  border-color: rgba(245,159,0,0.2); }
 .chip-red     { color: var(--red);     background: var(--red-lt);     border-color: rgba(214,57,57,0.2); }
 .chip-purple  { color: var(--purple);  background: var(--purple-lt);  border-color: rgba(174,62,201,0.2); }
 
@@ -155,7 +155,7 @@
 .calendar-event:hover { filter: brightness(0.95); }
 .calendar-day { cursor: pointer; }
 .calendar-event.blue   { background: var(--blue-lt);   color: var(--blue); }
-.calendar-event.yellow { background: var(--yellow-lt); color: #b45309; }
+.calendar-event.yellow { background: var(--yellow-lt); color: var(--warn-ink); }
 .calendar-event.red    { background: var(--red-lt);    color: var(--red); }
 .calendar-event.purple { background: var(--purple-lt); color: var(--purple); }
 
@@ -221,7 +221,7 @@
   min-width: 18px;
   text-align: center;
 }
-.inbox-folder.active .count { color: var(--primary); background: rgba(26, 187, 156, 0.14); }
+.inbox-folder.active .count { color: var(--primary); background: rgba(var(--primary-rgb), 0.14); }
 .inbox-folder svg { width: 14px; height: 14px; flex-shrink: 0; }
 .inbox-label-dot {
   width: 8px;
@@ -1240,7 +1240,7 @@ button.project-card:hover { border-color: var(--primary); }
 }
 .pricing-tier.popular {
   border-color: var(--primary);
-  box-shadow: 0 0 0 1px var(--primary), 0 4px 16px rgba(26, 187, 156, 0.12);
+  box-shadow: 0 0 0 1px var(--primary), 0 4px 16px rgba(var(--primary-rgb), 0.12);
   position: relative;
 }
 .pricing-tier.popular::before {
