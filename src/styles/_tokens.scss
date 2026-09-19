@@ -140,7 +140,7 @@
   // ── Studio: icon sizes scale together ───────────────────────────────────
   --icon-size: calc(18px * var(--icon-scale));
   --nav-icon-size: calc(18px * var(--icon-scale));
-  --topbar-icon-size: calc(40px * max(var(--icon-scale, 1), 1));
+  --topbar-icon-size: calc(28px * max(var(--icon-scale, 1), 1));
   --btn-icon-size: calc(14px * var(--icon-scale));
 
   /* Status colors */

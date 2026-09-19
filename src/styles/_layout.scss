@@ -310,8 +310,8 @@ body.page-leave { opacity: 0; }
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 42px;
-  height: 42px;
+  width: 30px;
+  height: 30px;
   border: 0;
   border-radius: 10px;
   background: transparent;
@@ -339,9 +339,9 @@ a.topbar-icon-btn { text-decoration: none; }
   height: var(--topbar-icon-size);
   stroke-linecap: round;
   stroke-linejoin: round;
-  /* Sidebar family is drawn at 1.5/20px; at 40px the equivalent weight is
-     3 — keeps the topbar set visually identical to the sidebar set. */
-  stroke-width: 3;
+  /* Sidebar family is drawn at 1.5/20px; at 28px the equivalent weight is
+     2.1 — keeps the topbar set visually identical to the sidebar set. */
+  stroke-width: 2.1;
 }
 :root[data-theme='light'] .theme-icon-sun { display: none; }
 :root[data-theme='dark'] .theme-icon-moon { display: none; }
@@ -372,8 +372,8 @@ a.topbar-icon-btn { text-decoration: none; }
 
 // Profile trigger — avatar only, no chip border/name/chevron.
 .topbar-user {
-  width: 40px;
-  height: 40px;
+  width: 28px;
+  height: 28px;
   padding: 0;
   border: 0;
   background: transparent;
@@ -386,15 +386,15 @@ a.topbar-icon-btn { text-decoration: none; }
 }
 .topbar-user:hover { background: var(--bg-surface-secondary); }
 .topbar-user-avatar {
-  width: 38px;
-  height: 38px;
+  width: 27px;
+  height: 27px;
   flex-shrink: 0;
   border-radius: 50%;
   /* Solid color first — if gradients are unavailable the disc still renders. */
   background: var(--primary);
   background: linear-gradient(135deg, var(--primary), var(--primary-dk));
   color: var(--on-primary);
-  font-size: 12px;
+  font-size: 10px;
   line-height: 1;
   letter-spacing: 0.02em;
   font-weight: 700;
@@ -406,9 +406,9 @@ a.topbar-icon-btn { text-decoration: none; }
 @media (max-width: 600px) {
   .topbar { gap: 4px; padding-inline: 10px; }
   .topbar-right { gap: 2px; }
-  .topbar-icon-btn { width: 40px; height: 40px; }
-  .topbar-user { width: 38px; height: 38px; }
-  .topbar-user-avatar { width: 34px; height: 34px; font-size: 11px; }
+  .topbar-icon-btn { width: 28px; height: 28px; }
+  .topbar-user { width: 26px; height: 26px; }
+  .topbar-user-avatar { width: 24px; height: 24px; font-size: 9px; }
 }
 
 // ────────────────────────
